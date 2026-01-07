@@ -1,0 +1,23 @@
+{
+  "dashboard": {
+    "welcome": "Hi, Welcome back! 👋",
+    "totalRevenue": "Total Revenue",
+    "newCustomers": "New Customers",
+    "activeAccounts": "Active Accounts",
+    "growthRate": "Growth Rate",
+    "trendingUp": "Trending up this month",
+    "trendingDown": "Down 20% this period",
+    "visitorsLast6Months": "Visitors for the last 6 months",
+    "acquisitionNeedsAttention": "Acquisition needs attention",
+    "strongRetention": "Strong user retention",
+    "engagementExceedsTargets": "Engagement exceeds targets",
+    "steadyPerformance": "Steady performance increase",
+    "meetsGrowthProjections": "Meets growth projections"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  }
+}
+
