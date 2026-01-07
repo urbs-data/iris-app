@@ -49,17 +49,6 @@ export const navItems: NavItem[] = [
     items: []
   },
   {
-    title: 'Teams',
-    url: '/dashboard/workspaces/team',
-    icon: 'teams',
-    isActive: false,
-    items: [],
-    // Require organization to be active
-    access: { requireOrg: true }
-    // Alternative: require specific permission
-    // access: { requireOrg: true, permission: 'org:teams:view' }
-  },
-  {
     title: 'Product',
     url: '/dashboard/product',
     icon: 'product',

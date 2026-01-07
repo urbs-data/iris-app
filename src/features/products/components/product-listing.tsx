@@ -1,8 +1,8 @@
-import { Product } from '@/constants/data';
-import { fakeProducts } from '@/constants/mock-api';
-import { searchParamsCache } from '@/lib/searchparams';
+import { searchParamsCache } from '@/features/products/searchparams';
 import { ProductTable } from './product-tables';
 import { columns } from './product-tables/columns';
+import { resolveActionResult } from '@/lib/actions/client';
+import { getProducts } from '../data/get-products';
 
 type ProductListingPage = {};
 
@@ -20,9 +20,9 @@ export default async function ProductListingPage({}: ProductListingPage) {
     ...(categories && { categories: categories })
   };
 
-  const data = await fakeProducts.getProducts(filters);
-  const totalProducts = data.total_products;
-  const products: Product[] = data.products;
+  const data = await resolveActionResult(getProducts(filters));
+  const totalProducts = data.totalCount;
+  const products = data.products;
 
   return (
     <ProductTable
