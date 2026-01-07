@@ -1,4 +1,4 @@
-import { i18n, type Locale } from '@/i18n-config';
+import { i18n } from '@/i18n-config';
 import { notFound } from 'next/navigation';
 
 export async function generateStaticParams() {
@@ -10,12 +10,12 @@ export default async function LangLayout({
   params
 }: {
   children: React.ReactNode;
-  params: Promise<{ lang: Locale }>;
+  params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
 
   // Validar que el locale sea soportado
-  if (!i18n.locales.includes(lang)) {
+  if (!i18n.locales.includes(lang as (typeof i18n.locales)[number])) {
     notFound();
   }
 
