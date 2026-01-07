@@ -53,6 +53,7 @@ export function OrgSwitcher() {
     }
     try {
       await setActive({ organization: organizationId });
+      router.refresh();
     } catch (error) {
       console.error('Failed to switch organization:', error);
     }

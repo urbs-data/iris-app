@@ -4,6 +4,7 @@
 
 import { faker } from '@faker-js/faker';
 import { matchSorter } from 'match-sorter'; // For filtering
+import { getAuthOrganizationContext } from '@/lib/context';
 
 export const delay = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
@@ -100,7 +101,10 @@ export const fakeProducts = {
     categories?: string;
     search?: string;
   }) {
+    const organization = await getAuthOrganizationContext();
+    console.log(organization);
     await delay(1000);
+
     const categoriesArray = categories ? categories.split('.') : [];
     const allProducts = await this.getAll({
       categories: categoriesArray,
