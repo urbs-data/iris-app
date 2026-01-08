@@ -2,18 +2,41 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/routing';
+import { defaultLocale } from './i18n/config';
 
 const intlMiddleware = createMiddleware(routing);
 
 const isProtectedRoute = createRouteMatcher(['/:lang/dashboard(.*)']);
+const isSelectTenantRoute = createRouteMatcher(['/:lang/select-tenant(.*)']);
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
-  // Primero manejar la redirección de locale
+  const { pathname } = req.nextUrl;
+
   const localeRedirect = intlMiddleware(req);
   if (localeRedirect) return localeRedirect;
 
-  // Proteger rutas que lo requieran
+  const { userId, orgId } = await auth();
+
   if (isProtectedRoute(req)) {
+    if (!userId) {
+      await auth.protect();
+      return;
+    }
+
+    if (!orgId) {
+      const locale = pathname.split('/')[1] || defaultLocale;
+      const selectTenantUrl = new URL(`/${locale}/select-tenant`, req.url);
+      return NextResponse.redirect(selectTenantUrl);
+    }
+  }
+
+  if (isSelectTenantRoute(req) && userId && orgId) {
+    const locale = pathname.split('/')[1] || defaultLocale;
+    const dashboardUrl = new URL(`/${locale}/dashboard`, req.url);
+    return NextResponse.redirect(dashboardUrl);
+  }
+
+  if (isSelectTenantRoute(req) && !userId) {
     await auth.protect();
   }
 });

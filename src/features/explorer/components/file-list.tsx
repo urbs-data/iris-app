@@ -11,7 +11,7 @@ interface FileListProps {
 }
 
 export function FileList({ files, currentPath }: FileListProps) {
-  const t = useTranslations('explorer');
+  const t = useTranslations('fileExplorer');
   const columns = createFileListColumns(currentPath);
 
   return (

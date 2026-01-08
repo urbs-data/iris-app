@@ -17,6 +17,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { BaseFormFieldProps, FormOption } from '@/types/base-form';
+import { Loader2 } from 'lucide-react';
 
 interface FormSelectProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -25,6 +26,7 @@ interface FormSelectProps<
   options: FormOption[];
   placeholder?: string;
   searchable?: boolean;
+  isLoading?: boolean;
 }
 
 function FormSelect<
@@ -39,7 +41,8 @@ function FormSelect<
   options,
   placeholder = 'Select an option',
   disabled,
-  className
+  className,
+  isLoading = false
 }: FormSelectProps<TFieldValues, TName>) {
   return (
     <FormField
@@ -56,24 +59,34 @@ function FormSelect<
           <Select
             onValueChange={field.onChange}
             defaultValue={field.value}
-            disabled={disabled}
+            value={field.value}
+            disabled={disabled || isLoading}
           >
             <FormControl>
               <SelectTrigger>
-                <SelectValue placeholder={placeholder} />
+                {isLoading ? (
+                  <div className='flex items-center gap-2'>
+                    <Loader2 className='size-4 animate-spin' />
+                    <span>Cargando...</span>
+                  </div>
+                ) : (
+                  <SelectValue placeholder={placeholder} />
+                )}
               </SelectTrigger>
             </FormControl>
-            <SelectContent>
-              {options.map((option) => (
-                <SelectItem
-                  key={option.value}
-                  value={option.value}
-                  disabled={option.disabled}
-                >
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
+            {!isLoading && (
+              <SelectContent>
+                {options.map((option) => (
+                  <SelectItem
+                    key={option.value}
+                    value={option.value}
+                    disabled={option.disabled}
+                  >
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            )}
           </Select>
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />

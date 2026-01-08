@@ -71,3 +71,49 @@ export const CATEGORIES = [
   { value: 'Jewelry', label: 'Jewelry' },
   { value: 'Beauty Products', label: 'Beauty Products' }
 ];
+
+// Tenant selection data
+export interface Country {
+  id: string;
+  label: string;
+}
+
+export interface Site {
+  id: string;
+  label: string;
+  countryId: string;
+}
+
+export interface Project {
+  id: string;
+  label: string;
+  siteId: string;
+  clerkOrgId: string;
+}
+
+export const COUNTRIES: Country[] = [{ id: 'argentina', label: 'Argentina' }];
+
+export const SITES: Site[] = [
+  { id: 'berazategui', label: 'Berazategui', countryId: 'argentina' }
+];
+
+export const PROJECTS: Project[] = [
+  {
+    id: 'proyecto-1',
+    label: 'Proyecto 1',
+    siteId: 'berazategui',
+    clerkOrgId: 'org_37zbB0nabOiSlx3ahAaNAbFrpUZ'
+  },
+  {
+    id: 'proyecto-2',
+    label: 'Proyecto 2',
+    siteId: 'berazategui',
+    clerkOrgId: 'org_XXXXX2'
+  },
+  {
+    id: 'proyecto-3',
+    label: 'Proyecto 3',
+    siteId: 'berazategui',
+    clerkOrgId: 'org_XXXXX3'
+  }
+];

@@ -42,13 +42,6 @@ export const navItems: NavItem[] = [
     items: []
   },
   {
-    title: 'Workspaces',
-    url: '/dashboard/workspaces',
-    icon: 'workspace',
-    isActive: false,
-    items: []
-  },
-  {
     title: 'Product',
     url: '/dashboard/product',
     icon: 'product',
@@ -65,17 +58,10 @@ export const navItems: NavItem[] = [
     items: []
   },
   {
-    title: 'Account',
-    url: '#', // Placeholder as there is no direct link for the parent
+    title: 'Profile',
+    url: '/dashboard/profile',
     icon: 'account',
-    isActive: true,
-    items: [
-      {
-        title: 'Profile',
-        url: '/dashboard/profile',
-        icon: 'profile',
-        shortcut: ['m', 'm']
-      }
-    ]
+    isActive: false,
+    items: []
   }
 ];

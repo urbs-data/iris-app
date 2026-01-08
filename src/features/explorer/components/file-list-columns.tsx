@@ -2,13 +2,9 @@
 
 import Link from 'next/link';
 import { ColumnDef } from '@tanstack/react-table';
-import { FileItem } from '../lib/types';
-import { serialize } from '../searchparams';
-import { Button } from '@/components/ui/button';
 import {
   IconFolder,
   IconFile,
-  IconDownload,
   IconFileTypePdf,
   IconFileTypeDocx,
   IconFileTypeXls,
@@ -16,8 +12,11 @@ import {
   IconFileZip,
   IconFileText
 } from '@tabler/icons-react';
-import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
+import { cn } from '@/lib/utils';
+import { DownloadButton } from '@/features/shared/components/download-button';
+import { FileItem } from '../lib/types';
+import { serialize } from '../searchparams';
 
 function getFileIcon(file: FileItem) {
   if (file.type === 'folder') {
@@ -71,7 +70,7 @@ function formatFileSize(bytes: number | null): string {
 export function createFileListColumns(
   currentPath: string
 ): ColumnDef<FileItem>[] {
-  const t = useTranslations('explorer');
+  const t = useTranslations('fileExplorer');
   return [
     {
       accessorKey: 'type',
@@ -134,23 +133,12 @@ export function createFileListColumns(
       header: 'Acciones',
       cell: ({ row }) => {
         const file = row.original;
-        const isFolder = file.type === 'folder';
 
-        if (isFolder) return null;
+        if (file.type === 'folder') return null;
 
         return (
           <div className='flex justify-end'>
-            <Button
-              variant='outline'
-              size='sm'
-              onClick={(e) => {
-                e.preventDefault();
-                // TODO: Implementar descarga cuando se conecte a Azure
-                console.log('Descargar:', file.name);
-              }}
-            >
-              <IconDownload className='h-4 w-4' />
-            </Button>
+            <DownloadButton blobPath={file.id} />
           </div>
         );
       }

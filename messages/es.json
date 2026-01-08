@@ -1,35 +1,415 @@
 {
-  "dashboard": {
-    "welcome": "Hola, ¡Bienvenido de nuevo! 👋",
-    "totalRevenue": "Ingresos Totales",
-    "newCustomers": "Nuevos Clientes",
-    "activeAccounts": "Cuentas Activas",
-    "growthRate": "Tasa de Crecimiento",
-    "trendingUp": "Tendencia al alza este mes",
-    "trendingDown": "Bajó un 20% este período",
-    "visitorsLast6Months": "Visitantes de los últimos 6 meses",
-    "acquisitionNeedsAttention": "La adquisición necesita atención",
-    "strongRetention": "Fuerte retención de usuarios",
-    "engagementExceedsTargets": "El engagement supera los objetivos",
-    "steadyPerformance": "Aumento constante del rendimiento",
-    "meetsGrowthProjections": "Cumple las proyecciones de crecimiento"
-  },
-  "explorer": {
-    "title": "Explorador de Archivos",
-    "description": "Explora los archivos de tu proyecto",
-    "emptyFolder": "Esta carpeta está vacía",
-    "columns": {
-      "type": "Tipo",
-      "name": "Nombre",
-      "size": "Tamaño",
-      "lastModified": "Última Modificación",
-      "uploadedBy": "Subido por",
-      "actions": "Acciones"
+    "profile": {
+        "title": "Perfil",
+        "description": "Gestiona tu perfil de usuario",
+        "personalInfo": {
+            "title": "Información Personal",
+            "nameLabel": "Nombre",
+            "emailLabel": "Email",
+            "locationLabel": "Sitio",
+            "defaultUserName": "Usuario"
+        },
+        "security": {
+            "title": "Seguridad",
+            "logoutButton": "Cerrar sesión"
+        },
+        "changePassword": {
+            "title": "Cambiar Contraseña",
+            "description": "Actualiza tu contraseña para mantener tu cuenta segura",
+            "form": {
+                "newPasswordLabel": "Nueva Contraseña",
+                "newPasswordPlaceholder": "Nueva contraseña",
+                "confirmPasswordLabel": "Confirmar Contraseña",
+                "confirmPasswordPlaceholder": "Confirmar contraseña",
+                "submitButton": "Cambiar Contraseña",
+                "loadingButton": "Actualizando..."
+            },
+            "requirements": {
+                "minLength": "Mínimo 8 caracteres",
+                "uppercase": "Al menos una letra mayúscula",
+                "lowercase": "Al menos una letra minúscula",
+                "number": "Al menos un número",
+                "specialChar": "Al menos un carácter especial",
+                "passwordsMatch": "Las contraseñas coinciden"
+            },
+            "validation": {
+                "minLength": "La contraseña debe tener al menos 8 caracteres",
+                "uppercase": "La contraseña debe contener al menos una mayúscula",
+                "lowercase": "La contraseña debe contener al menos una minúscula",
+                "number": "La contraseña debe contener al menos un número",
+                "specialChar": "La contraseña debe contener al menos un carácter especial",
+                "passwordsMatch": "Las contraseñas no coinciden"
+            },
+            "toast": {
+                "success": "Contraseña actualizada correctamente",
+                "error": "Error al cambiar la contraseña"
+            }
+        },
+        "languageSwitcher": {
+            "spanish": "Español",
+            "english": "English"
+        }
+    },
+    "nav": {
+        "home": "Inicio",
+        "dashboard": "Dashboard",
+        "analyze": "Analizar",
+        "analyze_concentration": "Análisis de concentraciones",
+        "search": "Buscador",
+        "explorer": "Explorador",
+        "validation": "Validación",
+        "profile": "Perfil",
+        "documentation": "Documentación",
+        "group": {
+            "main": "Principal",
+            "documents": "Documentos",
+            "others": "Otros"
+        }
+    },
+    "sidebar": {
+        "profileDropdown": {
+            "profile": "Perfil",
+            "logout": "Cerrar sesión"
+        }
+    },
+    "breadcrumb": {
+        "analyze": {
+            "kpi": "Análisis KPIs"
+        },
+        "explorer": {
+            "upload": "Cargar Documento"
+        }
+    },
+    "fileExplorer": {
+        "title": "Explorador de Documentos",
+        "description": "Navega y gestiona tus documentos",
+        "upload": "Cargar Documento",
+        "deleteSuccess": "Archivo eliminado correctamente",
+        "deleteError": "Error al eliminar el archivo",
+        "deleteConfirmationTitle": "¿Estás seguro?",
+        "deleteConfirmationDescription": "Esta acción no se puede deshacer. Se eliminará el archivo y todos los datos relacionados.",
+        "cancel": "Cancelar",
+        "delete": "Eliminar",
+        "columns": {
+            "type": "Tipo",
+            "name": "Nombre",
+            "metadata": "Metadata",
+            "size": "Tamaño",
+            "actions": "Acciones"
+        },
+        "deletingFiles": "Eliminando archivos",
+        "bulkDeleteSuccess": "{0} archivos eliminados correctamente",
+        "bulkDeleteError": "Error al eliminar {0} de {1} archivos",
+        "emptyFolder": "No hay archivos en esta carpeta"
+    },
+    "uploadDocument": {
+        "title": "Cargar Documentos",
+        "description": "Sube uno o más documentos al sistema",
+        "atLeastOneFile": "Debes seleccionar al menos un archivo",
+        "dateRequired": "La fecha es requerida",
+        "invalidFileTypeForSamplesWellsSubstances": "Para pozos, sustancias y muestras, solo se permiten archivos Excel (.xlsx o .xlsm)",
+        "fileTooLarge": "El tamaño máximo permitido es 10MB",
+        "uploadSuccess": "Documentos cargados correctamente",
+        "uploadError": "Error al cargar los documentos",
+        "documentDateLabel": "Fecha del documento",
+        "documentDatePlaceholder": "Selecciona una fecha",
+        "documentDateError": "La fecha es requerida",
+        "classificationLabel": "Clasificación",
+        "classificationPlaceholder": "Selecciona una clasificación",
+        "classificationError": "La clasificación es requerida",
+        "subclassificationLabel": "Subclasificación",
+        "subclassificationPlaceholder": "Selecciona una subclasificación",
+        "subclassificationError": "La subclasificación es requerida",
+        "areaLabel": "Área",
+        "areaPlaceholder": "Selecciona un área",
+        "filesLabel": "Documentos",
+        "dragMoreFiles": "Arrastra más archivos o haz clic para agregar",
+        "clickToSelectFiles": "Haz clic para seleccionar archivos",
+        "anyFileType": "Cualquier tipo de archivo (máx. 100MB por archivo)",
+        "dragAndDropFiles": "Arrastra y suelta tus archivos aquí o",
+        "clickToAddFiles": "Haz clic para agregar archivos",
+        "loading": "Cargando...",
+        "upload": "Cargar documentos",
+        "cancel": "Cancelar"
+    },
+    "documentClassifications": {
+        "Muestras": "Muestras",
+        "Procesos de remediacion": "Procesos de remediacion",
+        "Procesos de remediación": "Procesos de remediación",
+        "Reportes de monitoreo": "Reportes de monitoreo",
+        "Memorandum tecnicos": "Memorandum tecnicos",
+        "Reportes tecnicos": "Reportes tecnicos",
+        "Reportes a las autoridades": "Reportes a las autoridades",
+        "Estudios complementarios": "Estudios complementarios",
+        "Estudios hidrogeologicos": "Estudios hidrogeológicos",
+        "Estudios hidrogeológicos": "Estudios hidrogeológicos",
+        "Informes de avance": "Informes de avance",
+        "Pozos": "Pozos",
+        "Sustancias": "Sustancias",
+        "Otros": "Otros"
+    },
+    "documentSubclassifications": {
+        "Cadenas de custodia": "Cadenas de custodia",
+        "Muestras de suelo": "Muestras de suelo",
+        "Muestras de agua": "Muestras de agua",
+        "CoC de agua": "CoC de agua",
+        "CoC de suelo": "CoC de suelo",
+        "Reportes diarios": "Reportes diarios",
+        "Inyección": "Inyección",
+        "Otros": "Otros"
+    },
+    "dashboard": {
+        "all": "Todos",
+        "filter": {
+            "dateRange": "Rango de Fechas",
+            "substance": "Sustancia",
+            "wellType": "Tipo de Pozo",
+            "area": "Área",
+            "well": "Pozo",
+            "sampleType": "Tipo de Muestra"
+        },
+        "lineplot": {
+            "concentration": "Concentración",
+            "guidelineLevel": "Nivel Guía",
+            "average": "Promedio",
+            "title": "{0} promedio por período",
+            "defaultTitle": "Concentración promedio por período"
+        },
+        "boxplot": {
+            "interquartileRange": "Rango intercuartil",
+            "outlierRange": "Rango sin valores atípicos",
+            "average": "Promedio",
+            "median": "Mediana",
+            "guidelineLevel": "Nivel Guía",
+            "defaultTitle": "Distribución de concentraciones por año",
+            "defaultTooltip": "Este gráfico muestra cómo se comportan las concentraciones en cada año, permitiendo ver si los valores tienden a ser más dispersos o más cercanos entre sí con el paso del tiempo.",
+            "moreDetails": "Para más detalles, consulta la",
+            "documentation": "documentación"
+        },
+        "map": {
+            "viewInMap": "Ver en mapa",
+            "spatialDistribution": "Distribución espacial",
+            "light": "Claro",
+            "dark": "Oscuro",
+            "satellite": "Satélite",
+            "default": "Defecto",
+            "concentrations": "Concentraciones",
+            "markers": "Marcadores",
+            "areas": {
+                "Area C": "Área C",
+                "Area A y B": "Área A y B",
+                "Sitio Berazategui": "Sitio Berazategui"
+            },
+            "locationTooltip": {
+                "period": "Período",
+                "sampleCount": "Muestras",
+                "average": "Promedio",
+                "median": "Mediana",
+                "minimum": "Mínimo",
+                "maximum": "Máximo",
+                "standardDeviation": "Desvío"
+            }
+        },
+        "kpi": {
+            "sampleCount": "Muestras",
+            "guidelineLevel": "Nivel Guía",
+            "average": "Promedio",
+            "minimum": "Mínimo",
+            "maximum": "Máximo",
+            "median": "Mediana",
+            "standardDeviation": "Desvío",
+            "well": "Pozo",
+            "firstSample": "Primer muestra",
+            "lastSample": "Última muestra",
+            "percentageToGuideline": "% vs Guía",
+            "percentageToMaximum": "% vs Máx",
+            "percentageToGuidelineTooltip": "Variación porcentual del último valor medio respecto al nivel guía. Un valor negativo indica que está por debajo del nivel guía.",
+            "percentageToMaximumTooltip": "Variación porcentual del último valor medio respecto al máximo histórico. Un valor negativo indica que está por debajo del máximo histórico."
+        }
+    },
+    "substances": {
+        "carbonTetrachloride": "Tetracloruro de Carbono",
+        "chloroform": "Cloroformo"
+    },
+    "components": {
+        "combobox": {
+            "placeholder": "Seleccionar...",
+            "searchPlaceholder": "Buscar",
+            "emptyMessage": "No se encontraron resultados"
+        },
+        "dateRangePicker": {
+            "year": "Año",
+            "month": "Mes",
+            "yearSearchPlaceholder": "Buscar año",
+            "monthSearchPlaceholder": "Buscar mes",
+            "from": "Desde",
+            "to": "Hasta"
+        },
+        "table": {
+            "total": "Total: {0} entradas",
+            "noResults": "No hay resultados"
+        }
+    },
+    "wellTypes": {
+        "all": "Todos",
+        "well": "Monitoreo",
+        "pump": "Bomba"
+    },
+    "sampleTypes": {
+        "water": "Agua",
+        "soil": "Suelo"
+    },
+    "areas": {
+        "": "Todos",
+        "Area C": "Área C",
+        "Area A y B": "Área A y B",
+        "Resto": "Resto"
+    },
+    "search": {
+        "title": "Buscador de documentos",
+        "description": "Busca y gestiona documentos",
+        "fileTypes": {
+            "excels": "Excels",
+            "documents": "Documentos",
+            "others": "Otros"
+        },
+        "fileType": "Tipo de archivo",
+        "years": "Año",
+        "classifications": "Clasificación",
+        "subClassifications": "Subclasificación",
+        "resetFilters": "Eliminar filtros",
+        "table": {
+            "title": "Título",
+            "pageNumber": "Página",
+            "relevance": "Relevancia",
+            "download": "Descargar",
+            "useful": "Useful",
+            "unuseful": "Useless",
+            "moveUp": "Move up",
+            "moveDown": "Move down"
+        },
+        "search": "Buscar",
+        "searching": "Buscando...",
+        "noResults": "No se encontraron resultados",
+        "selected": "seleccionados"
+    },
+    "validation": {
+        "title": "Validación de documentos",
+        "description": "Valida los documentos de muestras realizadas por el laboratorio.",
+        "reset": "Reiniciar validación",
+        "upload": {
+            "error": "Por favor sube los tres archivos requeridos",
+            "success": "Validación completada",
+            "fileTooLarge": "El tamaño máximo permitido es 10MB",
+            "fileInvalidType": "Solo se permiten archivos Excel (.xlsx o .xls)",
+            "preliminar": "Preliminar Muestras",
+            "edd": "EDD Muestras",
+            "parametrosFQ": "EDD Parametros Fisico-Quimicos",
+            "changeFile": "Haz clic para cambiar el archivo",
+            "dragAndDrop": "Arrastra y suelta tu archivo Excel aquí",
+            "orClickToSelect": "o haz clic para seleccionar",
+            "processing": "Procesando...",
+            "validateFiles": "Validar Archivos",
+            "matrixSpike": "Muestras de Matrix Spike"
+        },
+        "results": {
+            "title": "Resultados de la validación",
+            "noResults": "No hay validaciones con estado '{status}' para mostrar.",
+            "success": "Éxito",
+            "warning": "Advertencia",
+            "error": "Error",
+            "skipped": "Omitido"
+        },
+        "exportToPdf": {
+            "title": "Resultados de la validación",
+            "filesAnalyzed": "Archivos analizados:",
+            "exportToPdf": "Exportar a PDF",
+            "documentName": "resultados-validacion",
+            "date": "Fecha",
+            "dateLanguage": "es-ES"
+        },
+        "rules": {
+            "existingWells": {
+                "success": "Todos los pozos existen en la base de datos",
+                "error": "Los siguientes pozos no existen en la base de datos",
+                "skipped": "Todos los pozos existen en la base de datos"
+            },
+            "sampleId": {
+                "success": "El nombre de las muestras cumplen el estandar",
+                "error": "El nombre de las muestras no cumplen el estandar",
+                "skipped": "El nombre de las muestras no cumplen el estandar"
+            },
+            "requiredColumns": {
+                "success": "El documento tiene las columnas requeridas",
+                "error": "Las columnas {columns} no fueron encontradas en el documento"
+            },
+            "rangeValues": {
+                "success": "La columna {column} tiene valores dentro del rango permitido [{min_value}, {max_value}]",
+                "warning": "La columna {column} tiene valores fuera del rango permitido [{min_value}, {max_value}]",
+                "skipped": "El documento tiene valores dentro del rango permitido"
+            },
+            "holdingTime": {
+                "success": "El holding time es correcto para todos los parámetros",
+                "error": "El holding time es incorrecto para algunos parámetros",
+                "skipped": "El holding time es correcto para todos los parámetros"
+            },
+            "guidelineLevel": {
+                "success": "Las concentraciones de los parámetros no superan los niveles guía",
+                "warning": "Las concentraciones de los parámetros superan los niveles guía",
+                "skipped": "Las concentraciones de los parámetros no superan los niveles guía"
+            },
+            "equality": {
+                "success": "Los archivos preliminar y EDD del laboratorio son iguales",
+                "error": "Los archivos preliminar y EDD del laboratorio no son iguales",
+                "skipped": "Los archivos preliminar y EDD del laboratorio son iguales"
+            },
+            "duplicidadPreliminar": {
+                "success": "Las muestras duplicadas cumplen con los criterios de duplicidad",
+                "warning": "Las muestras duplicadas {original} y {duplicado} no cumplen con los criterios de duplicidad",
+                "skipped": "Las muestras duplicadas cumplen con los criterios de duplicidad"
+            },
+            "duplicidadPreliminarNoRPD": {
+                "warning": "Las mediciones de {original} y {duplicado} no superan los umbrales de RL2 o RL5. Requiere del criterio del analista."
+            },
+            "matrixSpike": {
+                "success": "Los porcentajes de recuperación de las muestras de matrix spike están dentro de los límites permitidos",
+                "warning": "Los porcentajes de recuperación de las muestras de matrix spike no están dentro de los límites permitidos",
+                "skipped": "Los porcentajes de recuperación de las muestras de matrix spike están dentro de los límites permitidos"
+            },
+            "matrixSpikeDuplicates": {
+                "success": "Las muestras de matrix spike duplicadas cumplen con los criterios de duplicidad",
+                "warning": "Las muestras de matrix spike duplicadas no cumplen con los criterios de duplicidad",
+                "skipped": "Las muestras de matrix spike duplicadas cumplen con los criterios de duplicidad"
+            },
+            "missing": {
+                "success": "Las muestras estan en el archivo preliminar y EDD",
+                "skipped": "Las muestras estan en el archivo preliminar y EDD",
+                "edd": {
+                    "error": "Las siguientes combinaciones de muestra y sustancia del EDD no estan en el preliminar"
+                },
+                "preliminar": {
+                    "error": "Las siguientes combinaciones de muestra y sustancia del preliminar no estan en el EDD"
+                }
+            }
+        }
+    },
+    "auth": {
+        "login": {
+            "title": "Iniciar sesión",
+            "description": "Ingresa tu correo electrónico para acceder a tu cuenta",
+            "acceptTerms": "Al continuar, aceptas nuestros",
+            "terms": "Términos de Servicio",
+            "privacy": "Política de Privacidad",
+            "documentation": "Documentación de la aplicación",
+            "language": "Idioma"
+        },
+        "two-factor": {
+            "title": "Verificación de dos factores",
+            "enter-code": "Ingrese el código de verificación",
+            "invalid-code": "Código inválido. Por favor, intente nuevamente.",
+            "verifying": "Verificando...",
+            "verify": "Verificar"
+        },
+        "loading": "Cargando..."
     }
-  },
-  "common": {
-    "loading": "Cargando...",
-    "error": "Error",
-    "success": "Éxito"
-  }
 }
