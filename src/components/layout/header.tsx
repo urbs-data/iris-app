@@ -1,7 +1,6 @@
 import { SidebarTrigger } from '../ui/sidebar';
 import { Separator } from '../ui/separator';
 import { Breadcrumbs } from '../breadcrumbs';
-import { UserNav } from './user-nav';
 import { ModeToggle } from './ThemeToggle/theme-toggle';
 import { LangSwitcher } from './lang-switcher';
 
@@ -17,7 +16,6 @@ export default function Header() {
       <div className='flex items-center gap-2 px-4'>
         <LangSwitcher />
         <ModeToggle />
-        <UserNav />
       </div>
     </header>
   );

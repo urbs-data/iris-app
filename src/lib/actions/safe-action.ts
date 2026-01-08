@@ -46,9 +46,8 @@ export const actionClientWithLogger = actionClient.use(
     if (process.env.NODE_ENV === 'development') {
       logger('Metadata ->', metadata);
       logger('Input ->', clientInput);
-      if (!metadata.actionName.startsWith('get')) {
-        logger('Result ->', result.data);
-      }
+      logger('Result ->', result.data);
+
       if (result.serverError) {
         logger('Error ->', result.serverError);
       }
