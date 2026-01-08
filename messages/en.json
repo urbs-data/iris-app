@@ -14,10 +14,22 @@
     "steadyPerformance": "Steady performance increase",
     "meetsGrowthProjections": "Meets growth projections"
   },
+  "explorer": {
+    "title": "File Explorer",
+    "description": "Explore your project files",
+    "emptyFolder": "This folder is empty",
+    "columns": {
+      "type": "Type",
+      "name": "Name",
+      "size": "Size",
+      "lastModified": "Last Modified",
+      "uploadedBy": "Uploaded By",
+      "actions": "Actions"
+    }
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",
     "success": "Success"
   }
 }
-

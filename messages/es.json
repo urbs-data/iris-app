@@ -14,10 +14,22 @@
     "steadyPerformance": "Aumento constante del rendimiento",
     "meetsGrowthProjections": "Cumple las proyecciones de crecimiento"
   },
+  "explorer": {
+    "title": "Explorador de Archivos",
+    "description": "Explora los archivos de tu proyecto",
+    "emptyFolder": "Esta carpeta está vacía",
+    "columns": {
+      "type": "Tipo",
+      "name": "Nombre",
+      "size": "Tamaño",
+      "lastModified": "Última Modificación",
+      "uploadedBy": "Subido por",
+      "actions": "Acciones"
+    }
+  },
   "common": {
     "loading": "Cargando...",
     "error": "Error",
     "success": "Éxito"
   }
 }
-

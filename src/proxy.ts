@@ -1,46 +1,15 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
-import { i18n } from './i18n-config';
+import createMiddleware from 'next-intl/middleware';
+import { routing } from './i18n/routing';
+
+const intlMiddleware = createMiddleware(routing);
 
 const isProtectedRoute = createRouteMatcher(['/:lang/dashboard(.*)']);
 
-function getLocale(request: NextRequest): string {
-  const acceptLanguage = request.headers.get('accept-language');
-  if (!acceptLanguage) return i18n.defaultLocale;
-
-  // Extraer el primer idioma preferido
-  const preferredLocale = acceptLanguage.split(',')[0]?.split('-')[0];
-
-  // Verificar si el idioma está soportado
-  if (
-    preferredLocale &&
-    i18n.locales.includes(preferredLocale as (typeof i18n.locales)[number])
-  ) {
-    return preferredLocale;
-  }
-
-  return i18n.defaultLocale;
-}
-
-function handleLocaleRedirect(request: NextRequest): NextResponse | undefined {
-  const { pathname } = request.nextUrl;
-
-  // Verificar si ya hay un locale en el pathname
-  const pathnameHasLocale = i18n.locales.some(
-    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-  );
-
-  if (pathnameHasLocale) return;
-
-  // Redirigir si no hay locale
-  const locale = getLocale(request);
-  request.nextUrl.pathname = `/${locale}${pathname}`;
-  return NextResponse.redirect(request.nextUrl);
-}
-
 export default clerkMiddleware(async (auth, req: NextRequest) => {
   // Primero manejar la redirección de locale
-  const localeRedirect = handleLocaleRedirect(req);
+  const localeRedirect = intlMiddleware(req);
   if (localeRedirect) return localeRedirect;
 
   // Proteger rutas que lo requieran

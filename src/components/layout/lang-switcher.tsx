@@ -1,7 +1,8 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
-import { i18n, type Locale } from '@/i18n-config';
+import { useLocale } from 'next-intl';
+import { usePathname, useRouter } from '@/i18n/navigation';
+import { routing } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -9,7 +10,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { IconLanguage } from '@tabler/icons-react';
+
+type Locale = (typeof routing.locales)[number];
 
 const localeNames: Record<Locale, string> = {
   es: 'Español',
@@ -24,20 +26,11 @@ const localeFlags: Record<Locale, string> = {
 export function LangSwitcher() {
   const pathname = usePathname();
   const router = useRouter();
-
-  // Extraer el locale actual del pathname
-  const currentLocale =
-    i18n.locales.find(
-      (locale) =>
-        pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-    ) || i18n.defaultLocale;
+  const currentLocale = useLocale();
 
   const switchLocale = (newLocale: Locale) => {
     if (newLocale === currentLocale) return;
-
-    // Reemplazar el locale en el pathname
-    const newPathname = pathname.replace(`/${currentLocale}`, `/${newLocale}`);
-    router.push(newPathname);
+    router.replace(pathname, { locale: newLocale });
   };
 
   return (
@@ -51,7 +44,7 @@ export function LangSwitcher() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
-        {i18n.locales.map((locale) => (
+        {routing.locales.map((locale) => (
           <DropdownMenuItem
             key={locale}
             onClick={() => switchLocale(locale)}

@@ -1,6 +1,7 @@
-import { fakeProducts, Product } from '@/constants/mock-api';
 import { notFound } from 'next/navigation';
 import ProductForm from './product-form';
+import { resolveActionResult } from '@/lib/actions/client';
+import { getProductById } from '../data/get-product-by-id';
 
 type TProductViewPageProps = {
   productId: string;
@@ -13,13 +14,14 @@ export default async function ProductViewPage({
   let pageTitle = 'Create New Product';
 
   if (productId !== 'new') {
-    const data = await fakeProducts.getProductById(Number(productId));
-    product = data.product as Product;
-    if (!product) {
+    const fetchedProduct = await resolveActionResult(
+      getProductById({ id: Number(productId) })
+    );
+    if (!fetchedProduct) {
       notFound();
     }
     pageTitle = `Edit Product`;
   }
 
-  return <ProductForm initialData={product} pageTitle={pageTitle} />;
+  return <ProductForm />;
 }

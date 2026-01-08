@@ -10,44 +10,33 @@ import {
 } from '@/components/ui/card';
 import { IconTrendingDown, IconTrendingUp } from '@tabler/icons-react';
 import React from 'react';
-import { getDictionary, hasLocale, type Locale } from '../../dictionaries';
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 
 export default async function OverViewLayout({
   sales,
   pie_stats,
   bar_stats,
-  area_stats,
-  params
+  area_stats
 }: {
   sales: React.ReactNode;
   pie_stats: React.ReactNode;
   bar_stats: React.ReactNode;
   area_stats: React.ReactNode;
-  params: Promise<{ lang: string }>;
 }) {
-  const { lang } = await params;
-
-  // Validar el locale y obtener el diccionario
-  if (!hasLocale(lang)) {
-    notFound();
-  }
-
-  const dict = await getDictionary(lang as Locale);
+  const t = await getTranslations('dashboard');
 
   return (
     <PageContainer>
       <div className='flex flex-1 flex-col space-y-2'>
         <div className='flex items-center justify-between space-y-2'>
-          <h2 className='text-2xl font-bold tracking-tight'>
-            {dict.dashboard.welcome}
-          </h2>
+          <h2 className='text-2xl font-bold tracking-tight'>{t('welcome')}</h2>
         </div>
 
         <div className='*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs md:grid-cols-2 lg:grid-cols-4'>
           <Card className='@container/card'>
             <CardHeader>
-              <CardDescription>{dict.dashboard.totalRevenue}</CardDescription>
+              <CardDescription>{t('totalRevenue')}</CardDescription>
               <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
                 $1,250.00
               </CardTitle>
@@ -60,17 +49,16 @@ export default async function OverViewLayout({
             </CardHeader>
             <CardFooter className='flex-col items-start gap-1.5 text-sm'>
               <div className='line-clamp-1 flex gap-2 font-medium'>
-                {dict.dashboard.trendingUp}{' '}
-                <IconTrendingUp className='size-4' />
+                {t('trendingUp')} <IconTrendingUp className='size-4' />
               </div>
               <div className='text-muted-foreground'>
-                {dict.dashboard.visitorsLast6Months}
+                {t('visitorsLast6Months')}
               </div>
             </CardFooter>
           </Card>
           <Card className='@container/card'>
             <CardHeader>
-              <CardDescription>{dict.dashboard.newCustomers}</CardDescription>
+              <CardDescription>{t('newCustomers')}</CardDescription>
               <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
                 1,234
               </CardTitle>
@@ -83,17 +71,16 @@ export default async function OverViewLayout({
             </CardHeader>
             <CardFooter className='flex-col items-start gap-1.5 text-sm'>
               <div className='line-clamp-1 flex gap-2 font-medium'>
-                {dict.dashboard.trendingDown}{' '}
-                <IconTrendingDown className='size-4' />
+                {t('trendingDown')} <IconTrendingDown className='size-4' />
               </div>
               <div className='text-muted-foreground'>
-                {dict.dashboard.acquisitionNeedsAttention}
+                {t('acquisitionNeedsAttention')}
               </div>
             </CardFooter>
           </Card>
           <Card className='@container/card'>
             <CardHeader>
-              <CardDescription>{dict.dashboard.activeAccounts}</CardDescription>
+              <CardDescription>{t('activeAccounts')}</CardDescription>
               <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
                 45,678
               </CardTitle>
@@ -106,17 +93,16 @@ export default async function OverViewLayout({
             </CardHeader>
             <CardFooter className='flex-col items-start gap-1.5 text-sm'>
               <div className='line-clamp-1 flex gap-2 font-medium'>
-                {dict.dashboard.strongRetention}{' '}
-                <IconTrendingUp className='size-4' />
+                {t('strongRetention')} <IconTrendingUp className='size-4' />
               </div>
               <div className='text-muted-foreground'>
-                {dict.dashboard.engagementExceedsTargets}
+                {t('engagementExceedsTargets')}
               </div>
             </CardFooter>
           </Card>
           <Card className='@container/card'>
             <CardHeader>
-              <CardDescription>{dict.dashboard.growthRate}</CardDescription>
+              <CardDescription>{t('growthRate')}</CardDescription>
               <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
                 4.5%
               </CardTitle>
@@ -129,11 +115,10 @@ export default async function OverViewLayout({
             </CardHeader>
             <CardFooter className='flex-col items-start gap-1.5 text-sm'>
               <div className='line-clamp-1 flex gap-2 font-medium'>
-                {dict.dashboard.steadyPerformance}{' '}
-                <IconTrendingUp className='size-4' />
+                {t('steadyPerformance')} <IconTrendingUp className='size-4' />
               </div>
               <div className='text-muted-foreground'>
-                {dict.dashboard.meetsGrowthProjections}
+                {t('meetsGrowthProjections')}
               </div>
             </CardFooter>
           </Card>
