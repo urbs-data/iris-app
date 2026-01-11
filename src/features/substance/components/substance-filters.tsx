@@ -16,10 +16,12 @@ import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Combobox } from '@/components/ui/combobox';
 import { IconSearch } from '@tabler/icons-react';
 import type { DateRange } from 'react-day-picker';
-import { getSubstancesSync } from '../data/get-substances';
-import { getAreasSync } from '../data/get-areas';
+import { getSubstances } from '../data/get-substances';
 import { getWells } from '../data/get-wells';
+import { getAreas } from '../data/get-areas';
 import { wellTypes, sampleTypes } from '../searchparams';
+import { resolveActionResult } from '@/lib/actions/client';
+import { parseISO } from 'date-fns';
 
 interface LocalFilters {
   dateRange: DateRange | undefined;
@@ -48,7 +50,7 @@ export function SubstanceFilters() {
     {
       dateFrom: parseAsString,
       dateTo: parseAsString,
-      substance: parseAsString,
+      substance: parseAsString.withDefault('56-23-5'),
       wellType: parseAsStringLiteral(wellTypes).withDefault('all'),
       area: parseAsString,
       well: parseAsString,
@@ -57,17 +59,16 @@ export function SubstanceFilters() {
     { shallow: false }
   );
 
-  // Parse initial date range from query params
   const initialDateRange: DateRange | undefined =
     queryFilters.dateFrom || queryFilters.dateTo
       ? {
           from: queryFilters.dateFrom
-            ? new Date(queryFilters.dateFrom)
+            ? parseISO(queryFilters.dateFrom)
             : undefined,
-          to: queryFilters.dateTo ? new Date(queryFilters.dateTo) : undefined
+          to: queryFilters.dateTo ? parseISO(queryFilters.dateTo) : undefined
         }
       : {
-          from: new Date('2019-01-01'),
+          from: parseISO('2019-01-01'),
           to: new Date()
         };
 
@@ -80,15 +81,20 @@ export function SubstanceFilters() {
     sampleType: queryFilters.sampleType
   });
 
-  // Get static data
-  const substances = getSubstancesSync();
-  const areas = getAreasSync();
+  const { data: areas = [], isLoading: isLoadingAreas } = useQuery({
+    queryKey: ['areas'],
+    queryFn: () => resolveActionResult(getAreas())
+  });
 
-  // Fetch wells based on selected area using react-query
   const { data: wells = [], isLoading: isLoadingWells } = useQuery({
     queryKey: ['wells', localFilters.area],
-    queryFn: () => getWells(localFilters.area || undefined),
-    staleTime: 5 * 60 * 1000 // 5 minutes
+    queryFn: () =>
+      resolveActionResult(getWells({ area: localFilters.area || undefined }))
+  });
+
+  const { data: substances = [], isLoading: isLoadingSubstances } = useQuery({
+    queryKey: ['substances'],
+    queryFn: () => resolveActionResult(getSubstances())
   });
 
   function handleAreaChange(value: string | null) {
@@ -130,6 +136,7 @@ export function SubstanceFilters() {
           setLocalFilters((prev) => ({ ...prev, substance: value }))
         }
         options={substances}
+        isLoading={isLoadingSubstances}
         placeholder={t('substance')}
         searchPlaceholder={t('searchSubstance')}
         emptyMessage={t('noSubstanceFound')}
@@ -156,23 +163,17 @@ export function SubstanceFilters() {
       </Select>
 
       {/* Area */}
-      <Select
-        value={localFilters.area || 'all'}
+      <Combobox
+        value={localFilters.area}
         onValueChange={(value) =>
-          handleAreaChange(value === 'all' ? null : value)
+          setLocalFilters((prev) => ({ ...prev, area: value }))
         }
-      >
-        <SelectTrigger>
-          <SelectValue placeholder={t('area')} />
-        </SelectTrigger>
-        <SelectContent>
-          {areas.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        options={areas.map((a) => ({ value: a.value, label: a.label }))}
+        placeholder={t('area')}
+        searchPlaceholder={t('searchArea')}
+        emptyMessage={t('noAreaFound')}
+        isLoading={isLoadingAreas}
+      />
 
       {/* Well */}
       <Combobox
@@ -185,7 +186,6 @@ export function SubstanceFilters() {
         searchPlaceholder={t('searchWell')}
         emptyMessage={t('noWellFound')}
         isLoading={isLoadingWells}
-        disabled={!localFilters.area || localFilters.area === 'all'}
       />
 
       {/* Sample Type */}

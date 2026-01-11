@@ -3,44 +3,192 @@
 import { authOrganizationActionClient } from '@/lib/actions/safe-action';
 import { getMonthlyMetricsSchema } from './get-monthly-metrics-schema';
 import type { MonthlyConcentration } from '../types';
-import { randomInt } from 'crypto';
+import { sql } from 'drizzle-orm';
 
 interface MonthlyMetricsResult {
   data: MonthlyConcentration[];
   guideLevel: number;
 }
 
+interface QueryRow extends Record<string, unknown> {
+  periodo: string;
+  unidad: string | null;
+  nivel_guia: number | null;
+  cantidad_registros: number;
+  promedio_concentracion: number;
+  desvio_concentracion: number | null;
+  minimo_concentracion: number;
+  maximo_concentracion: number;
+  mediana_concentracion: number;
+  proporcion_max_promedio: number;
+  proporcion_nivel_guia: number | null;
+}
+
 export const getMonthlyMetrics = authOrganizationActionClient
   .metadata({ actionName: 'getMonthlyMetrics' })
   .inputSchema(getMonthlyMetricsSchema)
-  .action(async ({ parsedInput }): Promise<MonthlyMetricsResult> => {
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 600));
+  .action(async ({ parsedInput, ctx }): Promise<MonthlyMetricsResult> => {
+    let tipoPozo: string | null = null;
+    if (parsedInput.wellType === 'monitoring') {
+      tipoPozo = 'WELL';
+    } else if (parsedInput.wellType === 'pump') {
+      tipoPozo = 'PUMP';
+    }
 
-    // Return mock data matching the mockup image
-    // TODO: Replace with actual DB query using parsedInput filters
-    const data: MonthlyConcentration[] = [
-      { date: '2021-01-01', value: randomInt(100, 1000) },
-      { date: '2021-04-01', value: randomInt(100, 1000) },
-      { date: '2021-07-01', value: randomInt(100, 1000) },
-      { date: '2021-10-01', value: randomInt(100, 1000) },
-      { date: '2022-01-01', value: randomInt(100, 1000) },
-      { date: '2022-04-01', value: randomInt(100, 1000) },
-      { date: '2022-07-01', value: randomInt(100, 1000) },
-      { date: '2022-10-01', value: randomInt(100, 1000) },
-      { date: '2023-01-01', value: 60 },
-      { date: '2023-04-01', value: randomInt(100, 1000) },
-      { date: '2023-07-01', value: randomInt(100, 1000) },
-      { date: '2024-01-01', value: 180 },
-      { date: '2024-04-01', value: 280 },
-      { date: '2024-09-01', value: 450 },
-      { date: '2025-02-01', value: 520 },
-      { date: '2025-07-01', value: 380 },
-      { date: '2025-10-01', value: 220 }
-    ];
+    const tipoMuestra = parsedInput.sampleType === 'water' ? 'Agua' : 'Suelo';
+
+    const query = sql`
+      WITH raw_muestras AS (
+        SELECT *
+        FROM muestras
+        WHERE tipo = ${tipoMuestra}
+          ${parsedInput.dateFrom ? sql`AND fecha >= ${parsedInput.dateFrom}::timestamp` : sql``}
+          ${parsedInput.dateTo ? sql`AND fecha <= ${parsedInput.dateTo}::timestamp` : sql``}
+      ),
+      raw_concentraciones AS (
+        SELECT *
+        FROM concentraciones
+        ${parsedInput.substance ? sql`WHERE id_sustancia = ${parsedInput.substance}` : sql``}
+      ),
+      raw_pozos AS (
+        SELECT *
+        FROM pozos
+        WHERE tipo IN ('WELL', 'PUMP')
+        ${parsedInput.area ? sql`AND area = ${parsedInput.area}` : sql``}
+        ${tipoPozo ? sql`AND tipo = ${tipoPozo}` : sql``}
+        ${parsedInput.well ? sql`AND LOWER(id_pozo) = LOWER(${parsedInput.well})` : sql``}
+      ),
+      raw_estudios_pozos AS (
+        SELECT *
+        FROM estudios_pozos
+      ),
+      raw_sustancias AS (
+        SELECT *
+        FROM sustancias
+      ),
+      promedios_periodo AS (
+        SELECT TO_CHAR(m.fecha, 'YYYY-MM') AS periodo,
+          c.unidad,
+          AVG(
+            COALESCE(
+              c.concentracion,
+              CASE 
+                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
+                THEN CAST(c.limite_deteccion AS real)
+                ELSE NULL
+              END
+            )
+          ) AS promedio_concentracion
+        FROM raw_concentraciones c
+          INNER JOIN raw_muestras m ON c.id_muestra = m.id_muestra
+          INNER JOIN raw_estudios_pozos e ON m.id_estudio_pozo = e.id_estudio_pozo
+          INNER JOIN raw_pozos p ON LOWER(e.id_pozo) = LOWER(p.id_pozo)
+        GROUP BY TO_CHAR(m.fecha, 'YYYY-MM'), c.unidad
+      ),
+      datos_calculados AS (
+        SELECT 
+          TO_CHAR(m.fecha, 'YYYY-MM') AS periodo,
+          c.unidad,
+          MAX(s.nivel_guia) AS nivel_guia,
+          COUNT(*) AS cantidad_registros,
+          AVG(
+            COALESCE(
+              c.concentracion,
+              CASE 
+                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
+                THEN CAST(c.limite_deteccion AS real)
+                ELSE NULL
+              END
+            )
+          ) AS promedio_concentracion,
+          STDDEV_SAMP(
+            COALESCE(
+              c.concentracion,
+              CASE 
+                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
+                THEN CAST(c.limite_deteccion AS real)
+                ELSE NULL
+              END
+            )
+          ) AS desvio_concentracion,
+          MIN(
+            COALESCE(
+              c.concentracion,
+              CASE 
+                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
+                THEN CAST(c.limite_deteccion AS real)
+                ELSE NULL
+              END
+            )
+          ) AS minimo_concentracion,
+          MAX(
+            COALESCE(
+              c.concentracion,
+              CASE 
+                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
+                THEN CAST(c.limite_deteccion AS real)
+                ELSE NULL
+              END
+            )
+          ) AS maximo_concentracion,
+          PERCENTILE_CONT(0.5) WITHIN GROUP (
+            ORDER BY COALESCE(
+              c.concentracion,
+              CASE 
+                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
+                THEN CAST(c.limite_deteccion AS real)
+                ELSE NULL
+              END
+            )
+          ) AS mediana_concentracion
+        FROM raw_concentraciones c
+          INNER JOIN raw_muestras m ON c.id_muestra = m.id_muestra
+          INNER JOIN raw_estudios_pozos e ON m.id_estudio_pozo = e.id_estudio_pozo
+          INNER JOIN raw_pozos p ON LOWER(e.id_pozo) = LOWER(p.id_pozo)
+          INNER JOIN raw_sustancias s ON c.id_sustancia = s.id_sustancia
+        GROUP BY TO_CHAR(m.fecha, 'YYYY-MM'), c.unidad
+      ),
+      datos_con_proporciones AS (
+        SELECT 
+          dc.*,
+          dc.promedio_concentracion / NULLIF((
+            SELECT MAX(promedio_concentracion)
+            FROM promedios_periodo
+          ), 0) AS proporcion_max_promedio,
+          CASE
+            WHEN dc.nivel_guia IS NOT NULL AND dc.nivel_guia > 0 THEN 
+              dc.promedio_concentracion / dc.nivel_guia
+            ELSE NULL
+          END AS proporcion_nivel_guia
+        FROM datos_calculados dc
+      )
+      SELECT DISTINCT periodo,
+        unidad,
+        nivel_guia,
+        cantidad_registros,
+        ROUND(promedio_concentracion::numeric, 2)::real AS promedio_concentracion,
+        ROUND(desvio_concentracion::numeric, 2)::real AS desvio_concentracion,
+        ROUND(minimo_concentracion::numeric, 2)::real AS minimo_concentracion,
+        ROUND(maximo_concentracion::numeric, 2)::real AS maximo_concentracion,
+        ROUND(mediana_concentracion::numeric, 4)::real AS mediana_concentracion,
+        ROUND(proporcion_max_promedio::numeric, 4)::real AS proporcion_max_promedio,
+        ROUND(proporcion_nivel_guia::numeric, 4)::real AS proporcion_nivel_guia
+      FROM datos_con_proporciones
+      ORDER BY periodo
+    `;
+
+    const results = await ctx.db.execute<QueryRow>(query);
+
+    const guideLevel =
+      results.rows.length > 0 ? (results.rows[0].nivel_guia ?? 100) : 100;
+
+    const data: MonthlyConcentration[] = results.rows.map((row) => ({
+      date: row.periodo + '-01',
+      value: row.promedio_concentracion
+    }));
 
     return {
       data,
-      guideLevel: 100 // Nivel guía en µg/l
+      guideLevel
     };
   });

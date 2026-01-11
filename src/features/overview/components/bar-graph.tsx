@@ -16,6 +16,7 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from '@/components/ui/chart';
+import { parseISO } from 'date-fns';
 
 export const description = 'An interactive bar chart';
 
@@ -227,8 +228,8 @@ export function BarGraph() {
               tickMargin={8}
               minTickGap={32}
               tickFormatter={(value) => {
-                const date = new Date(value);
-                return date.toLocaleDateString('en-US', {
+                const date = parseISO(value);
+                return date.toLocaleDateString('es-AR', {
                   month: 'short',
                   day: 'numeric'
                 });
@@ -241,7 +242,7 @@ export function BarGraph() {
                   className='w-[150px]'
                   nameKey='views'
                   labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString('en-US', {
+                    return parseISO(value).toLocaleDateString('es-AR', {
                       month: 'short',
                       day: 'numeric',
                       year: 'numeric'

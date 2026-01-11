@@ -1,18 +1,36 @@
+'use server';
+
+import { and, inArray, isNotNull } from 'drizzle-orm';
+import { pozosTable } from '@/db/schema';
 import type { Area } from '../types';
+import { authOrganizationActionClient } from '@/lib/actions/safe-action';
 
-// Hardcoded areas - will be replaced with DB fetch
-const AREAS: Area[] = [
-  { value: 'all', label: 'Todos' },
-  { value: 'area-ab', label: 'Área A y B' },
-  { value: 'area-c', label: 'Área C' },
-  { value: 'rest', label: 'Resto' }
-];
+export const getAreas = authOrganizationActionClient
+  .metadata({ actionName: 'getAreas' })
+  .action(async ({ ctx }): Promise<Area[]> => {
+    const results = await ctx.db
+      .selectDistinct({
+        area: pozosTable.area
+      })
+      .from(pozosTable)
+      .where(
+        and(
+          inArray(pozosTable.tipo, ['WELL', 'PUMP']),
+          isNotNull(pozosTable.area)
+        )
+      )
+      .orderBy(pozosTable.area);
 
-export async function getAreas(): Promise<Area[]> {
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  return AREAS;
-}
+    const areas: Area[] = [{ value: 'all', label: 'Todos' }];
 
-export function getAreasSync(): Area[] {
-  return AREAS;
-}
+    results.forEach((row) => {
+      if (row.area) {
+        areas.push({
+          value: row.area,
+          label: row.area
+        });
+      }
+    });
+
+    return areas;
+  });

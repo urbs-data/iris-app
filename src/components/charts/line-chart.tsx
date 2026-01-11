@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/chart';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
+import { parseISO } from 'date-fns';
 
 interface DataPoint {
   date: string;
@@ -63,7 +64,7 @@ export function LineChart({
   formatTooltip
 }: LineChartProps) {
   const defaultFormatXAxis = (value: string) => {
-    const date = new Date(value);
+    const date = parseISO(value);
     return date.toLocaleDateString('es-AR', {
       month: 'short',
       year: '2-digit'

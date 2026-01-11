@@ -1,19 +1,31 @@
 import type { DateRange } from 'react-day-picker';
 
 export interface Substance {
-  value: string;
-  label: string;
+  id_sustancia: string;
+  nombre_ingles: string;
+  nombre_espanol: string | null;
+  categoria: string | null;
+  nivel_guia: number | null;
+  unidad_guia: string | null;
+  nivel_guia_suelo: number | null;
+  unidad_guia_suelo: string | null;
+  // Computed fields
+  value: string; // id_sustancia
+  label: string; // coalesce(nombre_espanol, nombre_ingles)
 }
 
 export interface Well {
-  value: string;
-  label: string;
-  area: string;
+  value: string; // id_pozo
+  label: string; // id_pozo
+  area: string | null;
+  latitud_decimal: number | null;
+  longitud_decimal: number | null;
+  tipo_pozo: string | null;
 }
 
 export interface Area {
-  value: string;
-  label: string;
+  value: string; // area from pozos table
+  label: string; // area from pozos table
 }
 
 export type WellType = 'all' | 'monitoring' | 'pump';

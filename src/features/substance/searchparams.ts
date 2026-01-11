@@ -11,8 +11,8 @@ export const sampleTypes = ['water', 'soil'] as const;
 export const substanceSearchParams = {
   dateFrom: parseAsString,
   dateTo: parseAsString,
-  substance: parseAsString,
-  wellType: parseAsStringLiteral(wellTypes).withDefault('all'),
+  substance: parseAsString.withDefault('56-23-5'),
+  wellType: parseAsStringLiteral(wellTypes).withDefault('monitoring'),
   area: parseAsString,
   well: parseAsString,
   sampleType: parseAsStringLiteral(sampleTypes).withDefault('water')

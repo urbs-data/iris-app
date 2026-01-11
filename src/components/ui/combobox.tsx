@@ -62,16 +62,34 @@ export function Combobox({
 
   const mode: SearchMode = searchMode ?? (onSearch ? 'dynamic' : 'static');
 
+  // Guardar la opción seleccionada para siempre mostrarla
+  const selectedOptionRef = React.useRef<ComboboxOption | null>(null);
+
   React.useEffect(() => {
     if (mode === 'dynamic' && onSearch && debouncedSearch !== undefined) {
       onSearch(debouncedSearch);
     }
   }, [debouncedSearch, onSearch, mode]);
 
-  const selectedOption = options.find((option) => option.value === value);
+  const selectedOption = React.useMemo(() => {
+    const found = options.find((option) => option.value === value);
+    if (found) {
+      selectedOptionRef.current = found;
+      return found;
+    }
+    // Si no está en las opciones actuales, usar la última guardada
+    return value ? selectedOptionRef.current : null;
+  }, [options, value]);
 
   const filteredOptions = React.useMemo(() => {
     if (mode === 'dynamic') {
+      // En modo dinámico, asegurar que la opción seleccionada esté siempre visible
+      if (
+        selectedOption &&
+        !options.some((opt) => opt.value === selectedOption.value)
+      ) {
+        return [selectedOption, ...options];
+      }
       return options;
     }
     if (!debouncedSearch) return options;
@@ -81,7 +99,7 @@ export function Combobox({
         option.label.toLowerCase().includes(searchLower) ||
         option.value.toLowerCase().includes(searchLower)
     );
-  }, [options, debouncedSearch, mode]);
+  }, [options, debouncedSearch, mode, selectedOption]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
