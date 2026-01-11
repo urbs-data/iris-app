@@ -20,6 +20,7 @@ export interface NavItem {
   isActive?: boolean;
   items?: NavItem[];
   access?: PermissionCheck;
+  group?: string;
 }
 
 export interface NavItemWithChildren extends NavItem {

@@ -34,29 +34,33 @@ import { NavItem } from '@/types';
  */
 export const navItems: NavItem[] = [
   {
-    title: 'Dashboard',
+    title: 'home',
     url: '/dashboard/overview',
     icon: 'dashboard',
     shortcut: ['d', 'd'],
-    items: []
+    items: [],
+    group: 'group.main'
   },
   {
-    title: 'Search',
+    title: 'search',
     url: '/dashboard/search',
     icon: 'dashboard',
-    items: []
+    items: [],
+    group: 'group.documents'
   },
   {
-    title: 'Explorer',
+    title: 'explorer',
     url: '/dashboard/explorer',
     icon: 'explorer',
     shortcut: ['e', 'e'],
-    items: []
+    items: [],
+    group: 'group.documents'
   },
   {
-    title: 'Profile',
+    title: 'profile',
     url: '/dashboard/profile',
     icon: 'account',
-    items: []
+    items: [],
+    group: 'group.others'
   }
 ];

@@ -107,20 +107,26 @@ export function SearchToolbar() {
   }
 
   return (
-    <div className='flex flex-col gap-3 p-1'>
-      <div className='w-full'>
-        <Input
-          placeholder={t('search')}
-          value={localFilters.q}
-          onChange={(e) =>
-            setLocalFilters((prev) => ({ ...prev, q: e.target.value }))
-          }
-          onKeyDown={handleKeyDown}
-          className='w-full'
-        />
-      </div>
+    <div className='mb-2 grid grid-cols-1 gap-2 sm:grid-cols-12 sm:grid-rows-2'>
+      {/* Input de búsqueda - Primera fila */}
+      <Input
+        placeholder={t('search')}
+        value={localFilters.q}
+        onChange={(e) =>
+          setLocalFilters((prev) => ({ ...prev, q: e.target.value }))
+        }
+        onKeyDown={handleKeyDown}
+        className='col-span-1 sm:col-span-10 sm:row-span-1'
+      />
 
-      <div className='flex flex-wrap items-center gap-2'>
+      {/* Botón de búsqueda  */}
+      <Button onClick={handleSearch} className='col-span-1 sm:col-span-2'>
+        <IconSearch className='mr-2 h-4 w-4' />
+        {t('search')}
+      </Button>
+
+      {/* Filtros - Segunda fila */}
+      <div className='col-span-1 grid grid-cols-1 gap-3 sm:col-span-10 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5'>
         <Select
           value={localFilters.year || 'all'}
           onValueChange={(value) =>
@@ -130,7 +136,7 @@ export function SearchToolbar() {
             }))
           }
         >
-          <SelectTrigger className='w-full sm:w-[120px]'>
+          <SelectTrigger className='w-full'>
             <SelectValue placeholder={t('years')} />
           </SelectTrigger>
           <SelectContent>
@@ -147,7 +153,7 @@ export function SearchToolbar() {
           value={localFilters.classification || 'all'}
           onValueChange={handleClassificationChange}
         >
-          <SelectTrigger className='w-full sm:w-[180px]'>
+          <SelectTrigger className='w-full'>
             <SelectValue placeholder={t('classifications')} />
           </SelectTrigger>
           <SelectContent>
@@ -175,7 +181,7 @@ export function SearchToolbar() {
             !localFilters.classification || subClassifications.length === 0
           }
         >
-          <SelectTrigger className='w-full sm:w-[180px]'>
+          <SelectTrigger className='w-full'>
             <SelectValue placeholder={t('subClassifications')} />
           </SelectTrigger>
           <SelectContent>
@@ -200,7 +206,7 @@ export function SearchToolbar() {
             }))
           }
         >
-          <SelectTrigger className='w-full sm:w-[140px]'>
+          <SelectTrigger className='w-full'>
             <SelectValue placeholder={t('fileType')} />
           </SelectTrigger>
           <SelectContent>
@@ -216,19 +222,13 @@ export function SearchToolbar() {
           </SelectContent>
         </Select>
 
-        <Button onClick={handleSearch} size='sm'>
-          <IconSearch className='mr-1 h-4 w-4' />
-          {t('search')}
-        </Button>
-
         {hasLocalFilters && (
           <Button
             variant='outline'
-            size='sm'
             onClick={handleResetFilters}
-            className='border-dashed'
+            className='col-span-1 border-dashed sm:col-span-2 md:col-span-1 lg:col-span-1'
           >
-            <IconX className='mr-1 h-4 w-4' />
+            <IconX className='mr-2 h-4 w-4' />
             {t('resetFilters')}
           </Button>
         )}

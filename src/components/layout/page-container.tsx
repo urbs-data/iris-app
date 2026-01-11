@@ -68,7 +68,7 @@ export default function PageContainer({
       </div>
     </ScrollArea>
   ) : (
-    <div className='flex flex-1 flex-col px-4 md:px-6'>
+    <div className='mb-4 flex flex-1 flex-col px-4 md:px-6'>
       <div className='mb-4 flex items-start justify-between'>
         <Heading
           title={pageTitle ?? ''}

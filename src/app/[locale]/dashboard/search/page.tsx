@@ -25,27 +25,23 @@ export default async function Page(props: PageProps) {
 
   return (
     <PageContainer scrollable={false} pageTitle={t('title')}>
-      <div className='flex items-center justify-between'>
-        <Suspense fallback={<div className='h-9' />}>
-          <SearchToolbar />
-        </Suspense>
-      </div>
+      <Suspense fallback={<div className='h-9' />}>
+        <SearchToolbar />
+      </Suspense>
 
-      <div className='flex min-h-0 flex-1 flex-col'>
-        <Suspense
-          key={key}
-          fallback={
-            <DataTableSkeleton
-              columnCount={8}
-              rowCount={10}
-              filterCount={5}
-              withToolbar={false}
-            />
-          }
-        >
-          <SearchListing />
-        </Suspense>
-      </div>
+      <Suspense
+        key={key}
+        fallback={
+          <DataTableSkeleton
+            columnCount={8}
+            rowCount={10}
+            filterCount={5}
+            withToolbar={false}
+          />
+        }
+      >
+        <SearchListing />
+      </Suspense>
     </PageContainer>
   );
 }
