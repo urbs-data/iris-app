@@ -20,14 +20,8 @@ export const getGeneralMetrics = authOrganizationActionClient
   .metadata({ actionName: 'getGeneralMetrics' })
   .inputSchema(getGeneralMetricsSchema)
   .action(async ({ parsedInput, ctx }): Promise<GeneralMetrics> => {
-    let tipoPozo: string | null = null;
-    if (parsedInput.wellType === 'monitoring') {
-      tipoPozo = 'WELL';
-    } else if (parsedInput.wellType === 'pump') {
-      tipoPozo = 'PUMP';
-    }
-
-    const tipoMuestra = parsedInput.sampleType === 'water' ? 'Agua' : 'Suelo';
+    const tipoPozo = parsedInput.wellType ?? null;
+    const tipoMuestra = parsedInput.sampleType;
 
     const query = sql`
       WITH raw_muestras AS (

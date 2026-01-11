@@ -26,7 +26,7 @@ async function KpisContent() {
     ...(dateFrom && { dateFrom }),
     ...(dateTo && { dateTo }),
     ...(substance && { substance }),
-    wellType,
+    ...(wellType && { wellType }),
     ...(area && { area }),
     ...(well && { well }),
     sampleType

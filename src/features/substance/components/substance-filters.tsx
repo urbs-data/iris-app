@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { parseAsString, parseAsStringLiteral, useQueryStates } from 'nuqs';
+import { useQueryState } from 'nuqs';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,66 +19,81 @@ import type { DateRange } from 'react-day-picker';
 import { getSubstances } from '../data/get-substances';
 import { getWells } from '../data/get-wells';
 import { getAreas } from '../data/get-areas';
-import { wellTypes, sampleTypes } from '../searchparams';
+import { WellType, SampleType, SUBSTANCE_DEFAULTS } from '../types';
+import { substanceSearchParams } from '../searchparams';
 import { resolveActionResult } from '@/lib/actions/client';
 import { parseISO } from 'date-fns';
 
 interface LocalFilters {
   dateRange: DateRange | undefined;
   substance: string | null;
-  wellType: string;
+  wellType: WellType | null;
   area: string | null;
   well: string | null;
-  sampleType: string;
+  sampleType: SampleType;
 }
 
 const WELL_TYPE_OPTIONS = [
   { value: 'all', label: 'Todos' },
-  { value: 'monitoring', label: 'Monitoreo' },
-  { value: 'pump', label: 'Bomba' }
+  { value: WellType.MONITORING, label: 'Monitoreo' },
+  { value: WellType.PUMP, label: 'Bomba' }
 ];
 
 const SAMPLE_TYPE_OPTIONS = [
-  { value: 'water', label: 'Agua' },
-  { value: 'soil', label: 'Suelo' }
+  { value: SampleType.WATER, label: 'Agua' },
+  { value: SampleType.SOIL, label: 'Suelo' }
 ];
 
 export function SubstanceFilters() {
   const t = useTranslations('substance');
 
-  const [queryFilters, setQueryFilters] = useQueryStates(
-    {
-      dateFrom: parseAsString,
-      dateTo: parseAsString,
-      substance: parseAsString.withDefault('56-23-5'),
-      wellType: parseAsStringLiteral(wellTypes).withDefault('all'),
-      area: parseAsString,
-      well: parseAsString,
-      sampleType: parseAsStringLiteral(sampleTypes).withDefault('water')
-    },
-    { shallow: false }
+  const [dateFrom, setDateFrom] = useQueryState(
+    'dateFrom',
+    substanceSearchParams.dateFrom.withOptions({ shallow: false })
+  );
+  const [dateTo, setDateTo] = useQueryState(
+    'dateTo',
+    substanceSearchParams.dateTo.withOptions({ shallow: false })
+  );
+  const [substance, setSubstance] = useQueryState(
+    'substance',
+    substanceSearchParams.substance.withOptions({ shallow: false })
+  );
+  const [wellType, setWellType] = useQueryState(
+    'wellType',
+    substanceSearchParams.wellType.withOptions({ shallow: false })
+  );
+  const [area, setArea] = useQueryState(
+    'area',
+    substanceSearchParams.area.withOptions({ shallow: false })
+  );
+  const [well, setWell] = useQueryState(
+    'well',
+    substanceSearchParams.well.withOptions({ shallow: false })
+  );
+  const [sampleType, setSampleType] = useQueryState(
+    'sampleType',
+    substanceSearchParams.sampleType.withOptions({ shallow: false })
   );
 
   const initialDateRange: DateRange | undefined =
-    queryFilters.dateFrom || queryFilters.dateTo
+    dateFrom || dateTo
       ? {
-          from: queryFilters.dateFrom
-            ? parseISO(queryFilters.dateFrom)
-            : undefined,
-          to: queryFilters.dateTo ? parseISO(queryFilters.dateTo) : undefined
+          from: dateFrom ? parseISO(dateFrom) : undefined,
+          to: dateTo ? parseISO(dateTo) : undefined
         }
       : {
-          from: parseISO('2019-01-01'),
+          from: parseISO(SUBSTANCE_DEFAULTS.dateFrom),
           to: new Date()
         };
 
   const [localFilters, setLocalFilters] = useState<LocalFilters>({
     dateRange: initialDateRange,
-    substance: queryFilters.substance,
-    wellType: queryFilters.wellType,
-    area: queryFilters.area,
-    well: queryFilters.well,
-    sampleType: queryFilters.sampleType
+    substance,
+    wellType: wellType ?? null,
+    area,
+    well,
+    sampleType
   });
 
   const { data: areas = [], isLoading: isLoadingAreas } = useQuery({
@@ -105,16 +120,16 @@ export function SubstanceFilters() {
     }));
   }
 
-  function handleSearch() {
-    setQueryFilters({
-      dateFrom: localFilters.dateRange?.from?.toISOString() || null,
-      dateTo: localFilters.dateRange?.to?.toISOString() || null,
-      substance: localFilters.substance,
-      wellType: localFilters.wellType as (typeof wellTypes)[number],
-      area: localFilters.area,
-      well: localFilters.well,
-      sampleType: localFilters.sampleType as (typeof sampleTypes)[number]
-    });
+  async function handleSearch() {
+    await Promise.all([
+      setDateFrom(localFilters.dateRange?.from?.toISOString() || null),
+      setDateTo(localFilters.dateRange?.to?.toISOString() || null),
+      setSubstance(localFilters.substance),
+      setWellType(localFilters.wellType || null),
+      setArea(localFilters.area),
+      setWell(localFilters.well),
+      setSampleType(localFilters.sampleType)
+    ]);
   }
 
   return (
@@ -145,9 +160,12 @@ export function SubstanceFilters() {
 
       {/* Well Type */}
       <Select
-        value={localFilters.wellType}
+        value={localFilters.wellType || 'all'}
         onValueChange={(value) =>
-          setLocalFilters((prev) => ({ ...prev, wellType: value }))
+          setLocalFilters((prev) => ({
+            ...prev,
+            wellType: value === 'all' ? null : (value as WellType)
+          }))
         }
       >
         <SelectTrigger>
@@ -192,7 +210,10 @@ export function SubstanceFilters() {
       <Select
         value={localFilters.sampleType}
         onValueChange={(value) =>
-          setLocalFilters((prev) => ({ ...prev, sampleType: value }))
+          setLocalFilters((prev) => ({
+            ...prev,
+            sampleType: value as SampleType
+          }))
         }
       >
         <SelectTrigger>

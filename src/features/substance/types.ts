@@ -1,4 +1,19 @@
-import type { DateRange } from 'react-day-picker';
+export enum WellType {
+  MONITORING = 'WELL',
+  PUMP = 'PUMP'
+}
+
+export enum SampleType {
+  WATER = 'Agua',
+  SOIL = 'Suelo'
+}
+
+export const SUBSTANCE_DEFAULTS = {
+  substance: '56-23-5',
+  sampleType: SampleType.WATER,
+  dateFrom: '2019-01-01',
+  wellType: WellType.MONITORING
+} as const;
 
 export interface Substance {
   id_sustancia: string;
@@ -27,9 +42,6 @@ export interface Area {
   value: string; // area from pozos table
   label: string; // area from pozos table
 }
-
-export type WellType = 'all' | 'monitoring' | 'pump';
-export type SampleType = 'water' | 'soil';
 
 export interface GeneralMetrics {
   samples: number;

@@ -1,13 +1,5 @@
-import { z } from 'zod';
+import { baseMetricsFiltersSchema } from './shared-schemas';
 
-export const getMonthlyMetricsSchema = z.object({
-  dateFrom: z.string().optional(),
-  dateTo: z.string().optional(),
-  substance: z.string().optional(),
-  wellType: z.enum(['all', 'monitoring', 'pump']).default('all'),
-  area: z.string().optional(),
-  well: z.string().optional(),
-  sampleType: z.enum(['water', 'soil']).default('water')
-});
+export const getMonthlyMetricsSchema = baseMetricsFiltersSchema;
 
-export type GetMonthlyMetricsInput = z.infer<typeof getMonthlyMetricsSchema>;
+export type { BaseMetricsFilters as GetMonthlyMetricsInput } from './shared-schemas';

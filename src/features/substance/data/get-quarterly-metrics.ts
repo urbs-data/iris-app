@@ -12,7 +12,7 @@ interface QuarterlyMetricsResult {
 export const getQuarterlyMetrics = authOrganizationActionClient
   .metadata({ actionName: 'getQuarterlyMetrics' })
   .inputSchema(getQuarterlyMetricsSchema)
-  .action(async ({ parsedInput }): Promise<QuarterlyMetricsResult> => {
+  .action(async (): Promise<QuarterlyMetricsResult> => {
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 700));
 

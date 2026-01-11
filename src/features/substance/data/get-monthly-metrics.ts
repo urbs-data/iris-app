@@ -28,14 +28,8 @@ export const getMonthlyMetrics = authOrganizationActionClient
   .metadata({ actionName: 'getMonthlyMetrics' })
   .inputSchema(getMonthlyMetricsSchema)
   .action(async ({ parsedInput, ctx }): Promise<MonthlyMetricsResult> => {
-    let tipoPozo: string | null = null;
-    if (parsedInput.wellType === 'monitoring') {
-      tipoPozo = 'WELL';
-    } else if (parsedInput.wellType === 'pump') {
-      tipoPozo = 'PUMP';
-    }
-
-    const tipoMuestra = parsedInput.sampleType === 'water' ? 'Agua' : 'Suelo';
+    const tipoPozo = parsedInput.wellType ?? null;
+    const tipoMuestra = parsedInput.sampleType;
 
     const query = sql`
       WITH raw_muestras AS (
