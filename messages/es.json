@@ -393,6 +393,20 @@
             }
         }
     },
+    "substance": {
+        "title": "Análisis de Sustancias",
+        "dateRange": "Rango de fechas",
+        "substance": "Sustancia",
+        "searchSubstance": "Buscar sustancia...",
+        "noSubstanceFound": "No se encontró la sustancia",
+        "wellType": "Tipo de Pozo",
+        "area": "Área",
+        "well": "Pozo",
+        "searchWell": "Buscar pozo...",
+        "noWellFound": "No se encontró el pozo",
+        "sampleType": "Tipo de Muestra",
+        "search": "Buscar"
+    },
     "auth": {
         "login": {
             "title": "Iniciar sesión",

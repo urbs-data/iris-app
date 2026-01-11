@@ -391,6 +391,20 @@
             }
         }
     },
+    "substance": {
+        "title": "Substance Analysis",
+        "dateRange": "Date range",
+        "substance": "Substance",
+        "searchSubstance": "Search substance...",
+        "noSubstanceFound": "Substance not found",
+        "wellType": "Well Type",
+        "area": "Area",
+        "well": "Well",
+        "searchWell": "Search well...",
+        "noWellFound": "Well not found",
+        "sampleType": "Sample Type",
+        "search": "Search"
+    },
     "auth": {
         "login": {
             "title": "Login",

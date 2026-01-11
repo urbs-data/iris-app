@@ -42,6 +42,14 @@ export const navItems: NavItem[] = [
     group: 'group.main'
   },
   {
+    title: 'analyze_concentration',
+    url: '/dashboard/substance',
+    icon: 'analyze',
+    shortcut: ['a', 'c'],
+    items: [],
+    group: 'group.main'
+  },
+  {
     title: 'search',
     url: '/dashboard/search',
     icon: 'dashboard',
