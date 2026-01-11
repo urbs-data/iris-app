@@ -37,16 +37,13 @@ export const navItems: NavItem[] = [
     title: 'Dashboard',
     url: '/dashboard/overview',
     icon: 'dashboard',
-    isActive: false,
     shortcut: ['d', 'd'],
     items: []
   },
   {
-    title: 'Product',
-    url: '/dashboard/product',
-    icon: 'product',
-    shortcut: ['p', 'p'],
-    isActive: false,
+    title: 'Search',
+    url: '/dashboard/search',
+    icon: 'dashboard',
     items: []
   },
   {
@@ -54,14 +51,12 @@ export const navItems: NavItem[] = [
     url: '/dashboard/explorer',
     icon: 'explorer',
     shortcut: ['e', 'e'],
-    isActive: false,
     items: []
   },
   {
     title: 'Profile',
     url: '/dashboard/profile',
     icon: 'account',
-    isActive: false,
     items: []
   }
 ];

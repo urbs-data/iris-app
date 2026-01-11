@@ -117,3 +117,63 @@ export const PROJECTS: Project[] = [
     clerkOrgId: 'org_XXXXX3'
   }
 ];
+
+export const YEARS = Array.from(
+  { length: new Date().getFullYear() - 1995 },
+  (_, i) => {
+    const year = (new Date().getFullYear() - i).toString();
+    return { value: year, label: year };
+  }
+);
+
+// Document search file types
+export const FILE_TYPES = [
+  { value: 'excels', label: 'excels' },
+  { value: 'documents', label: 'documents' },
+  { value: 'others', label: 'others' }
+] as const;
+
+// Document classifications for search
+export const CLASSIFICATIONS = [
+  { value: 'Muestras', label: 'Muestras' },
+  { value: 'Procesos de remediacion', label: 'Procesos de remediacion' },
+  { value: 'Reportes de monitoreo', label: 'Reportes de monitoreo' },
+  { value: 'Memorandum tecnicos', label: 'Memorandum tecnicos' },
+  { value: 'Reportes tecnicos', label: 'Reportes tecnicos' },
+  { value: 'Reportes a las autoridades', label: 'Reportes a las autoridades' },
+  { value: 'Estudios complementarios', label: 'Estudios complementarios' },
+  { value: 'Estudios hidrogeologicos', label: 'Estudios hidrogeologicos' },
+  { value: 'Informes de avance', label: 'Informes de avance' },
+  { value: 'Pozos', label: 'Pozos' },
+  { value: 'Sustancias', label: 'Sustancias' },
+  { value: 'Otros', label: 'Otros' }
+] as const;
+
+// Subclassifications mapped by classification
+export const SUBCLASSIFICATIONS_MAP: Record<
+  string,
+  { value: string; label: string }[]
+> = {
+  Muestras: [
+    { value: 'Cadenas de custodia', label: 'Cadenas de custodia' },
+    { value: 'Muestras de suelo', label: 'Muestras de suelo' },
+    { value: 'Muestras de agua', label: 'Muestras de agua' },
+    { value: 'CoC de agua', label: 'CoC de agua' },
+    { value: 'CoC de suelo', label: 'CoC de suelo' }
+  ],
+  'Procesos de remediacion': [
+    { value: 'Reportes diarios', label: 'Reportes diarios' },
+    { value: 'Inyección', label: 'Inyección' },
+    { value: 'Otros', label: 'Otros' }
+  ],
+  'Reportes de monitoreo': [{ value: 'Otros', label: 'Otros' }],
+  'Memorandum tecnicos': [{ value: 'Otros', label: 'Otros' }],
+  'Reportes tecnicos': [{ value: 'Otros', label: 'Otros' }],
+  'Reportes a las autoridades': [{ value: 'Otros', label: 'Otros' }],
+  'Estudios complementarios': [{ value: 'Otros', label: 'Otros' }],
+  'Estudios hidrogeologicos': [{ value: 'Otros', label: 'Otros' }],
+  'Informes de avance': [{ value: 'Otros', label: 'Otros' }],
+  Pozos: [{ value: 'Otros', label: 'Otros' }],
+  Sustancias: [{ value: 'Otros', label: 'Otros' }],
+  Otros: [{ value: 'Otros', label: 'Otros' }]
+};

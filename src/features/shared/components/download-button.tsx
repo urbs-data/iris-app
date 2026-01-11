@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { getSasUri } from '../actions/get-sas-uri';
 
 interface DownloadButtonProps {
-  blobPath: string;
+  blobPath?: string;
   page?: number;
 }
 
@@ -20,6 +20,11 @@ export function DownloadButton({ blobPath, page }: DownloadButtonProps) {
   async function handleDownload() {
     setIsLoading(true);
     try {
+      // Otherwise, get SAS URI for blobPath
+      if (!blobPath) {
+        throw new Error('No blobPath or storageUrl provided');
+      }
+
       const result = await getSasUri({ blobPath });
 
       if (!result?.data?.sasUri) {

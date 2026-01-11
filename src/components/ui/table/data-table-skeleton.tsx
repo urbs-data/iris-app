@@ -14,6 +14,7 @@ interface DataTableSkeletonProps extends React.ComponentProps<'div'> {
   rowCount?: number;
   filterCount?: number;
   cellWidths?: string[];
+  withToolbar?: boolean;
   withViewOptions?: boolean;
   withPagination?: boolean;
   shrinkZero?: boolean;
@@ -24,6 +25,7 @@ export function DataTableSkeleton({
   rowCount = 10,
   filterCount = 0,
   cellWidths = ['auto'],
+  withToolbar = true,
   withViewOptions = true,
   withPagination = true,
   shrinkZero = false,
@@ -37,18 +39,20 @@ export function DataTableSkeleton({
 
   return (
     <div className={cn('flex flex-1 flex-col space-y-4', className)} {...props}>
-      <div className='flex w-full items-center justify-between gap-2 overflow-auto p-1'>
-        <div className='flex flex-1 items-center gap-2'>
-          {filterCount > 0
-            ? Array.from({ length: filterCount }).map((_, i) => (
-                <Skeleton key={i} className='h-7 w-[4.5rem] border-dashed' />
-              ))
-            : null}
+      {withToolbar ? (
+        <div className='flex w-full items-center justify-between gap-2 overflow-auto p-1'>
+          <div className='flex flex-1 items-center gap-2'>
+            {filterCount > 0
+              ? Array.from({ length: filterCount }).map((_, i) => (
+                  <Skeleton key={i} className='h-7 w-[4.5rem] border-dashed' />
+                ))
+              : null}
+          </div>
+          {withViewOptions ? (
+            <Skeleton className='ml-auto hidden h-7 w-[4.5rem] lg:flex' />
+          ) : null}
         </div>
-        {withViewOptions ? (
-          <Skeleton className='ml-auto hidden h-7 w-[4.5rem] lg:flex' />
-        ) : null}
-      </div>
+      ) : null}
 
       <div className='flex-1 rounded-md border'>
         <Table>
