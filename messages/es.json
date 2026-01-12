@@ -54,6 +54,7 @@
         "home": "Inicio",
         "dashboard": "Dashboard",
         "analyze": "Analizar",
+        "general_dashboard": "Dashboard General",
         "analyze_concentration": "Análisis de concentraciones",
         "search": "Buscador",
         "explorer": "Explorador",
@@ -230,6 +231,22 @@
     "substances": {
         "carbonTetrachloride": "Tetracloruro de Carbono",
         "chloroform": "Cloroformo"
+    },
+    "general": {
+        "title": "Dashboard General",
+        "chloroform": "Cloroformo",
+        "carbonTetrachloride": "Tetracloruro de Carbono",
+        "chloroformConcentration": "Cloroformo - Concentración promedio",
+        "carbonTetrachlorideConcentration": "Tetracloruro de Carbono - Concentración promedio"
+    },
+    "errors": {
+        "somethingWentWrong": "Algo salió mal",
+        "substanceDashboardError": "Error al cargar el tablero de sustancias.",
+        "tryAgain": "Intentar de nuevo",
+        "kpisError": "Error al cargar los KPIs. Intente nuevamente.",
+        "lineChartError": "Error al cargar el gráfico. Intente nuevamente.",
+        "boxplotError": "Error al cargar el gráfico. Intente nuevamente.",
+        "mapError": "Error al cargar el mapa. Intente nuevamente."
     },
     "components": {
         "combobox": {
@@ -408,6 +425,7 @@
         "searchArea": "Buscar área...",
         "noAreaFound": "No se encontró el área",
         "well": "Pozo",
+        "wells": "Pozos",
         "searchWell": "Buscar pozo...",
         "noWellFound": "No se encontró el pozo",
         "sampleType": "Tipo de Muestra",

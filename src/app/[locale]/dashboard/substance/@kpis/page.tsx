@@ -8,19 +8,23 @@ import { resolveActionResult } from '@/lib/actions/client';
 import { SearchParams } from 'nuqs/server';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getTranslations } from 'next-intl/server';
 
 interface PageProps {
   searchParams: Promise<SearchParams>;
 }
 
 async function KpisContent() {
+  const t = await getTranslations('dashboard.kpi');
   const dateFrom = substanceSearchParamsCache.get('dateFrom');
   const dateTo = substanceSearchParamsCache.get('dateTo');
   const substance = substanceSearchParamsCache.get('substance');
   const wellType = substanceSearchParamsCache.get('wellType');
   const area = substanceSearchParamsCache.get('area');
-  const well = substanceSearchParamsCache.get('well');
+  const wells = substanceSearchParamsCache.get('wells');
   const sampleType = substanceSearchParamsCache.get('sampleType');
+
+  const wellsArray = wells ? wells.split(',').filter(Boolean) : undefined;
 
   const filters = {
     ...(dateFrom && { dateFrom }),
@@ -28,30 +32,46 @@ async function KpisContent() {
     ...(substance && { substance }),
     ...(wellType && { wellType }),
     ...(area && { area }),
-    ...(well && { well }),
+    ...(wellsArray && { wells: wellsArray }),
     sampleType
   };
 
   const metrics = await resolveActionResult(getGeneralMetrics(filters));
 
   const mainKpis = [
-    { label: 'Muestras', value: metrics.samples },
-    { label: 'Promedio', value: metrics.average.toFixed(1), unit: 'µg/l' },
-    { label: 'Mediana', value: metrics.median.toFixed(2), unit: 'µg/l' },
-    { label: 'Mínimo', value: metrics.min.toFixed(2), unit: 'µg/l' },
-    { label: 'Máximo', value: metrics.max.toFixed(2), unit: 'µg/l' },
-    { label: 'Desvío', value: metrics.stdDev.toFixed(2), unit: 'µg/l' }
+    { label: t('sampleCount'), value: metrics.samples },
+    {
+      label: t('average'),
+      value: metrics.average.toFixed(1),
+      unit: metrics.unit
+    },
+    {
+      label: t('median'),
+      value: metrics.median.toFixed(2),
+      unit: metrics.unit
+    },
+    { label: t('minimum'), value: metrics.min.toFixed(2), unit: metrics.unit },
+    { label: t('maximum'), value: metrics.max.toFixed(2), unit: metrics.unit },
+    {
+      label: t('standardDeviation'),
+      value: metrics.stdDev.toFixed(2),
+      unit: metrics.unit
+    }
   ];
 
   const guideKpis = [
-    { label: 'Nivel Guía', value: metrics.guideLevel, unit: 'µg/l' },
     {
-      label: '% vs Guía',
+      label: t('guidelineLevel'),
+      value: metrics.guideLevel,
+      unit: metrics.unit
+    },
+    {
+      label: t('percentageToGuideline'),
       value: `${metrics.vsGuidePercent.toFixed(2)} %`,
       className: metrics.vsGuidePercent > 100 ? 'text-destructive' : ''
     },
     {
-      label: '% vs Máx',
+      label: t('percentageToMaximum'),
       value: `${metrics.vsMaxPercent.toFixed(2)} %`,
       className: metrics.vsMaxPercent < 0 ? 'text-green-600' : ''
     }

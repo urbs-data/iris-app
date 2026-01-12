@@ -18,11 +18,13 @@ interface KpiCardProps {
 
 export function KpiCard({ items, className }: KpiCardProps) {
   return (
-    <Card className={cn('flex flex-row items-center divide-x', className)}>
+    <Card
+      className={cn('flex flex-row items-center gap-0 divide-x', className)}
+    >
       {items.map((item, index) => (
         <div
           key={index}
-          className='flex flex-1 flex-col items-center justify-center px-2 py-3 text-center'
+          className='flex flex-1 flex-col items-center justify-center px-2 text-center'
         >
           <span className='text-muted-foreground text-xs font-medium'>
             {item.label}

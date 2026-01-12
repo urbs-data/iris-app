@@ -55,6 +55,7 @@ export interface GeneralMetrics {
   vsMaxPercent: number;
   lastMonthlyAverage?: number;
   maxMonthlyAverage?: number;
+  unit: string;
 }
 
 export interface MonthlyConcentration {
@@ -70,6 +71,7 @@ export interface QuarterlyStats {
   q3: number;
   max: number;
   mean: number;
+  unit: string;
 }
 
 export interface WellMetrics {
@@ -87,7 +89,9 @@ export interface WellMetrics {
   median: number; // mediana_concentracion
 }
 
-export interface MapMetricsResult {
+export interface WellMetricsResult {
   data: WellMetrics[];
   guideLevel: number;
 }
+
+export type MapMetricsResult = WellMetricsResult;

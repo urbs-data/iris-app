@@ -22,6 +22,7 @@ import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { InfoButton } from '@/components/ui/info-button';
 import { InfobarContent } from '../ui/infobar';
+import { useTranslations } from 'next-intl';
 
 interface BoxplotDataPoint {
   period: string;
@@ -31,6 +32,7 @@ interface BoxplotDataPoint {
   q3: number;
   max: number;
   mean?: number;
+  unit: string;
 }
 
 interface ReferenceLineConfig {
@@ -119,6 +121,9 @@ export function BoxplotChart({
   className,
   yAxisLabel
 }: BoxplotChartProps) {
+  const t = useTranslations('dashboard.boxplot');
+  const tKpi = useTranslations('dashboard.kpi');
+
   // Transform data for the boxplot visualization with proper stacking
   const transformedData: TransformedBoxplotData[] = React.useMemo(
     () =>
@@ -153,11 +158,11 @@ export function BoxplotChart({
           <div className='text-muted-foreground flex flex-wrap items-center gap-4 text-xs'>
             <div className='flex items-center gap-1'>
               <div className='bg-primary h-3 w-4' />
-              <span>Rango intercuartil</span>
+              <span>{t('interquartileRange')}</span>
             </div>
             <div className='flex items-center gap-1'>
               <div className='bg-foreground h-2 w-2 rounded-full' />
-              <span>Promedio</span>
+              <span>{t('average')}</span>
             </div>
             {referenceLines.map((ref, index) => (
               <div key={index} className='flex items-center gap-1'>
@@ -223,14 +228,28 @@ export function BoxplotChart({
                     <div className='bg-background rounded-lg border p-2 shadow-sm'>
                       <p className='text-sm font-medium'>{data.period}</p>
                       <div className='mt-1 space-y-1 text-sm'>
-                        <p>Mín: {data.min?.toFixed(2)}</p>
-                        <p>Q1: {data.q1?.toFixed(2)}</p>
-                        <p>Mediana: {data.median?.toFixed(2)}</p>
+                        <p>
+                          {tKpi('minimum')}: {data.min?.toFixed(2)} {data.unit}
+                        </p>
+                        <p>
+                          Q1: {data.q1?.toFixed(2)} {data.unit}
+                        </p>
+                        <p>
+                          {tKpi('median')}: {data.median?.toFixed(2)}{' '}
+                          {data.unit}
+                        </p>
                         {data.mean != null && (
-                          <p>Promedio: {data.mean?.toFixed(2)}</p>
+                          <p>
+                            {tKpi('average')}: {data.mean?.toFixed(2)}{' '}
+                            {data.unit}
+                          </p>
                         )}
-                        <p>Q3: {data.q3?.toFixed(2)}</p>
-                        <p>Máx: {data.max?.toFixed(2)}</p>
+                        <p>
+                          Q3: {data.q3?.toFixed(2)} {data.unit}
+                        </p>
+                        <p>
+                          {tKpi('maximum')}: {data.max?.toFixed(2)} {data.unit}
+                        </p>
                       </div>
                     </div>
                   );

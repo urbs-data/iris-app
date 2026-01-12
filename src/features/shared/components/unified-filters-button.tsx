@@ -12,14 +12,24 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
-import { SubstanceFilters } from './substance-filters';
-import { substanceSearchParams } from '../searchparams';
+import { UnifiedFilters } from './unified-filters';
 import { useActiveFiltersCount } from '@/hooks/use-active-filters-count';
+import { baseSearchParams } from '../searchparams';
+import { substanceSearchParams } from '@/features/substance/searchparams';
 
-export function SubstanceFiltersButton() {
+interface UnifiedFiltersButtonProps {
+  showSubstanceFilter?: boolean;
+}
+
+export function UnifiedFiltersButton({
+  showSubstanceFilter = false
+}: UnifiedFiltersButtonProps) {
   const t = useTranslations('substance');
   const [open, setOpen] = useState(false);
-  const activeFiltersCount = useActiveFiltersCount(substanceSearchParams);
+  const searchParams = showSubstanceFilter
+    ? substanceSearchParams
+    : baseSearchParams;
+  const activeFiltersCount = useActiveFiltersCount(searchParams);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -39,7 +49,7 @@ export function SubstanceFiltersButton() {
           <SheetTitle>{t('filters')}</SheetTitle>
         </SheetHeader>
         <div>
-          <SubstanceFilters />
+          <UnifiedFilters useSubstanceParams={showSubstanceFilter} />
         </div>
       </SheetContent>
     </Sheet>

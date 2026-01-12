@@ -8,6 +8,7 @@ import { sql } from 'drizzle-orm';
 interface QuarterlyMetricsResult {
   data: QuarterlyStats[];
   guideLevel: number;
+  unit: string | null;
 }
 
 interface QueryRow extends Record<string, unknown> {
@@ -29,6 +30,10 @@ export const getQuarterlyMetrics = authOrganizationActionClient
   .action(async ({ parsedInput, ctx }): Promise<QuarterlyMetricsResult> => {
     const tipoPozo = parsedInput.wellType ?? null;
     const tipoMuestra = parsedInput.sampleType;
+    const wells =
+      parsedInput.wells && parsedInput.wells.length > 0
+        ? parsedInput.wells.map((w) => w.toLowerCase())
+        : null;
 
     const query = sql`
       WITH raw_muestras AS (
@@ -49,7 +54,7 @@ export const getQuarterlyMetrics = authOrganizationActionClient
         WHERE tipo IN ('WELL', 'PUMP')
           ${parsedInput.area ? sql`AND area = ${parsedInput.area}` : sql``}
           ${tipoPozo ? sql`AND tipo = ${tipoPozo}` : sql``}
-          ${parsedInput.well ? sql`AND LOWER(id_pozo) = LOWER(${parsedInput.well})` : sql``}
+          ${wells ? sql`AND LOWER(id_pozo) IN ${sql.raw(`(${wells.map((w) => `'${w}'`).join(',')})`)}` : sql``}
       ),
       raw_estudios_pozos AS (
         SELECT *
@@ -63,7 +68,10 @@ export const getQuarterlyMetrics = authOrganizationActionClient
         SELECT 
           EXTRACT(YEAR FROM m.fecha)::text AS anio,
           c.unidad,
-          s.nivel_guia,
+          CASE 
+            WHEN ${tipoMuestra} = 'Suelo' THEN s.nivel_guia_suelo
+            ELSE s.nivel_guia
+          END AS nivel_guia,
           COALESCE(
             c.concentracion,
             CASE 
@@ -128,11 +136,16 @@ export const getQuarterlyMetrics = authOrganizationActionClient
       median: row.mediana_concentracion,
       q3: row.q3_concentracion,
       max: row.maximo_concentracion,
-      mean: row.promedio_concentracion
+      mean: row.promedio_concentracion,
+      unit: row.unidad!
     }));
+
+    const unit =
+      results.rows.length > 0 ? (results.rows[0].unidad ?? null) : null;
 
     return {
       data,
-      guideLevel
+      guideLevel,
+      unit
     };
   });

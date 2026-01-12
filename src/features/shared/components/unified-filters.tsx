@@ -2,29 +2,33 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useQueryState } from 'nuqs';
+import { useQueryState, parseAsString, parseAsStringEnum } from 'nuqs';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Combobox } from '@/components/ui/combobox';
+import { MultiSelect } from '@/components/ui/multi-select';
 import type { DateRange } from 'react-day-picker';
 import { X, Search } from 'lucide-react';
-import { getSubstances } from '../data/get-substances';
-import { getWells } from '../data/get-wells';
-import { getAreas } from '../data/get-areas';
-import { WellType, SampleType, SUBSTANCE_DEFAULTS } from '../types';
-import { substanceSearchParams } from '../searchparams';
+import { getWells } from '@/features/substance/data/get-wells';
+import { getAreas } from '@/features/substance/data/get-areas';
+import { getSubstances } from '@/features/substance/data/get-substances';
+import {
+  WellType,
+  SampleType,
+  SUBSTANCE_DEFAULTS
+} from '@/features/substance/types';
 import { resolveActionResult } from '@/lib/actions/client';
 import { parseISO } from 'date-fns';
 import { useTransitionContext } from '@/hooks/use-transition-context';
 
 interface LocalFilters {
   dateRange: DateRange | undefined;
-  substance: string | null;
+  substance?: string | null;
   wellType: WellType | null;
   area: string | null;
-  well: string | null;
+  wells: string[];
   sampleType: SampleType;
 }
 
@@ -39,49 +43,58 @@ const SAMPLE_TYPE_OPTIONS = [
   { value: SampleType.SOIL, label: 'Suelo' }
 ];
 
-export function SubstanceFilters() {
+interface UnifiedFiltersProps {
+  useSubstanceParams?: boolean;
+}
+
+export function UnifiedFilters({
+  useSubstanceParams = false
+}: UnifiedFiltersProps) {
   const t = useTranslations('substance');
   const { startTransition, isLoading } = useTransitionContext();
+  const showSubstanceFilter = useSubstanceParams;
 
   const [dateFrom, setDateFrom] = useQueryState(
     'dateFrom',
-    substanceSearchParams.dateFrom.withOptions({
+    parseAsString.withOptions({
       shallow: false,
       startTransition
     })
   );
   const [dateTo, setDateTo] = useQueryState(
     'dateTo',
-    substanceSearchParams.dateTo.withOptions({
+    parseAsString.withOptions({
       shallow: false,
       startTransition
     })
   );
+
   const [substance, setSubstance] = useQueryState(
     'substance',
-    substanceSearchParams.substance.withOptions({
+    parseAsString.withOptions({
       shallow: false,
       startTransition
     })
   );
+
   const [wellType, setWellType] = useQueryState(
     'wellType',
-    substanceSearchParams.wellType.withOptions({
+    parseAsStringEnum<WellType>(Object.values(WellType)).withOptions({
       shallow: false,
       startTransition
     })
   );
   const [area, setArea] = useQueryState(
     'area',
-    substanceSearchParams.area.withOptions({ shallow: false, startTransition })
+    parseAsString.withOptions({ shallow: false, startTransition })
   );
-  const [well, setWell] = useQueryState(
-    'well',
-    substanceSearchParams.well.withOptions({ shallow: false, startTransition })
+  const [wells, setWells] = useQueryState(
+    'wells',
+    parseAsString.withOptions({ shallow: false, startTransition })
   );
   const [sampleType, setSampleType] = useQueryState(
     'sampleType',
-    substanceSearchParams.sampleType.withOptions({
+    parseAsStringEnum<SampleType>(Object.values(SampleType)).withOptions({
       shallow: false,
       startTransition
     })
@@ -100,11 +113,11 @@ export function SubstanceFilters() {
 
   const [localFilters, setLocalFilters] = useState<LocalFilters>({
     dateRange: initialDateRange,
-    substance,
+    ...(showSubstanceFilter && { substance }),
     wellType: wellType ?? null,
     area,
-    well,
-    sampleType
+    wells: wells ? wells.split(',') : [],
+    sampleType: sampleType ?? SampleType.WATER
   });
 
   const { data: areas = [], isLoading: isLoadingAreas } = useQuery({
@@ -112,7 +125,7 @@ export function SubstanceFilters() {
     queryFn: () => resolveActionResult(getAreas())
   });
 
-  const { data: wells = [], isLoading: isLoadingWells } = useQuery({
+  const { data: wellsData = [], isLoading: isLoadingWells } = useQuery({
     queryKey: ['wells', localFilters.area],
     queryFn: () =>
       resolveActionResult(getWells({ area: localFilters.area || undefined }))
@@ -120,19 +133,27 @@ export function SubstanceFilters() {
 
   const { data: substances = [], isLoading: isLoadingSubstances } = useQuery({
     queryKey: ['substances'],
-    queryFn: () => resolveActionResult(getSubstances())
+    queryFn: () => resolveActionResult(getSubstances()),
+    enabled: showSubstanceFilter
   });
 
   async function handleSearch() {
-    await Promise.all([
+    const updates = [
       setDateFrom(localFilters.dateRange?.from?.toISOString() || null),
       setDateTo(localFilters.dateRange?.to?.toISOString() || null),
-      setSubstance(localFilters.substance),
       setWellType(localFilters.wellType || null),
       setArea(localFilters.area),
-      setWell(localFilters.well),
+      setWells(
+        localFilters.wells.length > 0 ? localFilters.wells.join(',') : null
+      ),
       setSampleType(localFilters.sampleType)
-    ]);
+    ];
+
+    if (showSubstanceFilter) {
+      updates.push(setSubstance(localFilters.substance || null));
+    }
+
+    await Promise.all(updates);
   }
 
   const handleResetFilters = (): void => {
@@ -143,24 +164,32 @@ export function SubstanceFilters() {
 
     setLocalFilters({
       dateRange: defaultDateRange,
-      substance: null,
+      ...(showSubstanceFilter && { substance: null }),
       wellType: null,
       area: null,
-      well: null,
+      wells: [],
       sampleType: SampleType.WATER
     });
 
     setDateFrom(null);
     setDateTo(null);
-    setSubstance(null);
+    if (showSubstanceFilter) {
+      setSubstance(null);
+    }
     setWellType(null);
     setArea(null);
-    setWell(null);
+    setWells(null);
     setSampleType(null);
   };
 
   const hasActiveFilters =
-    dateFrom || dateTo || substance || wellType || area || well || sampleType;
+    dateFrom ||
+    dateTo ||
+    (showSubstanceFilter && substance) ||
+    wellType ||
+    area ||
+    wells ||
+    sampleType;
 
   return (
     <div className='space-y-4'>
@@ -176,21 +205,23 @@ export function SubstanceFilters() {
         />
       </div>
 
-      <div className='space-y-2'>
-        <Label className='text-sm font-medium'>{t('substance')}</Label>
-        <Combobox
-          value={localFilters.substance}
-          onValueChange={(value) =>
-            setLocalFilters((prev) => ({ ...prev, substance: value }))
-          }
-          options={substances}
-          isLoading={isLoadingSubstances}
-          placeholder={t('substance')}
-          searchPlaceholder={t('searchSubstance')}
-          emptyMessage={t('noSubstanceFound')}
-          className='h-9'
-        />
-      </div>
+      {showSubstanceFilter && (
+        <div className='space-y-2'>
+          <Label className='text-sm font-medium'>{t('substance')}</Label>
+          <Combobox
+            value={localFilters.substance || null}
+            onValueChange={(value) =>
+              setLocalFilters((prev) => ({ ...prev, substance: value }))
+            }
+            options={substances}
+            isLoading={isLoadingSubstances}
+            placeholder={t('substance')}
+            searchPlaceholder={t('searchSubstance')}
+            emptyMessage={t('noSubstanceFound')}
+            className='h-9'
+          />
+        </div>
+      )}
 
       <div className='space-y-2'>
         <Label className='text-sm font-medium'>{t('wellType')}</Label>
@@ -221,7 +252,7 @@ export function SubstanceFilters() {
             setLocalFilters((prev) => ({
               ...prev,
               area: value === 'all' ? null : value,
-              well: null
+              wells: []
             }))
           }
           options={areas.map((a) => ({ value: a.value, label: a.label }))}
@@ -234,14 +265,14 @@ export function SubstanceFilters() {
       </div>
 
       <div className='space-y-2'>
-        <Label className='text-sm font-medium'>{t('well')}</Label>
-        <Combobox
-          value={localFilters.well}
-          onValueChange={(value) =>
-            setLocalFilters((prev) => ({ ...prev, well: value }))
+        <Label className='text-sm font-medium'>{t('wells')}</Label>
+        <MultiSelect
+          values={localFilters.wells}
+          onValuesChange={(values) =>
+            setLocalFilters((prev) => ({ ...prev, wells: values }))
           }
-          options={wells.map((w) => ({ value: w.value, label: w.label }))}
-          placeholder={t('well')}
+          options={wellsData.map((w) => ({ value: w.value, label: w.label }))}
+          placeholder={t('wells')}
           searchPlaceholder={t('searchWell')}
           emptyMessage={t('noWellFound')}
           isLoading={isLoadingWells}

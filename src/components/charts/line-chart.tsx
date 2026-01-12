@@ -75,7 +75,7 @@ export function LineChart({
 
   const defaultFormatXAxis = (value: number) => {
     const date = new Date(value);
-    return date.toLocaleDateString('es-AR', {
+    return date.toLocaleDateString(locale, {
       month: 'short',
       year: '2-digit'
     });
@@ -99,7 +99,7 @@ export function LineChart({
           <div className='text-muted-foreground flex items-center gap-4 text-xs'>
             <div className='flex items-center gap-1'>
               <div className='bg-primary h-0.5 w-4' />
-              <span>Concentración</span>
+              <span>{tooltipLabel}</span>
             </div>
             {referenceLines.map((ref, index) => (
               <div key={index} className='flex items-center gap-1'>

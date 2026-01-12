@@ -1,8 +1,8 @@
 'use server';
 
 import { authOrganizationActionClient } from '@/lib/actions/safe-action';
-import { getMapMetricsSchema } from './get-map-metrics-schema';
-import type { WellMetrics, MapMetricsResult } from '../types';
+import { getWellMetricsSchema } from './get-well-metrics-schema';
+import type { WellMetrics, WellMetricsResult } from '../types';
 import { sql } from 'drizzle-orm';
 
 interface QueryRow extends Record<string, unknown> {
@@ -21,12 +21,16 @@ interface QueryRow extends Record<string, unknown> {
   mediana_concentracion: number;
 }
 
-export const getMapMetrics = authOrganizationActionClient
-  .metadata({ actionName: 'getMapMetrics' })
-  .inputSchema(getMapMetricsSchema)
-  .action(async ({ parsedInput, ctx }): Promise<MapMetricsResult> => {
+export const getWellMetrics = authOrganizationActionClient
+  .metadata({ actionName: 'getWellMetrics' })
+  .inputSchema(getWellMetricsSchema)
+  .action(async ({ parsedInput, ctx }): Promise<WellMetricsResult> => {
     const tipoPozo = parsedInput.wellType ?? null;
     const tipoMuestra = parsedInput.sampleType;
+    const wells =
+      parsedInput.wells && parsedInput.wells.length > 0
+        ? parsedInput.wells.map((w) => w.toLowerCase())
+        : null;
 
     const query = sql`
       WITH raw_muestras AS (
@@ -47,7 +51,7 @@ export const getMapMetrics = authOrganizationActionClient
         WHERE tipo IN ('WELL', 'PUMP')
           ${parsedInput.area ? sql`AND area = ${parsedInput.area}` : sql``}
           ${tipoPozo ? sql`AND tipo = ${tipoPozo}` : sql``}
-          ${parsedInput.well ? sql`AND LOWER(id_pozo) = LOWER(${parsedInput.well})` : sql``}
+          ${wells ? sql`AND LOWER(id_pozo) IN ${sql.raw(`(${wells.map((w) => `'${w}'`).join(',')})`)}` : sql``}
       ),
       raw_estudios_pozos AS (
         SELECT *
@@ -63,7 +67,12 @@ export const getMapMetrics = authOrganizationActionClient
           p.latitud_decimal,
           p.longitud_decimal,
           c.unidad,
-          MAX(s.nivel_guia) as nivel_guia,
+          MAX(
+            CASE 
+              WHEN ${tipoMuestra} = 'Suelo' THEN s.nivel_guia_suelo
+              ELSE s.nivel_guia
+            END
+          ) as nivel_guia,
           TO_CHAR(MIN(m.fecha), 'YYYY-MM') as primer_periodo,
           TO_CHAR(MAX(m.fecha), 'YYYY-MM') as ultimo_periodo,
           COUNT(*) AS cantidad_registros,

@@ -4,12 +4,15 @@ import {
   parseAsString,
   parseAsStringEnum
 } from 'nuqs/server';
-import { WellType, SampleType, SUBSTANCE_DEFAULTS } from './types';
+import {
+  WellType,
+  SampleType,
+  SUBSTANCE_DEFAULTS
+} from '@/features/substance/types';
 
-export const substanceSearchParams = {
+export const baseSearchParams = {
   dateFrom: parseAsString,
   dateTo: parseAsString,
-  substance: parseAsString.withDefault(SUBSTANCE_DEFAULTS.substance),
   wellType: parseAsStringEnum<WellType>(Object.values(WellType)).withDefault(
     WellType.MONITORING
   ),
@@ -20,7 +23,7 @@ export const substanceSearchParams = {
   ).withDefault(SampleType.WATER)
 };
 
-export const substanceSearchParamsCache = createSearchParamsCache(
-  substanceSearchParams
-);
-export const serializeSubstanceParams = createSerializer(substanceSearchParams);
+export const baseSearchParamsCache = createSearchParamsCache(baseSearchParams);
+export const serializeBaseParams = createSerializer(baseSearchParams);
+
+export { SUBSTANCE_DEFAULTS };

@@ -54,6 +54,7 @@
         "home": "Home",
         "dashboard": "Dashboard",
         "analyze": "Analyze",
+        "general_dashboard": "General Dashboard",
         "analyze_concentration": "Concentration Analysis",
         "search": "Search",
         "explorer": "Explorer",
@@ -228,6 +229,22 @@
     "substances": {
         "carbonTetrachloride": "Carbon tetrachloride",
         "chloroform": "Chloroform"
+    },
+    "general": {
+        "title": "General Dashboard",
+        "chloroform": "Chloroform",
+        "carbonTetrachloride": "Carbon Tetrachloride",
+        "chloroformConcentration": "Chloroform - Average concentration",
+        "carbonTetrachlorideConcentration": "Carbon Tetrachloride - Average concentration"
+    },
+    "errors": {
+        "somethingWentWrong": "Something went wrong",
+        "substanceDashboardError": "Error loading substance dashboard.",
+        "tryAgain": "Try again",
+        "kpisError": "Error loading KPIs. Please try again.",
+        "lineChartError": "Error loading chart. Please try again.",
+        "boxplotError": "Error loading chart. Please try again.",
+        "mapError": "Error loading map. Please try again."
     },
     "components": {
         "combobox": {
@@ -406,6 +423,7 @@
         "searchArea": "Search area...",
         "noAreaFound": "Area not found",
         "well": "Well",
+        "wells": "Wells",
         "searchWell": "Search well...",
         "noWellFound": "Well not found",
         "sampleType": "Sample Type",

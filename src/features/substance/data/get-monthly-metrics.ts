@@ -32,6 +32,10 @@ export const getMonthlyMetrics = authOrganizationActionClient
   .action(async ({ parsedInput, ctx }): Promise<MonthlyMetricsResult> => {
     const tipoPozo = parsedInput.wellType ?? null;
     const tipoMuestra = parsedInput.sampleType;
+    const wells =
+      parsedInput.wells && parsedInput.wells.length > 0
+        ? parsedInput.wells.map((w) => w.toLowerCase())
+        : null;
 
     const query = sql`
       WITH raw_muestras AS (
@@ -52,7 +56,7 @@ export const getMonthlyMetrics = authOrganizationActionClient
         WHERE tipo IN ('WELL', 'PUMP')
         ${parsedInput.area ? sql`AND area = ${parsedInput.area}` : sql``}
         ${tipoPozo ? sql`AND tipo = ${tipoPozo}` : sql``}
-        ${parsedInput.well ? sql`AND LOWER(id_pozo) = LOWER(${parsedInput.well})` : sql``}
+        ${wells ? sql`AND LOWER(id_pozo) IN ${sql.raw(`(${wells.map((w) => `'${w}'`).join(',')})`)}` : sql``}
       ),
       raw_estudios_pozos AS (
         SELECT *
@@ -85,7 +89,12 @@ export const getMonthlyMetrics = authOrganizationActionClient
         SELECT 
           TO_CHAR(m.fecha, 'YYYY-MM') AS periodo,
           c.unidad,
-          MAX(s.nivel_guia) AS nivel_guia,
+          MAX(
+            CASE 
+              WHEN ${tipoMuestra} = 'Suelo' THEN s.nivel_guia_suelo
+              ELSE s.nivel_guia
+            END
+          ) AS nivel_guia,
           COUNT(*) AS cantidad_registros,
           AVG(
             COALESCE(

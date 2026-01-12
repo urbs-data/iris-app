@@ -1436,10 +1436,10 @@ type GeoJSONLayersProps = {
 };
 
 const defaultColors = [
-  '#3b82f6', // blue
+  // '#3b82f6', // blue
   '#10b981', // green
   '#f59e0b', // amber
-  '#ef4444', // red
+  // '#ef4444', // red
   '#8b5cf6', // violet
   '#ec4899', // pink
   '#06b6d4', // cyan
@@ -1709,7 +1709,7 @@ function GeoJSONLayer({
             controlPosition === 'bottom-right' && 'right-16 bottom-3'
           )}
         >
-          <div className='bg-background/95 flex flex-col gap-2 rounded-md border p-3 shadow-lg backdrop-blur'>
+          <div className='bg-background/95 flex flex-col gap-1 rounded-md border p-2 shadow-lg backdrop-blur'>
             {featureInfo.features.map((feature) => {
               const isSelected = selectedFeatures.has(feature);
               const color = getFeatureColor(feature);
@@ -1720,16 +1720,16 @@ function GeoJSONLayer({
                   size='sm'
                   variant={isSelected ? 'default' : 'secondary'}
                   onClick={() => toggleFeature(feature)}
-                  className='min-w-[160px] justify-start'
+                  className='h-7 justify-start px-2 py-1 text-xs'
                 >
                   <div
-                    className='mr-2 size-3 rounded-full border border-white/20'
+                    className='mr-1 size-2 rounded-full border border-white/20'
                     style={{
                       backgroundColor: isSelected ? color : 'transparent',
                       borderColor: color
                     }}
                   />
-                  {feature}
+                  <span>{feature}</span>
                 </Button>
               );
             })}

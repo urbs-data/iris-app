@@ -1,36 +1,37 @@
 import { LineChart } from '@/components/charts';
 import { getMonthlyMetrics } from '@/features/substance/data/get-monthly-metrics';
 import {
-  substanceSearchParamsCache,
-  serializeSubstanceParams
-} from '@/features/substance/searchparams';
+  baseSearchParamsCache,
+  serializeBaseParams
+} from '@/features/shared/searchparams';
 import { resolveActionResult } from '@/lib/actions/client';
 import { SearchParams } from 'nuqs/server';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getTranslations, getLocale } from 'next-intl/server';
 
+const CLOROFORMO_SUBSTANCE_ID = '67-66-3';
+
 interface PageProps {
   searchParams: Promise<SearchParams>;
 }
 
 async function LineChartContent() {
-  const t = await getTranslations('dashboard.lineplot');
+  const t = await getTranslations();
   const locale = await getLocale();
-  const dateFrom = substanceSearchParamsCache.get('dateFrom');
-  const dateTo = substanceSearchParamsCache.get('dateTo');
-  const substance = substanceSearchParamsCache.get('substance');
-  const wellType = substanceSearchParamsCache.get('wellType');
-  const area = substanceSearchParamsCache.get('area');
-  const wells = substanceSearchParamsCache.get('wells');
-  const sampleType = substanceSearchParamsCache.get('sampleType');
+  const dateFrom = baseSearchParamsCache.get('dateFrom');
+  const dateTo = baseSearchParamsCache.get('dateTo');
+  const wellType = baseSearchParamsCache.get('wellType');
+  const area = baseSearchParamsCache.get('area');
+  const wells = baseSearchParamsCache.get('wells');
+  const sampleType = baseSearchParamsCache.get('sampleType');
 
   const wellsArray = wells ? wells.split(',').filter(Boolean) : undefined;
 
   const filters = {
     ...(dateFrom && { dateFrom }),
     ...(dateTo && { dateTo }),
-    ...(substance && { substance }),
+    substance: CLOROFORMO_SUBSTANCE_ID,
     ...(wellType && { wellType }),
     ...(area && { area }),
     ...(wellsArray && { wells: wellsArray }),
@@ -41,16 +42,16 @@ async function LineChartContent() {
 
   return (
     <LineChart
-      title={t('defaultTitle')}
+      title={t('general.chloroformConcentration')}
       data={result.data}
-      yAxisLabel={`${t('concentration')} [${result.unit}]`}
-      tooltipLabel={t('average')}
+      yAxisLabel={`${t('dashboard.lineplot.concentration')} [${result.unit}]`}
+      tooltipLabel={t('dashboard.lineplot.average')}
       tooltipUnit={result.unit}
       locale={locale === 'en' ? 'en-US' : 'es-ES'}
       referenceLines={[
         {
           value: result.guideLevel,
-          label: t('guidelineLevel'),
+          label: t('dashboard.lineplot.guidelineLevel'),
           color: 'var(--destructive)',
           strokeDasharray: '5 5'
         }
@@ -59,11 +60,11 @@ async function LineChartContent() {
   );
 }
 
-export default async function LineChartPage(props: PageProps) {
+export default async function CloroformoLinePage(props: PageProps) {
   const searchParams = await props.searchParams;
-  substanceSearchParamsCache.parse(searchParams);
+  baseSearchParamsCache.parse(searchParams);
 
-  const key = serializeSubstanceParams({ ...searchParams });
+  const key = serializeBaseParams({ ...searchParams });
 
   return (
     <Suspense key={key} fallback={<Skeleton className='h-full w-full' />}>

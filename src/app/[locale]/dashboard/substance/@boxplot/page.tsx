@@ -8,19 +8,23 @@ import { resolveActionResult } from '@/lib/actions/client';
 import { SearchParams } from 'nuqs/server';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getTranslations } from 'next-intl/server';
 
 interface PageProps {
   searchParams: Promise<SearchParams>;
 }
 
 async function BoxplotContent() {
+  const t = await getTranslations('dashboard');
   const dateFrom = substanceSearchParamsCache.get('dateFrom');
   const dateTo = substanceSearchParamsCache.get('dateTo');
   const substance = substanceSearchParamsCache.get('substance');
   const wellType = substanceSearchParamsCache.get('wellType');
   const area = substanceSearchParamsCache.get('area');
-  const well = substanceSearchParamsCache.get('well');
+  const wells = substanceSearchParamsCache.get('wells');
   const sampleType = substanceSearchParamsCache.get('sampleType');
+
+  const wellsArray = wells ? wells.split(',').filter(Boolean) : undefined;
 
   const filters = {
     ...(dateFrom && { dateFrom }),
@@ -28,7 +32,7 @@ async function BoxplotContent() {
     ...(substance && { substance }),
     ...(wellType && { wellType }),
     ...(area && { area }),
-    ...(well && { well }),
+    ...(wellsArray && { wells: wellsArray }),
     sampleType
   };
 
@@ -36,13 +40,13 @@ async function BoxplotContent() {
 
   return (
     <BoxplotChart
-      title='Distribución de concentraciones por año'
+      title={t('boxplot.defaultTitle')}
       data={result.data}
-      yAxisLabel='Concentración [µg/l]'
+      yAxisLabel={`${t('lineplot.concentration')} [${result.unit}]`}
       referenceLines={[
         {
           value: result.guideLevel,
-          label: 'Nivel Guía',
+          label: t('lineplot.guidelineLevel'),
           color: 'var(--destructive)',
           strokeDasharray: '5 5'
         }

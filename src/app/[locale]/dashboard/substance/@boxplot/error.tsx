@@ -1,13 +1,14 @@
 'use client';
 
 import { Card } from '@/components/ui/card';
+import { useTranslations } from 'next-intl';
 
 export default function Error() {
+  const t = useTranslations('errors');
+
   return (
     <Card className='flex h-full items-center justify-center p-4'>
-      <p className='text-muted-foreground text-sm'>
-        Error al cargar el boxplot. Intente nuevamente.
-      </p>
+      <p className='text-muted-foreground text-sm'>{t('boxplotError')}</p>
     </Card>
   );
 }

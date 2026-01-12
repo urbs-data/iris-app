@@ -7,7 +7,7 @@ export const baseMetricsFiltersSchema = z.object({
   substance: z.string().optional(),
   wellType: z.enum(WellType).optional(),
   area: z.string().optional(),
-  well: z.string().optional(),
+  wells: z.array(z.string()).optional(),
   sampleType: z.enum(SampleType).optional()
 });
 

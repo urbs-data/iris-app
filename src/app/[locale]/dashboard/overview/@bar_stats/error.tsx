@@ -30,7 +30,7 @@ export default function StatsError({ error, reset }: StatsErrorProps) {
   return (
     <Card className='border-red-500'>
       <CardHeader className='flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row'>
-        <div className='flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6'>
+        <div className='flex flex-1 flex-col justify-center gap-1 px-6 py-4'>
           <Alert variant='destructive' className='border-none'>
             <IconAlertCircle className='h-4 w-4' />
             <AlertTitle>Error</AlertTitle>

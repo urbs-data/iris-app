@@ -16,6 +16,7 @@ interface QueryRow extends Record<string, unknown> {
   max_promedio: number | null;
   ultimo_promedio_mensual: number | null;
   max_promedio_mensual: number | null;
+  unidad: string | null;
 }
 
 export const getGeneralMetrics = authOrganizationActionClient
@@ -24,6 +25,10 @@ export const getGeneralMetrics = authOrganizationActionClient
   .action(async ({ parsedInput, ctx }): Promise<GeneralMetrics> => {
     const tipoPozo = parsedInput.wellType ?? null;
     const tipoMuestra = parsedInput.sampleType;
+    const wells =
+      parsedInput.wells && parsedInput.wells.length > 0
+        ? parsedInput.wells.map((w) => w.toLowerCase())
+        : null;
 
     const query = sql`
       WITH raw_muestras AS (
@@ -44,7 +49,7 @@ export const getGeneralMetrics = authOrganizationActionClient
         WHERE tipo IN ('WELL', 'PUMP')
           ${parsedInput.area ? sql`AND area = ${parsedInput.area}` : sql``}
           ${tipoPozo ? sql`AND tipo = ${tipoPozo}` : sql``}
-          ${parsedInput.well ? sql`AND LOWER(id_pozo) = LOWER(${parsedInput.well})` : sql``}
+          ${wells ? sql`AND LOWER(id_pozo) IN ${sql.raw(`(${wells.map((w) => `'${w}'`).join(',')})`)}` : sql``}
       ),
       raw_estudios_pozos AS (
         SELECT *
@@ -57,6 +62,7 @@ export const getGeneralMetrics = authOrganizationActionClient
       datos_calculados_por_sustancia AS (
         SELECT 
           c.id_sustancia,
+          c.unidad,
           COUNT(*) AS cantidad_registros,
           AVG(
             COALESCE(
@@ -112,17 +118,23 @@ export const getGeneralMetrics = authOrganizationActionClient
           INNER JOIN raw_muestras m ON c.id_muestra = m.id_muestra
           INNER JOIN raw_estudios_pozos e ON m.id_estudio_pozo = e.id_estudio_pozo
           INNER JOIN raw_pozos p ON LOWER(e.id_pozo) = LOWER(p.id_pozo)
-        GROUP BY c.id_sustancia
+        GROUP BY c.id_sustancia, c.unidad
       ),
       datos_agregados AS (
         SELECT 
+          MAX(dc.unidad) AS unidad,
           SUM(dc.cantidad_registros) AS cantidad_registros,
           AVG(dc.promedio_concentracion) AS promedio_concentracion,
           SQRT(AVG(dc.desvio_concentracion * dc.desvio_concentracion)) AS desvio_concentracion,
           MIN(dc.minimo_concentracion) AS minimo_concentracion,
           MAX(dc.maximo_concentracion) AS maximo_concentracion,
           PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY dc.mediana_concentracion) AS mediana_concentracion,
-          MAX(s.nivel_guia) AS nivel_guia,
+          MAX(
+            CASE 
+              WHEN ${tipoMuestra} = 'Suelo' THEN s.nivel_guia_suelo
+              ELSE s.nivel_guia
+            END
+          ) AS nivel_guia,
           MAX(dc.promedio_concentracion) AS max_promedio
         FROM datos_calculados_por_sustancia dc
           INNER JOIN raw_sustancias s ON dc.id_sustancia = s.id_sustancia
@@ -157,6 +169,7 @@ export const getGeneralMetrics = authOrganizationActionClient
         FROM promedios_mensuales
       )
       SELECT 
+        da.unidad,
         da.cantidad_registros,
         ROUND(da.promedio_concentracion::numeric, 2)::real AS promedio_concentracion,
         ROUND(COALESCE(da.desvio_concentracion, 0)::numeric, 2)::real AS desvio_concentracion,
@@ -184,7 +197,8 @@ export const getGeneralMetrics = authOrganizationActionClient
         vsGuidePercent: 0,
         vsMaxPercent: 0,
         lastMonthlyAverage: 0,
-        maxMonthlyAverage: 0
+        maxMonthlyAverage: 0,
+        unit: 'µg/l'
       };
     }
 
@@ -198,6 +212,7 @@ export const getGeneralMetrics = authOrganizationActionClient
     const guideLevel = row.nivel_guia ?? 0;
     const ultimoPromedioMensual = row.ultimo_promedio_mensual ?? average;
     const maxPromedioMensual = row.max_promedio_mensual ?? average;
+    const unit = row.unidad ?? 'µg/l';
 
     // Calcular porcentajes usando el último promedio mensual
     const vsGuidePercent =
@@ -218,6 +233,7 @@ export const getGeneralMetrics = authOrganizationActionClient
       vsGuidePercent,
       vsMaxPercent,
       lastMonthlyAverage: ultimoPromedioMensual,
-      maxMonthlyAverage: maxPromedioMensual
+      maxMonthlyAverage: maxPromedioMensual,
+      unit
     };
   });

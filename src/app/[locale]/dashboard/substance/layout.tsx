@@ -1,6 +1,6 @@
 import React from 'react';
 import { Suspense } from 'react';
-import { SubstanceFiltersButton } from '@/features/substance/components/substance-filters-button';
+import { UnifiedFiltersButton } from '@/features/shared/components/unified-filters-button';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface SubstanceLayoutProps {
@@ -17,11 +17,11 @@ export default function SubstanceLayout({
   map
 }: SubstanceLayoutProps) {
   return (
-    <div className='flex flex-col gap-2 px-4 pb-4 md:px-6 lg:h-[calc(100dvh-52px)] lg:overflow-hidden lg:pb-0'>
+    <div className='flex flex-col gap-2 px-4 pb-4 md:px-6 lg:h-[calc(100dvh-52px)] lg:overflow-hidden'>
       {/* Filters Row */}
       <div className='shrink-0'>
         <Suspense fallback={<Skeleton className='h-10 w-full' />}>
-          <SubstanceFiltersButton />
+          <UnifiedFiltersButton showSubstanceFilter={true} />
         </Suspense>
       </div>
 

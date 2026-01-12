@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { MapContent } from './map-content';
-import { getMapMetrics } from '@/features/substance/data/get-map-metrics';
+import { getWellMetrics } from '@/features/substance/data/get-well-metrics';
 import {
   substanceSearchParamsCache,
   serializeSubstanceParams
@@ -19,8 +19,10 @@ async function MapContentWrapper() {
   const substance = substanceSearchParamsCache.get('substance');
   const wellType = substanceSearchParamsCache.get('wellType');
   const area = substanceSearchParamsCache.get('area');
-  const well = substanceSearchParamsCache.get('well');
+  const wells = substanceSearchParamsCache.get('wells');
   const sampleType = substanceSearchParamsCache.get('sampleType');
+
+  const wellsArray = wells ? wells.split(',').filter(Boolean) : undefined;
 
   const filters = {
     ...(dateFrom && { dateFrom }),
@@ -28,11 +30,11 @@ async function MapContentWrapper() {
     ...(substance && { substance }),
     ...(wellType && { wellType }),
     ...(area && { area }),
-    ...(well && { well }),
+    ...(wellsArray && { wells: wellsArray }),
     sampleType
   };
 
-  const result = await resolveActionResult(getMapMetrics(filters));
+  const result = await resolveActionResult(getWellMetrics(filters));
 
   return <MapContent data={result.data} guideLevel={result.guideLevel} />;
 }
