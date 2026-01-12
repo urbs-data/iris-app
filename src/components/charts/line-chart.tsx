@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import {
   LineChart as RechartsLineChart,
   Line,
@@ -12,15 +13,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   ChartConfig,
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent
+  ChartTooltip
 } from '@/components/ui/chart';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
-import { parseISO } from 'date-fns';
 
 interface DataPoint {
-  date: string;
+  date: Date;
   value: number;
 }
 
@@ -41,7 +40,9 @@ interface LineChartProps {
   yAxisLabel?: string;
   chartConfig?: ChartConfig;
   formatXAxis?: (value: string) => string;
-  formatTooltip?: (value: string) => string;
+  tooltipLabel?: string;
+  tooltipUnit?: string;
+  locale?: string;
 }
 
 const defaultChartConfig: ChartConfig = {
@@ -61,14 +62,31 @@ export function LineChart({
   yAxisLabel,
   chartConfig = defaultChartConfig,
   formatXAxis,
-  formatTooltip
+  tooltipLabel = 'Valor',
+  tooltipUnit = '',
+  locale = 'es-AR'
 }: LineChartProps) {
-  const defaultFormatXAxis = (value: string) => {
-    const date = parseISO(value);
+  const transformedData = React.useMemo(() => {
+    return data.map((point: DataPoint) => ({
+      ...point,
+      timestamp: point.date.getTime()
+    }));
+  }, [data, xAxisKey]);
+
+  const defaultFormatXAxis = (value: number) => {
+    const date = new Date(value);
     return date.toLocaleDateString('es-AR', {
       month: 'short',
       year: '2-digit'
     });
+  };
+
+  const formatXAxisWrapper = (value: number) => {
+    if (formatXAxis) {
+      const dateStr = new Date(value).toISOString();
+      return formatXAxis(dateStr);
+    }
+    return defaultFormatXAxis(value);
   };
 
   return (
@@ -101,18 +119,20 @@ export function LineChart({
       <CardContent className='min-h-0 flex-1 overflow-hidden p-2'>
         <ChartContainer config={chartConfig} className='h-full w-full'>
           <RechartsLineChart
-            data={data}
+            data={transformedData}
             margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
           >
             <CartesianGrid strokeDasharray='3 3' vertical={false} />
             <XAxis
-              dataKey={xAxisKey}
+              dataKey='timestamp'
+              type='number'
+              domain={['dataMin', 'dataMax']}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={formatXAxis || defaultFormatXAxis}
+              tickFormatter={formatXAxisWrapper}
               tick={{ fontSize: 10 }}
-              interval='preserveStartEnd'
+              scale='time'
             />
             <YAxis
               tickLine={false}
@@ -131,11 +151,35 @@ export function LineChart({
               }
             />
             <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  labelFormatter={formatTooltip || defaultFormatXAxis}
-                />
-              }
+              cursor={false}
+              content={({ active, payload }) => {
+                if (!active || !payload?.[0]) return null;
+
+                const dataPoint = payload[0].payload;
+                const fecha = new Date(dataPoint.timestamp).toLocaleDateString(
+                  locale,
+                  {
+                    month: 'long',
+                    year: 'numeric',
+                    timeZone: 'UTC'
+                  }
+                );
+
+                const value = dataPoint[dataKey];
+
+                return (
+                  <div className='bg-background rounded-lg border p-2 shadow-sm'>
+                    <p className='text-sm font-medium'>{fecha}</p>
+                    <div className='mt-1 text-sm'>
+                      <p>
+                        {tooltipLabel}:{' '}
+                        {typeof value === 'number' ? value.toFixed(2) : value}{' '}
+                        {tooltipUnit}
+                      </p>
+                    </div>
+                  </div>
+                );
+              }}
             />
             {referenceLines.map((ref, index) => (
               <RechartsReferenceLine

@@ -53,10 +53,12 @@ export interface GeneralMetrics {
   guideLevel: number;
   vsGuidePercent: number;
   vsMaxPercent: number;
+  lastMonthlyAverage?: number;
+  maxMonthlyAverage?: number;
 }
 
 export interface MonthlyConcentration {
-  date: string;
+  date: Date;
   value: number;
 }
 
@@ -71,14 +73,21 @@ export interface QuarterlyStats {
 }
 
 export interface WellMetrics {
-  wellId: string;
-  wellName: string;
-  lat: number;
-  lng: number;
-  min: number;
-  q1: number;
-  median: number;
-  q3: number;
-  max: number;
-  mean: number;
+  wellId: string; // pozo
+  lat: number; // latitud_decimal
+  lng: number; // longitud_decimal
+  unit: string; // unidad
+  firstPeriod: string; // primer_periodo
+  lastPeriod: string; // ultimo_periodo
+  sampleCount: number; // cantidad_registros
+  mean: number; // promedio_concentracion
+  stdDev: number; // desvio_concentracion
+  min: number; // minimo_concentracion
+  max: number; // maximo_concentracion
+  median: number; // mediana_concentracion
+}
+
+export interface MapMetricsResult {
+  data: WellMetrics[];
+  guideLevel: number;
 }

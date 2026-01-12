@@ -14,6 +14,8 @@ interface QueryRow extends Record<string, unknown> {
   mediana_concentracion: number;
   nivel_guia: number | null;
   max_promedio: number | null;
+  ultimo_promedio_mensual: number | null;
+  max_promedio_mensual: number | null;
 }
 
 export const getGeneralMetrics = authOrganizationActionClient
@@ -124,17 +126,48 @@ export const getGeneralMetrics = authOrganizationActionClient
           MAX(dc.promedio_concentracion) AS max_promedio
         FROM datos_calculados_por_sustancia dc
           INNER JOIN raw_sustancias s ON dc.id_sustancia = s.id_sustancia
+      ),
+      promedios_mensuales AS (
+        SELECT 
+          TO_CHAR(m.fecha, 'YYYY-MM') AS periodo,
+          AVG(
+            COALESCE(
+              c.concentracion,
+              CASE 
+                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
+                THEN CAST(c.limite_deteccion AS real)
+                ELSE NULL
+              END
+            )
+          ) AS promedio_concentracion
+        FROM raw_concentraciones c
+          INNER JOIN raw_muestras m ON c.id_muestra = m.id_muestra
+          INNER JOIN raw_estudios_pozos e ON m.id_estudio_pozo = e.id_estudio_pozo
+          INNER JOIN raw_pozos p ON LOWER(e.id_pozo) = LOWER(p.id_pozo)
+        GROUP BY TO_CHAR(m.fecha, 'YYYY-MM')
+      ),
+      ultimo_promedio AS (
+        SELECT promedio_concentracion
+        FROM promedios_mensuales
+        WHERE periodo = (SELECT MAX(periodo) FROM promedios_mensuales)
+        LIMIT 1
+      ),
+      max_promedio_periodos AS (
+        SELECT MAX(promedio_concentracion) AS max_promedio_mensual
+        FROM promedios_mensuales
       )
       SELECT 
-        cantidad_registros,
-        ROUND(promedio_concentracion::numeric, 2)::real AS promedio_concentracion,
-        ROUND(COALESCE(desvio_concentracion, 0)::numeric, 2)::real AS desvio_concentracion,
-        ROUND(minimo_concentracion::numeric, 2)::real AS minimo_concentracion,
-        ROUND(maximo_concentracion::numeric, 2)::real AS maximo_concentracion,
-        ROUND(mediana_concentracion::numeric, 2)::real AS mediana_concentracion,
-        nivel_guia,
-        max_promedio
-      FROM datos_agregados
+        da.cantidad_registros,
+        ROUND(da.promedio_concentracion::numeric, 2)::real AS promedio_concentracion,
+        ROUND(COALESCE(da.desvio_concentracion, 0)::numeric, 2)::real AS desvio_concentracion,
+        ROUND(da.minimo_concentracion::numeric, 2)::real AS minimo_concentracion,
+        ROUND(da.maximo_concentracion::numeric, 2)::real AS maximo_concentracion,
+        ROUND(da.mediana_concentracion::numeric, 2)::real AS mediana_concentracion,
+        da.nivel_guia,
+        da.max_promedio,
+        ROUND(COALESCE((SELECT promedio_concentracion FROM ultimo_promedio LIMIT 1), 0)::numeric, 2)::real AS ultimo_promedio_mensual,
+        ROUND(COALESCE((SELECT max_promedio_mensual FROM max_promedio_periodos LIMIT 1), 0)::numeric, 2)::real AS max_promedio_mensual
+      FROM datos_agregados da
     `;
 
     const results = await ctx.db.execute<QueryRow>(query);
@@ -149,7 +182,9 @@ export const getGeneralMetrics = authOrganizationActionClient
         stdDev: 0,
         guideLevel: 0,
         vsGuidePercent: 0,
-        vsMaxPercent: 0
+        vsMaxPercent: 0,
+        lastMonthlyAverage: 0,
+        maxMonthlyAverage: 0
       };
     }
 
@@ -161,12 +196,16 @@ export const getGeneralMetrics = authOrganizationActionClient
     const max = row.maximo_concentracion ?? 0;
     const stdDev = row.desvio_concentracion ?? 0;
     const guideLevel = row.nivel_guia ?? 0;
-    const maxPromedio = row.max_promedio ?? average;
+    const ultimoPromedioMensual = row.ultimo_promedio_mensual ?? average;
+    const maxPromedioMensual = row.max_promedio_mensual ?? average;
 
-    // Calcular porcentajes
-    const vsGuidePercent = guideLevel > 0 ? (average / guideLevel) * 100 : 0;
+    // Calcular porcentajes usando el último promedio mensual
+    const vsGuidePercent =
+      guideLevel > 0 ? (ultimoPromedioMensual / guideLevel) * 100 : 0;
     const vsMaxPercent =
-      maxPromedio > 0 ? ((average - maxPromedio) / maxPromedio) * 100 : 0;
+      maxPromedioMensual > 0
+        ? (ultimoPromedioMensual / maxPromedioMensual - 1) * 100
+        : 0;
 
     return {
       samples,
@@ -177,6 +216,8 @@ export const getGeneralMetrics = authOrganizationActionClient
       stdDev,
       guideLevel,
       vsGuidePercent,
-      vsMaxPercent
+      vsMaxPercent,
+      lastMonthlyAverage: ultimoPromedioMensual,
+      maxMonthlyAverage: maxPromedioMensual
     };
   });

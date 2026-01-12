@@ -38,7 +38,9 @@ async function LineChartContent() {
     <LineChart
       title='Concentración promedio por período'
       data={result.data}
-      yAxisLabel='Concentración [µg/l]'
+      yAxisLabel={`Concentración [${result.unit}]`}
+      tooltipLabel='Concentración promedio'
+      tooltipUnit={result.unit}
       referenceLines={[
         {
           value: result.guideLevel,

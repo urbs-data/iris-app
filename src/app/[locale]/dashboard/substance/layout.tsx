@@ -1,6 +1,6 @@
 import React from 'react';
 import { Suspense } from 'react';
-import { SubstanceFilters } from '@/features/substance/components/substance-filters';
+import { SubstanceFiltersButton } from '@/features/substance/components/substance-filters-button';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface SubstanceLayoutProps {
@@ -21,7 +21,7 @@ export default function SubstanceLayout({
       {/* Filters Row */}
       <div className='shrink-0'>
         <Suspense fallback={<Skeleton className='h-10 w-full' />}>
-          <SubstanceFilters />
+          <SubstanceFiltersButton />
         </Suspense>
       </div>
 

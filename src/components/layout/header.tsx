@@ -3,6 +3,7 @@ import { Separator } from '../ui/separator';
 import { Breadcrumbs } from '../breadcrumbs';
 import { ModeToggle } from './ThemeToggle/theme-toggle';
 import { LangSwitcher } from './lang-switcher';
+import { ThemeSelector } from '../theme-selector';
 
 export default function Header() {
   return (
@@ -16,6 +17,7 @@ export default function Header() {
       <div className='flex items-center gap-2 px-4'>
         <LangSwitcher />
         <ModeToggle />
+        <ThemeSelector />
       </div>
     </header>
   );

@@ -8,17 +8,15 @@ import {
   YAxis,
   CartesianGrid,
   ReferenceLine,
-  Cell,
   Scatter,
-  ZAxis,
-  ErrorBar
+  RectangleProps,
+  ResponsiveContainer
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   ChartConfig,
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent
+  ChartTooltip
 } from '@/components/ui/chart';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -51,10 +49,65 @@ interface BoxplotChartProps {
   yAxisLabel?: string;
 }
 
+// Componente para renderizar las líneas verticales de los whiskers
+const VerticalLine = (props: RectangleProps) => {
+  const { x, y, width, height } = props;
+
+  if (x == null || y == null || width == null || height == null) {
+    return null;
+  }
+
+  return (
+    <line
+      x1={x + width / 2}
+      y1={y + height}
+      x2={x + width / 2}
+      y2={y}
+      stroke='var(--foreground)'
+      strokeWidth={2}
+    />
+  );
+};
+
+// Componente para renderizar las líneas horizontales (caps de whiskers y mediana)
+const HorizontalLine = (props: RectangleProps) => {
+  const { x, y, width } = props;
+
+  if (x == null || y == null || width == null) {
+    return null;
+  }
+
+  return (
+    <line
+      x1={x}
+      y1={y}
+      x2={x + width}
+      y2={y}
+      stroke='var(--foreground)'
+      strokeWidth={2.5}
+    />
+  );
+};
+
+type TransformedBoxplotData = BoxplotDataPoint & {
+  bottomWhisker: number;
+  bottomBox: number;
+  topBox: number;
+  topWhisker: number;
+};
+
 const chartConfig: ChartConfig = {
   boxplot: {
     label: 'Distribución',
     color: 'var(--primary)'
+  },
+  whisker: {
+    label: 'Rango de valores',
+    color: 'var(--foreground)'
+  },
+  average: {
+    label: 'Promedio',
+    color: 'var(--foreground)'
   }
 };
 
@@ -66,18 +119,28 @@ export function BoxplotChart({
   className,
   yAxisLabel
 }: BoxplotChartProps) {
-  // Transform data for the boxplot visualization
-  const transformedData = data.map((item) => ({
-    ...item,
-    // For the IQR box (q1 to q3)
-    boxStart: item.q1,
-    boxHeight: item.q3 - item.q1,
-    // For whiskers
-    lowerWhisker: item.min,
-    upperWhisker: item.max,
-    // Position for median line
-    medianValue: item.median
-  }));
+  // Transform data for the boxplot visualization with proper stacking
+  const transformedData: TransformedBoxplotData[] = React.useMemo(
+    () =>
+      data.map((item) => {
+        const iqr = item.q3 - item.q1;
+        const lowerLimit = item.q1 - 1.5 * iqr;
+        const upperLimit = item.q3 + 1.5 * iqr;
+
+        // Ajustar min y max según los límites del IQR
+        const minValue = Math.max(Math.min(item.min, lowerLimit), 0);
+        const maxValue = Math.min(item.max, upperLimit);
+
+        return {
+          ...item,
+          bottomWhisker: item.q1 - minValue,
+          bottomBox: item.median - item.q1,
+          topBox: item.q3 - item.median,
+          topWhisker: maxValue - item.q3
+        };
+      }),
+    [data]
+  );
 
   return (
     <Card className={cn('flex h-full min-h-0 flex-col', className)}>
@@ -89,7 +152,7 @@ export function BoxplotChart({
           </div>
           <div className='text-muted-foreground flex flex-wrap items-center gap-4 text-xs'>
             <div className='flex items-center gap-1'>
-              <div className='bg-primary/30 border-primary h-3 w-4 border' />
+              <div className='bg-primary h-3 w-4' />
               <span>Rango intercuartil</span>
             </div>
             <div className='flex items-center gap-1'>
@@ -116,91 +179,108 @@ export function BoxplotChart({
           config={chartConfig}
           className='aspect-auto h-full w-full'
         >
-          <ComposedChart
-            data={transformedData}
-            margin={{ top: 20, right: 20, left: 0, bottom: 0 }}
-          >
-            <CartesianGrid strokeDasharray='3 3' vertical={false} />
-            <XAxis
-              dataKey='period'
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tick={{ fontSize: 10 }}
-            />
-            <YAxis
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tick={{ fontSize: 10 }}
-              label={
-                yAxisLabel
-                  ? {
-                      value: yAxisLabel,
-                      angle: -90,
-                      position: 'insideLeft',
-                      style: { fontSize: 10 }
-                    }
-                  : undefined
-              }
-            />
-            <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  formatter={(value, name, item) => {
-                    const data = item.payload;
-                    return (
-                      <div className='flex flex-col gap-1 text-xs'>
-                        <div>Máx: {data.max?.toFixed(2)}</div>
-                        <div>Q3: {data.q3?.toFixed(2)}</div>
-                        <div>Mediana: {data.median?.toFixed(2)}</div>
-                        <div>Q1: {data.q1?.toFixed(2)}</div>
-                        <div>Mín: {data.min?.toFixed(2)}</div>
-                        {data.mean && (
-                          <div>Promedio: {data.mean?.toFixed(2)}</div>
+          <ResponsiveContainer width='100%' height='100%'>
+            <ComposedChart
+              data={transformedData}
+              margin={{ top: 5, right: 20, left: 10, bottom: 10 }}
+            >
+              <CartesianGrid
+                strokeDasharray='3 3'
+                vertical={false}
+                className='stroke-border/50'
+              />
+              <XAxis
+                dataKey='period'
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tick={{ fontSize: 10 }}
+              />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tick={{ fontSize: 10 }}
+                label={
+                  yAxisLabel
+                    ? {
+                        value: yAxisLabel,
+                        angle: -90,
+                        position: 'insideLeft',
+                        style: { fontSize: 10 }
+                      }
+                    : undefined
+                }
+              />
+              <ChartTooltip
+                wrapperStyle={{ outline: 'none' }}
+                content={({ active, payload }) => {
+                  if (!active || !payload?.[0]) return null;
+
+                  const data = payload[0].payload as BoxplotDataPoint;
+
+                  return (
+                    <div className='bg-background rounded-lg border p-2 shadow-sm'>
+                      <p className='text-sm font-medium'>{data.period}</p>
+                      <div className='mt-1 space-y-1 text-sm'>
+                        <p>Mín: {data.min?.toFixed(2)}</p>
+                        <p>Q1: {data.q1?.toFixed(2)}</p>
+                        <p>Mediana: {data.median?.toFixed(2)}</p>
+                        {data.mean != null && (
+                          <p>Promedio: {data.mean?.toFixed(2)}</p>
                         )}
+                        <p>Q3: {data.q3?.toFixed(2)}</p>
+                        <p>Máx: {data.max?.toFixed(2)}</p>
                       </div>
+                    </div>
+                  );
+                }}
+              />
+              {referenceLines.map((ref, index) => (
+                <ReferenceLine
+                  key={index}
+                  y={ref.value}
+                  stroke={ref.color || 'var(--destructive)'}
+                  strokeDasharray={ref.strokeDasharray || '10 10'}
+                  strokeWidth={2}
+                />
+              ))}
+              {/* Stack de barras para crear el boxplot */}
+              {/* Barra invisible para el offset desde 0 hasta min */}
+              <Bar stackId='a' dataKey='min' fill='none' />
+              {/* Cap inferior del whisker */}
+              <Bar stackId='a' dataKey='bar' shape={<HorizontalLine />} />
+              {/* Línea del whisker inferior */}
+              <Bar
+                stackId='a'
+                dataKey='bottomWhisker'
+                shape={<VerticalLine />}
+              />
+              {/* Caja inferior (Q1 a mediana) */}
+              <Bar stackId='a' dataKey='bottomBox' fill='var(--primary)' />
+              {/* Línea de la mediana */}
+              <Bar stackId='a' dataKey='bar' shape={<HorizontalLine />} />
+              {/* Caja superior (mediana a Q3) */}
+              <Bar stackId='a' dataKey='topBox' fill='var(--primary)' />
+              {/* Línea del whisker superior */}
+              <Bar stackId='a' dataKey='topWhisker' shape={<VerticalLine />} />
+              {/* Cap superior del whisker */}
+              <Bar stackId='a' dataKey='bar' shape={<HorizontalLine />} />
+              {/* Puntos del promedio */}
+              {data.some((d) => d.mean != null) && (
+                <Scatter
+                  dataKey='mean'
+                  fill='var(--foreground)'
+                  shape={(props: any) => {
+                    const { cx, cy } = props;
+                    return (
+                      <circle cx={cx} cy={cy} r={4} fill='var(--foreground)' />
                     );
                   }}
                 />
-              }
-            />
-            {referenceLines.map((ref, index) => (
-              <ReferenceLine
-                key={index}
-                y={ref.value}
-                stroke={ref.color || 'var(--destructive)'}
-                strokeDasharray={ref.strokeDasharray || '5 5'}
-                strokeWidth={1.5}
-              />
-            ))}
-            {/* IQR Box */}
-            <Bar dataKey='boxHeight' stackId='box' fill='transparent'>
-              {transformedData.map((entry, index) => (
-                <Cell key={index} />
-              ))}
-            </Bar>
-            <Bar
-              dataKey='boxHeight'
-              stackId='box2'
-              fill='hsl(var(--primary) / 0.3)'
-              stroke='hsl(var(--primary))'
-              strokeWidth={1}
-              radius={[2, 2, 2, 2]}
-            >
-              {transformedData.map((entry, index) => (
-                <Cell key={index} y={entry.boxStart} />
-              ))}
-            </Bar>
-            {/* Mean points */}
-            <Scatter
-              dataKey='mean'
-              fill='hsl(var(--foreground))'
-              shape='circle'
-            >
-              <ZAxis range={[30, 30]} />
-            </Scatter>
-          </ComposedChart>
+              )}
+            </ComposedChart>
+          </ResponsiveContainer>
         </ChartContainer>
       </CardContent>
     </Card>

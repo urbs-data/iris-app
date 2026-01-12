@@ -4,10 +4,12 @@ import { authOrganizationActionClient } from '@/lib/actions/safe-action';
 import { getMonthlyMetricsSchema } from './get-monthly-metrics-schema';
 import type { MonthlyConcentration } from '../types';
 import { sql } from 'drizzle-orm';
+import { parseISO } from 'date-fns';
 
 interface MonthlyMetricsResult {
   data: MonthlyConcentration[];
   guideLevel: number;
+  unit: string;
 }
 
 interface QueryRow extends Record<string, unknown> {
@@ -176,13 +178,18 @@ export const getMonthlyMetrics = authOrganizationActionClient
     const guideLevel =
       results.rows.length > 0 ? (results.rows[0].nivel_guia ?? 100) : 100;
 
+    const unit =
+      results.rows.length > 0 ? (results.rows[0].unidad ?? 'µg/l') : 'µg/l';
+
     const data: MonthlyConcentration[] = results.rows.map((row) => ({
-      date: row.periodo + '-01',
-      value: row.promedio_concentracion
+      date: parseISO(row.periodo + '-01'),
+      value: row.promedio_concentracion,
+      unit
     }));
 
     return {
       data,
-      guideLevel
+      guideLevel,
+      unit
     };
   });

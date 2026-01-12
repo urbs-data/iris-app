@@ -2,79 +2,170 @@
 
 import { authOrganizationActionClient } from '@/lib/actions/safe-action';
 import { getMapMetricsSchema } from './get-map-metrics-schema';
-import type { WellMetrics } from '../types';
+import type { WellMetrics, MapMetricsResult } from '../types';
+import { sql } from 'drizzle-orm';
+
+interface QueryRow extends Record<string, unknown> {
+  pozo: string;
+  latitud_decimal: number | null;
+  longitud_decimal: number | null;
+  unidad: string;
+  nivel_guia: number | null;
+  primer_periodo: string;
+  ultimo_periodo: string;
+  cantidad_registros: number;
+  promedio_concentracion: number;
+  desvio_concentracion: number;
+  minimo_concentracion: number;
+  maximo_concentracion: number;
+  mediana_concentracion: number;
+}
 
 export const getMapMetrics = authOrganizationActionClient
   .metadata({ actionName: 'getMapMetrics' })
   .inputSchema(getMapMetricsSchema)
-  .action(async ({ parsedInput }): Promise<WellMetrics[]> => {
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 400));
+  .action(async ({ parsedInput, ctx }): Promise<MapMetricsResult> => {
+    const tipoPozo = parsedInput.wellType ?? null;
+    const tipoMuestra = parsedInput.sampleType;
 
-    // Return mock data for wells with coordinates around Berazategui
-    // TODO: Replace with actual DB query using parsedInput filters
-    const data: WellMetrics[] = [
-      {
-        wellId: 'well-001',
-        wellName: 'Pozo PM-01',
-        lat: -34.7532,
-        lng: -58.2196,
-        min: 50,
-        q1: 100,
-        median: 250,
-        q3: 400,
-        max: 600,
-        mean: 280
-      },
-      {
-        wellId: 'well-002',
-        wellName: 'Pozo PM-02',
-        lat: -34.758,
-        lng: -58.215,
-        min: 30,
-        q1: 80,
-        median: 150,
-        q3: 300,
-        max: 450,
-        mean: 190
-      },
-      {
-        wellId: 'well-003',
-        wellName: 'Pozo PM-03',
-        lat: -34.762,
-        lng: -58.225,
-        min: 20,
-        q1: 60,
-        median: 120,
-        q3: 200,
-        max: 350,
-        mean: 145
-      },
-      {
-        wellId: 'well-004',
-        wellName: 'Pozo PM-04',
-        lat: -34.749,
-        lng: -58.21,
-        min: 100,
-        q1: 200,
-        median: 400,
-        q3: 600,
-        max: 800,
-        mean: 420
-      },
-      {
-        wellId: 'well-005',
-        wellName: 'Pozo PM-05',
-        lat: -34.765,
-        lng: -58.205,
-        min: 40,
-        q1: 90,
-        median: 180,
-        q3: 280,
-        max: 400,
-        mean: 195
-      }
-    ];
+    const query = sql`
+      WITH raw_muestras AS (
+        SELECT *
+        FROM muestras
+        WHERE tipo = ${tipoMuestra}
+          ${parsedInput.dateFrom ? sql`AND fecha >= ${parsedInput.dateFrom}::timestamp` : sql``}
+          ${parsedInput.dateTo ? sql`AND fecha <= ${parsedInput.dateTo}::timestamp` : sql``}
+      ),
+      raw_concentraciones AS (
+        SELECT *
+        FROM concentraciones
+        ${parsedInput.substance ? sql`WHERE id_sustancia = ${parsedInput.substance}` : sql``}
+      ),
+      raw_pozos AS (
+        SELECT *
+        FROM pozos
+        WHERE tipo IN ('WELL', 'PUMP')
+          ${parsedInput.area ? sql`AND area = ${parsedInput.area}` : sql``}
+          ${tipoPozo ? sql`AND tipo = ${tipoPozo}` : sql``}
+          ${parsedInput.well ? sql`AND LOWER(id_pozo) = LOWER(${parsedInput.well})` : sql``}
+      ),
+      raw_estudios_pozos AS (
+        SELECT *
+        FROM estudios_pozos
+      ),
+      raw_sustancias AS (
+        SELECT *
+        FROM sustancias
+      ),
+      datos_calculados AS (
+        SELECT 
+          p.id_pozo as pozo,
+          p.latitud_decimal,
+          p.longitud_decimal,
+          c.unidad,
+          MAX(s.nivel_guia) as nivel_guia,
+          TO_CHAR(MIN(m.fecha), 'YYYY-MM') as primer_periodo,
+          TO_CHAR(MAX(m.fecha), 'YYYY-MM') as ultimo_periodo,
+          COUNT(*) AS cantidad_registros,
+          AVG(
+            COALESCE(
+              c.concentracion,
+              CASE 
+                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
+                THEN CAST(c.limite_deteccion AS real)
+                ELSE NULL
+              END
+            )
+          ) AS promedio_concentracion,
+          STDDEV_SAMP(
+            COALESCE(
+              c.concentracion,
+              CASE 
+                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
+                THEN CAST(c.limite_deteccion AS real)
+                ELSE NULL
+              END
+            )
+          ) AS desvio_concentracion,
+          MIN(
+            COALESCE(
+              c.concentracion,
+              CASE 
+                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
+                THEN CAST(c.limite_deteccion AS real)
+                ELSE NULL
+              END
+            )
+          ) AS minimo_concentracion,
+          MAX(
+            COALESCE(
+              c.concentracion,
+              CASE 
+                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
+                THEN CAST(c.limite_deteccion AS real)
+                ELSE NULL
+              END
+            )
+          ) AS maximo_concentracion,
+          PERCENTILE_CONT(0.5) WITHIN GROUP (
+            ORDER BY COALESCE(
+              c.concentracion,
+              CASE 
+                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
+                THEN CAST(c.limite_deteccion AS real)
+                ELSE NULL
+              END
+            )
+          ) AS mediana_concentracion
+        FROM raw_concentraciones c
+          INNER JOIN raw_muestras m ON c.id_muestra = m.id_muestra
+          INNER JOIN raw_estudios_pozos e ON m.id_estudio_pozo = e.id_estudio_pozo
+          INNER JOIN raw_pozos p ON LOWER(e.id_pozo) = LOWER(p.id_pozo)
+          INNER JOIN raw_sustancias s ON c.id_sustancia = s.id_sustancia
+        GROUP BY p.id_pozo, p.latitud_decimal, p.longitud_decimal, c.unidad
+      )
+      SELECT 
+        pozo,
+        latitud_decimal,
+        longitud_decimal,
+        unidad,
+        nivel_guia,
+        primer_periodo,
+        ultimo_periodo,
+        cantidad_registros,
+        ROUND(promedio_concentracion::numeric, 2)::real AS promedio_concentracion,
+        ROUND(COALESCE(desvio_concentracion, 0)::numeric, 2)::real AS desvio_concentracion,
+        ROUND(minimo_concentracion::numeric, 2)::real AS minimo_concentracion,
+        ROUND(maximo_concentracion::numeric, 2)::real AS maximo_concentracion,
+        ROUND(mediana_concentracion::numeric, 2)::real AS mediana_concentracion
+      FROM datos_calculados
+      WHERE latitud_decimal IS NOT NULL
+        AND longitud_decimal IS NOT NULL
+      ORDER BY pozo
+    `;
 
-    return data;
+    const results = await ctx.db.execute<QueryRow>(query);
+
+    const guideLevel =
+      results.rows.length > 0 ? (results.rows[0].nivel_guia ?? 100) : 100;
+
+    const data: WellMetrics[] = results.rows.map((row) => ({
+      wellId: row.pozo,
+      lat: row.latitud_decimal ?? 0,
+      lng: row.longitud_decimal ?? 0,
+      unit: row.unidad,
+      firstPeriod: row.primer_periodo,
+      lastPeriod: row.ultimo_periodo,
+      sampleCount: row.cantidad_registros,
+      mean: row.promedio_concentracion,
+      stdDev: row.desvio_concentracion,
+      min: row.minimo_concentracion,
+      max: row.maximo_concentracion,
+      median: row.mediana_concentracion
+    }));
+
+    return {
+      data,
+      guideLevel
+    };
   });
