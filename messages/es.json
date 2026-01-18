@@ -313,7 +313,13 @@
     "validation": {
         "title": "Validación de documentos",
         "description": "Valida los documentos de muestras realizadas por el laboratorio.",
-        "reset": "Reiniciar validación",
+        "reset": "Nueva validación",
+        "documentTypes": {
+            "preliminar": "Preliminar Muestras",
+            "edd": "EDD Muestras",
+            "matrixSpike": "Matrix Spike",
+            "parametros": "Parámetros FQ"
+        },
         "upload": {
             "error": "Por favor sube los tres archivos requeridos",
             "success": "Validación completada",

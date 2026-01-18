@@ -65,6 +65,14 @@ export const navItems: NavItem[] = [
     group: 'group.documents'
   },
   {
+    title: 'validation',
+    url: '/dashboard/validate',
+    icon: 'check',
+    shortcut: ['v', 'v'],
+    items: [],
+    group: 'group.documents'
+  },
+  {
     title: 'profile',
     url: '/dashboard/profile',
     icon: 'account',

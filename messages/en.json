@@ -311,7 +311,13 @@
     "validation": {
         "title": "Analytical validation",
         "description": "Validate the documents of samples made by the laboratory.",
-        "reset": "Reset validation",
+        "reset": "New validation",
+        "documentTypes": {
+            "preliminar": "Preliminary Samples",
+            "edd": "EDD Samples",
+            "matrixSpike": "Matrix Spike",
+            "parametros": "Physical-Chemical Parameters"
+        },
         "upload": {
             "error": "Please upload the three required files",
             "success": "Validation completed",
