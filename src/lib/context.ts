@@ -28,7 +28,7 @@ const getClerkAuth = cache(async function () {
 const getClerkOrganization = cache(async function () {
   const authResult = await auth();
   if (!authResult.orgId || !authResult.orgSlug) {
-    redirect('/dashboard/overview');
+    redirect('/dashboard/general');
   }
 
   return {

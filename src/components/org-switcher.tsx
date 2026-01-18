@@ -91,7 +91,7 @@ export function OrgSwitcher() {
     <SidebarMenu>
       <SidebarMenuItem>
         <SidebarMenuButton size='lg' className='cursor-default'>
-          <div className='bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg'>
+          <div className='text-sidebar-primary-foreground flex aspect-square size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg'>
             {activeOrganization.hasImage && activeOrganization.imageUrl ? (
               <Image
                 src={activeOrganization.imageUrl}

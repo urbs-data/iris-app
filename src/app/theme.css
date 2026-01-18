@@ -28,11 +28,11 @@ body {
 
 .theme-default,
 .theme-default-scaled {
-  --primary: oklch(0.5551 0.2053 266.05);
+  --primary: oklch(0.5551 0.12 266.05);
   --primary-foreground: oklch(0.985 0 0);
 
   @variant dark {
-    --primary: oklch(0.5551 0.2053 266.05);
+    --primary: oklch(0.5551 0.12 266.05);
     --primary-foreground: oklch(0.985 0 0);
   }
 }

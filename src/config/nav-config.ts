@@ -34,15 +34,7 @@ import { NavItem } from '@/types';
  */
 export const navItems: NavItem[] = [
   {
-    title: 'home',
-    url: '/dashboard/overview',
-    icon: 'dashboard',
-    shortcut: ['d', 'd'],
-    items: [],
-    group: 'group.main'
-  },
-  {
-    title: 'general_dashboard',
+    title: 'dashboard-general',
     url: '/dashboard/general',
     icon: 'analyze',
     shortcut: ['g', 'd'],
@@ -50,7 +42,7 @@ export const navItems: NavItem[] = [
     group: 'group.main'
   },
   {
-    title: 'analyze_concentration',
+    title: 'dashboard-substance',
     url: '/dashboard/substance',
     icon: 'analyze',
     shortcut: ['a', 'c'],
