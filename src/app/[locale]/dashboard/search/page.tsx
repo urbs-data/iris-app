@@ -1,11 +1,14 @@
 import PageContainer from '@/components/layout/page-container';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
-import SearchListing from '@/features/search/components/search-listing';
-import { searchParamsCache, serialize } from '@/features/search/searchparams';
 import { SearchParams } from 'nuqs/server';
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
-import { SearchToolbar } from '@/features/search/components/search-table/search-toolbar';
+import {
+  searchParamsCache,
+  serialize
+} from '@/features/documents/search/searchparams';
+import { SearchToolbar } from '@/features/documents/search/components/search-table/search-toolbar';
+import SearchListing from '@/features/documents/search/components/search-listing';
 
 export const metadata = {
   title: 'Dashboard: Search'

@@ -1,7 +1,7 @@
-import { searchParamsCache } from '@/features/search/searchparams';
 import { SearchTable } from './search-table';
 import { resolveActionResult } from '@/lib/actions/client';
 import { getDocuments } from '../data/get-documents';
+import { searchParamsCache } from '../searchparams';
 
 export default async function SearchListing() {
   const page = searchParamsCache.get('page');
