@@ -17,7 +17,7 @@ export function MetadataBadges({
   const t = useTranslations();
 
   return (
-    <div className='flex flex-wrap gap-1'>
+    <div className='flex max-w-[350px] min-w-[180px] flex-wrap gap-1'>
       {year && (
         <Badge variant='outline' className='shrink-0'>
           {year}

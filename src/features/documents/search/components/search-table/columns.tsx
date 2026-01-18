@@ -51,7 +51,7 @@ export function createSearchColumns(
       accessorKey: 'sourcefile',
       header: translations.title,
       cell: ({ row }) => (
-        <div className='max-w-[200px] truncate font-medium sm:max-w-[300px]'>
+        <div className='max-w-[400px] min-w-[200px] break-words'>
           {row.original.sourcefile}
         </div>
       ),

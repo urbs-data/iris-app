@@ -87,36 +87,62 @@ export interface Site {
 export interface Project {
   id: string;
   label: string;
+  countryId: string;
+  countryLabel: string;
   siteId: string;
+  siteLabel: string;
   clerkOrgId: string;
 }
 
-export const COUNTRIES: Country[] = [{ id: 'argentina', label: 'Argentina' }];
-
-export const SITES: Site[] = [
-  { id: 'berazategui', label: 'Berazategui', countryId: 'argentina' }
-];
-
+// Definición única de proyectos - países y sitios se generan automáticamente
 export const PROJECTS: Project[] = [
   {
     id: 'proyecto-1',
     label: 'Proyecto 1',
+    countryId: 'argentina',
+    countryLabel: 'Argentina',
     siteId: 'berazategui',
+    siteLabel: 'Berazategui',
     clerkOrgId: 'org_37zbB0nabOiSlx3ahAaNAbFrpUZ'
   },
   {
     id: 'proyecto-2',
     label: 'Proyecto 2',
+    countryId: 'EEUU',
+    countryLabel: 'EEUU',
     siteId: 'berazategui',
-    clerkOrgId: 'org_XXXXX2'
+    siteLabel: 'Berazategui',
+    clerkOrgId: 'org_38RVApbyfuKPvX0tEdfN2EATyr5'
   },
   {
     id: 'proyecto-3',
     label: 'Proyecto 3',
+    countryId: 'argentina',
+    countryLabel: 'Argentina',
     siteId: 'berazategui',
+    siteLabel: 'Berazategui',
     clerkOrgId: 'org_XXXXX3'
   }
 ];
+
+export const COUNTRIES: Country[] = Array.from(
+  new Map(
+    PROJECTS.map((project) => [project.countryId, project.countryLabel])
+  ).entries()
+).map(([id, label]) => ({ id, label }));
+
+export const SITES: Site[] = Array.from(
+  new Map(
+    PROJECTS.map((project) => [
+      `${project.countryId}-${project.siteId}`,
+      {
+        id: project.siteId,
+        label: project.siteLabel,
+        countryId: project.countryId
+      }
+    ])
+  ).values()
+);
 
 export const YEARS = Array.from(
   { length: new Date().getFullYear() - 1995 },

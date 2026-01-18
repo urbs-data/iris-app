@@ -18,7 +18,7 @@ export function FileList({ files, currentPath }: FileListProps) {
     <SimpleDataTable
       columns={columns}
       data={files}
-      pageSize={20}
+      pageSize={30}
       emptyMessage={t('emptyFolder')}
     />
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useOrganizationList } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
@@ -18,20 +18,31 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { COUNTRIES, SITES, PROJECTS } from '@/constants/data';
+import type { Project, Country, Site } from '@/constants/data';
 import { Loader2 } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { getAvailableTenants } from '../data/get-available-tenants';
+import { resolveActionResult } from '@/lib/actions/client';
 
 export function TenantSelector() {
   const router = useRouter();
-  const { setActive, isLoaded } = useOrganizationList();
+  const { setActive, isLoaded } = useOrganizationList({
+    userMemberships: {
+      infinite: true
+    }
+  });
 
-  // Resetear la organización activa al montar el componente
-  // para forzar al usuario a seleccionar una nueva
   useEffect(() => {
     if (isLoaded && setActive) {
       void setActive({ organization: null });
     }
   }, [isLoaded, setActive]);
+
+  const { data: availableTenants, isLoading: isLoadingAvailableTenants } =
+    useQuery({
+      queryKey: ['available-tenants'],
+      queryFn: () => resolveActionResult(getAvailableTenants())
+    });
 
   const [selectedCountry, setSelectedCountry] = useState<string>('');
   const [selectedSite, setSelectedSite] = useState<string>('');
@@ -39,20 +50,56 @@ export function TenantSelector() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Filtrar sitios basados en el país seleccionado
-  const filteredSites = SITES.filter(
-    (site) => site.countryId === selectedCountry
-  );
+  const countries = useMemo<Country[]>(() => {
+    if (!availableTenants) return [];
 
-  // Filtrar proyectos basados en el sitio seleccionado
-  const filteredProjects = PROJECTS.filter(
-    (project) => project.siteId === selectedSite
-  );
+    return Array.from(
+      new Map(
+        availableTenants.map((project) => [
+          project.countryId,
+          project.countryLabel
+        ])
+      ).entries()
+    ).map(([id, label]) => ({ id, label }));
+  }, [availableTenants]);
 
-  // Obtener el proyecto seleccionado para conseguir el clerkOrgId
-  const selectedProjectData = PROJECTS.find(
-    (project) => project.id === selectedProject
-  );
+  const filteredSites = useMemo<Site[]>(() => {
+    if (!availableTenants || !selectedCountry) return [];
+
+    const sitesMap = new Map<
+      string,
+      { id: string; label: string; countryId: string }
+    >();
+
+    availableTenants
+      .filter((project) => project.countryId === selectedCountry)
+      .forEach((project) => {
+        const key = `${project.countryId}-${project.siteId}`;
+        if (!sitesMap.has(key)) {
+          sitesMap.set(key, {
+            id: project.siteId,
+            label: project.siteLabel,
+            countryId: project.countryId
+          });
+        }
+      });
+
+    return Array.from(sitesMap.values());
+  }, [availableTenants, selectedCountry]);
+
+  const filteredProjects = useMemo<Project[]>(() => {
+    if (!availableTenants || !selectedCountry || !selectedSite) return [];
+
+    return availableTenants.filter(
+      (project) =>
+        project.countryId === selectedCountry && project.siteId === selectedSite
+    );
+  }, [availableTenants, selectedCountry, selectedSite]);
+
+  const selectedProjectData = useMemo<Project | undefined>(() => {
+    if (!selectedProject || !availableTenants) return undefined;
+    return availableTenants.find((project) => project.id === selectedProject);
+  }, [selectedProject, availableTenants]);
 
   const handleCountryChange = (value: string) => {
     setSelectedCountry(value);
@@ -96,6 +143,28 @@ export function TenantSelector() {
   const isFormComplete =
     selectedCountry && selectedSite && selectedProject && isLoaded;
 
+  if (isLoadingAvailableTenants) {
+    return (
+      <Card className='w-full max-w-md'>
+        <CardContent className='flex items-center justify-center p-8'>
+          <Loader2 className='h-6 w-6 animate-spin' />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!availableTenants || availableTenants.length === 0) {
+    return (
+      <Card className='w-full max-w-md'>
+        <CardContent className='p-8'>
+          <p className='text-muted-foreground text-center text-sm'>
+            No tienes acceso a ningún proyecto.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className='w-full max-w-md'>
       <CardHeader className='text-center'>
@@ -116,7 +185,7 @@ export function TenantSelector() {
               <SelectValue placeholder='Seleccionar país' />
             </SelectTrigger>
             <SelectContent>
-              {COUNTRIES.map((country) => (
+              {countries.map((country) => (
                 <SelectItem key={country.id} value={country.id}>
                   {country.label}
                 </SelectItem>
