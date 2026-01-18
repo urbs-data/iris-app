@@ -1,9 +1,9 @@
 import { BoxplotChart } from '@/components/charts';
-import { getQuarterlyMetrics } from '@/features/substance/data/get-quarterly-metrics';
+import { getQuarterlyMetrics } from '@/features/dashboards/substance/data/get-quarterly-metrics';
 import {
   substanceSearchParamsCache,
   serializeSubstanceParams
-} from '@/features/substance/searchparams';
+} from '@/features/dashboards/substance/searchparams';
 import { resolveActionResult } from '@/lib/actions/client';
 import { SearchParams } from 'nuqs/server';
 import { Suspense } from 'react';

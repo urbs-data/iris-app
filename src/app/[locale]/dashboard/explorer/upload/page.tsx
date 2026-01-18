@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import PageContainer from '@/components/layout/page-container';
-import { UploadDocumentsForm } from '@/features/explorer/components/upload-documents-form';
+import { UploadDocumentsForm } from '@/features/documents/explorer/components/upload-documents-form';
 
 export const metadata = {
   title: 'Dashboard: Cargar Documentos'

@@ -11,14 +11,14 @@ import { Combobox } from '@/components/ui/combobox';
 import { MultiSelect } from '@/components/ui/multi-select';
 import type { DateRange } from 'react-day-picker';
 import { X, Search } from 'lucide-react';
-import { getWells } from '@/features/substance/data/get-wells';
-import { getAreas } from '@/features/substance/data/get-areas';
-import { getSubstances } from '@/features/substance/data/get-substances';
+import { getWells } from '@/features/dashboards/substance/data/get-wells';
+import { getAreas } from '@/features/dashboards/substance/data/get-areas';
+import { getSubstances } from '@/features/dashboards/substance/data/get-substances';
 import {
   WellType,
   SampleType,
   SUBSTANCE_DEFAULTS
-} from '@/features/substance/types';
+} from '@/features/dashboards/substance/types';
 import { resolveActionResult } from '@/lib/actions/client';
 import { parseISO } from 'date-fns';
 import { useTransitionContext } from '@/hooks/use-transition-context';

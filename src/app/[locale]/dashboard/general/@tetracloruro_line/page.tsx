@@ -1,9 +1,9 @@
 import { LineChart } from '@/components/charts';
-import { getMonthlyMetrics } from '@/features/substance/data/get-monthly-metrics';
+import { getMonthlyMetrics } from '@/features/dashboards/substance/data/get-monthly-metrics';
 import {
   baseSearchParamsCache,
   serializeBaseParams
-} from '@/features/shared/searchparams';
+} from '@/features/dashboards/shared/searchparams';
 import { resolveActionResult } from '@/lib/actions/client';
 import { SearchParams } from 'nuqs/server';
 import { Suspense } from 'react';

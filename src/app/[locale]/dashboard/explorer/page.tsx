@@ -5,9 +5,12 @@ import { getTranslations } from 'next-intl/server';
 import { IconPlus } from '@tabler/icons-react';
 import PageContainer from '@/components/layout/page-container';
 import { buttonVariants } from '@/components/ui/button';
-import { FileExplorer } from '@/features/explorer/components/file-explorer';
-import { FileExplorerSkeleton } from '@/features/explorer/components/file-explorer-skeleton';
-import { searchParamsCache, serialize } from '@/features/explorer/searchparams';
+import { FileExplorer } from '@/features/documents/explorer/components/file-explorer';
+import { FileExplorerSkeleton } from '@/features/documents/explorer/components/file-explorer-skeleton';
+import {
+  searchParamsCache,
+  serialize
+} from '@/features/documents/explorer/searchparams';
 import { cn } from '@/lib/utils';
 
 export const metadata = {

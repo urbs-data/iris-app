@@ -1,13 +1,13 @@
 import {
   SubstanceKpis,
   SubstanceKpisSkeleton
-} from '@/features/shared/components/substance-kpis';
-import { getGeneralMetrics } from '@/features/substance/data/get-general-metrics';
-import { getWellMetrics } from '@/features/substance/data/get-well-metrics';
+} from '@/features/dashboards/shared/components/substance-kpis';
+import { getGeneralMetrics } from '@/features/dashboards/substance/data/get-general-metrics';
+import { getWellMetrics } from '@/features/dashboards/substance/data/get-well-metrics';
 import {
   baseSearchParamsCache,
   serializeBaseParams
-} from '@/features/shared/searchparams';
+} from '@/features/dashboards/shared/searchparams';
 import { resolveActionResult } from '@/lib/actions/client';
 import { SearchParams } from 'nuqs/server';
 import { Suspense } from 'react';

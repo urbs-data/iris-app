@@ -1,6 +1,6 @@
 import React from 'react';
 import { Suspense } from 'react';
-import { UnifiedFiltersButton } from '@/features/shared/components/unified-filters-button';
+import { UnifiedFiltersButton } from '@/features/dashboards/shared/components/unified-filters-button';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface GeneralLayoutProps {

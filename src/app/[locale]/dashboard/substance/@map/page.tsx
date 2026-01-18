@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { MapContent } from './map-content';
-import { getWellMetrics } from '@/features/substance/data/get-well-metrics';
+import { getWellMetrics } from '@/features/dashboards/substance/data/get-well-metrics';
 import {
   substanceSearchParamsCache,
   serializeSubstanceParams
-} from '@/features/substance/searchparams';
+} from '@/features/dashboards/substance/searchparams';
 import { resolveActionResult } from '@/lib/actions/client';
 import { SearchParams } from 'nuqs/server';
 

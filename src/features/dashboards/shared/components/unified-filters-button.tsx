@@ -12,10 +12,10 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
-import { UnifiedFilters } from './unified-filters';
+import { UnifiedFilters } from '@/features/dashboards/shared/components/unified-filters';
 import { useActiveFiltersCount } from '@/hooks/use-active-filters-count';
-import { baseSearchParams } from '../searchparams';
-import { substanceSearchParams } from '@/features/substance/searchparams';
+import { baseSearchParams } from '@/features/dashboards/shared/searchparams';
+import { substanceSearchParams } from '@/features/dashboards/substance/searchparams';
 
 interface UnifiedFiltersButtonProps {
   showSubstanceFilter?: boolean;

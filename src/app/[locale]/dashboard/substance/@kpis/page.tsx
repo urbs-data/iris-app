@@ -1,9 +1,9 @@
 import { KpiCard } from '@/components/charts';
-import { getGeneralMetrics } from '@/features/substance/data/get-general-metrics';
+import { getGeneralMetrics } from '@/features/dashboards/substance/data/get-general-metrics';
 import {
   substanceSearchParamsCache,
   serializeSubstanceParams
-} from '@/features/substance/searchparams';
+} from '@/features/dashboards/substance/searchparams';
 import { resolveActionResult } from '@/lib/actions/client';
 import { SearchParams } from 'nuqs/server';
 import { Suspense } from 'react';

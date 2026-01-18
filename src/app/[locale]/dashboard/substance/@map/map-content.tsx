@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/map';
 import { Card } from '@/components/ui/card';
 import { useTranslations } from 'next-intl';
-import type { WellMetrics } from '@/features/substance/types';
+import type { WellMetrics } from '@/features/dashboards/substance/types';
 
 // GeoJSON data for Berazategui area
 const berazateguiGeoJson = {

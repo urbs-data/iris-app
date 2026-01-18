@@ -8,7 +8,7 @@ import {
   WellType,
   SampleType,
   SUBSTANCE_DEFAULTS
-} from '@/features/substance/types';
+} from '@/features/dashboards/substance/types';
 
 export const baseSearchParams = {
   dateFrom: parseAsString,

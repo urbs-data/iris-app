@@ -6,7 +6,10 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { Map } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import type { GeneralMetrics, WellMetrics } from '@/features/substance/types';
+import type {
+  GeneralMetrics,
+  WellMetrics
+} from '@/features/dashboards/substance/types';
 
 interface SubstanceKpisProps {
   title: string;
