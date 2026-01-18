@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { ColumnDef } from '@tanstack/react-table';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
-import { DownloadButton } from '@/features/shared/components/download-button';
 import { FileIcon } from '@/features/shared/components/file-icon';
 import { FileItem } from '../lib/types';
 import { serialize } from '../searchparams';
+import { FileCellAction } from './file-cell-action';
 
 function formatFileSize(bytes: number | null): string {
   if (bytes === null) return '-';
@@ -95,11 +95,7 @@ export function createFileListColumns(
 
         if (file.type === 'folder') return null;
 
-        return (
-          <div className='flex justify-end'>
-            <DownloadButton blobPath={file.id} />
-          </div>
-        );
+        return <FileCellAction file={file} />;
       }
     }
   ];
