@@ -6,7 +6,7 @@ const BATCH_SIZE = 500;
 export abstract class TruncateLoadETL<TRow, TEntity> implements ETLProcessor {
   abstract canProcess(ctx: ETLContext): boolean;
   abstract parse(buffer: Buffer): ParseResult<TRow>;
-  abstract toEntity(row: TRow): TEntity;
+  abstract toEntity(row: TRow, organizationId: string): TEntity;
   abstract getTable(): Table;
 
   async process(ctx: ETLContext): Promise<ETLResult> {
@@ -30,7 +30,7 @@ export abstract class TruncateLoadETL<TRow, TEntity> implements ETLProcessor {
     result.stats.rowsParsed = parseResult.rows.length;
 
     const entities: TEntity[] = parseResult.rows.map((row) =>
-      this.toEntity(row)
+      this.toEntity(row, ctx.organizationId)
     );
 
     try {

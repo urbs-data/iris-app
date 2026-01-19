@@ -1,4 +1,4 @@
-import { LineChart } from '@/components/charts';
+import { LineChart, EmptyState } from '@/components/charts';
 import { getMonthlyMetrics } from '@/features/dashboards/substance/data/get-monthly-metrics';
 import {
   substanceSearchParamsCache,
@@ -15,7 +15,7 @@ interface PageProps {
 }
 
 async function LineChartContent() {
-  const t = await getTranslations('dashboard.lineplot');
+  const t = await getTranslations();
   const locale = await getLocale();
   const dateFrom = substanceSearchParamsCache.get('dateFrom');
   const dateTo = substanceSearchParamsCache.get('dateTo');
@@ -39,18 +39,27 @@ async function LineChartContent() {
 
   const result = await resolveActionResult(getMonthlyMetrics(filters));
 
+  if (!result.data || result.data.length === 0) {
+    return (
+      <EmptyState
+        title={t('dashboard.noData.title')}
+        description={t('dashboard.noData.description')}
+      />
+    );
+  }
+
   return (
     <LineChart
-      title={t('defaultTitle')}
+      title={t('dashboard.lineplot.defaultTitle')}
       data={result.data}
-      yAxisLabel={`${t('concentration')} [${result.unit}]`}
-      tooltipLabel={t('average')}
+      yAxisLabel={`${t('dashboard.lineplot.concentration')} [${result.unit}]`}
+      tooltipLabel={t('dashboard.lineplot.average')}
       tooltipUnit={result.unit}
       locale={locale === 'en' ? 'en-US' : 'es-ES'}
       referenceLines={[
         {
           value: result.guideLevel,
-          label: t('guidelineLevel'),
+          label: t('dashboard.lineplot.guidelineLevel'),
           color: 'var(--destructive)',
           strokeDasharray: '5 5'
         }

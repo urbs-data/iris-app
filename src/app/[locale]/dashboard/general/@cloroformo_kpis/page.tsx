@@ -2,6 +2,7 @@ import {
   SubstanceKpis,
   SubstanceKpisSkeleton
 } from '@/features/dashboards/shared/components/substance-kpis';
+import { EmptyState } from '@/components/charts';
 import { getGeneralMetrics } from '@/features/dashboards/substance/data/get-general-metrics';
 import { getWellMetrics } from '@/features/dashboards/substance/data/get-well-metrics';
 import {
@@ -20,7 +21,7 @@ interface PageProps {
 }
 
 async function KpisContent() {
-  const t = await getTranslations('general');
+  const t = await getTranslations();
   const dateFrom = baseSearchParamsCache.get('dateFrom');
   const dateTo = baseSearchParamsCache.get('dateTo');
   const wellType = baseSearchParamsCache.get('wellType');
@@ -45,9 +46,18 @@ async function KpisContent() {
     resolveActionResult(getWellMetrics(filters))
   ]);
 
+  if (generalMetrics.samples === 0) {
+    return (
+      <EmptyState
+        title={t('dashboard.noData.title')}
+        description={t('dashboard.noData.kpisDescription')}
+      />
+    );
+  }
+
   return (
     <SubstanceKpis
-      title={t('chloroform')}
+      title={t('general.chloroform')}
       generalMetrics={generalMetrics}
       wellMetrics={wellMetricsResult.data}
       unit={generalMetrics.unit}

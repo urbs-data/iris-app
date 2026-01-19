@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool, PoolConfig } from 'pg';
 import { logger } from '@/lib/logger';
-import { Logger } from 'drizzle-orm';
+import { Logger, sql } from 'drizzle-orm';
 import { mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
@@ -61,6 +61,18 @@ async function getDb(): Promise<ReturnType<typeof drizzle>> {
   })();
 
   return initPromise;
+}
+
+export async function getDbWithOrg(
+  organizationId: string
+): Promise<ReturnType<typeof drizzle>> {
+  const db = await getDb();
+
+  await db.execute(
+    sql`SELECT set_config('app.current_org', ${organizationId}, false)`
+  );
+
+  return db;
 }
 
 export default getDb;

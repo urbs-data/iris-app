@@ -30,6 +30,7 @@ export async function upsertEstudios(
     .onConflictDoUpdate({
       target: estudiosTable.id_estudio,
       set: {
+        organization_id: estudiosTable.organization_id,
         proveedor: estudiosTable.proveedor,
         informe_final: estudiosTable.informe_final,
         fecha_desde: estudiosTable.fecha_desde,
@@ -56,6 +57,7 @@ export async function upsertDocumentos(
     .onConflictDoUpdate({
       target: documentosTable.id_documento,
       set: {
+        organization_id: documentosTable.organization_id,
         id_estudio: documentosTable.id_estudio,
         documento: documentosTable.documento
       }
@@ -80,6 +82,7 @@ export async function upsertEstudiosPozos(
     .onConflictDoUpdate({
       target: estudiosPozosTable.id_estudio_pozo,
       set: {
+        organization_id: estudiosPozosTable.organization_id,
         id_estudio: estudiosPozosTable.id_estudio,
         id_pozo: estudiosPozosTable.id_pozo
       }
@@ -104,6 +107,7 @@ export async function upsertMuestras(
     .onConflictDoUpdate({
       target: muestrasTable.id_muestra,
       set: {
+        organization_id: muestrasTable.organization_id,
         muestra: muestrasTable.muestra,
         id_estudio_pozo: muestrasTable.id_estudio_pozo,
         tipo: muestrasTable.tipo,

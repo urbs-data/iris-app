@@ -8,9 +8,13 @@ import { isExcelFile } from '../parsing/utils';
 import type { ETLContext } from './types';
 import { Classification } from '../../constants/classifications';
 
-function toNewSubstance(row: ParsedSubstanceRow): NewSubstance {
+function toNewSubstance(
+  row: ParsedSubstanceRow,
+  organizationId: string
+): NewSubstance {
   return {
     id_sustancia: row.id_sustancia,
+    organization_id: organizationId,
     nombre_ingles: row.nombre_ingles,
     nombre_espanol: row.nombre_espanol,
     alias: row.alias,
@@ -37,8 +41,8 @@ export class SubstancesETL extends TruncateLoadETL<
     return parseSubstancesExcel(buffer);
   }
 
-  toEntity(row: ParsedSubstanceRow): NewSubstance {
-    return toNewSubstance(row);
+  toEntity(row: ParsedSubstanceRow, organizationId: string): NewSubstance {
+    return toNewSubstance(row, organizationId);
   }
 
   getTable() {

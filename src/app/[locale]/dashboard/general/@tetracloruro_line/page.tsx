@@ -1,4 +1,4 @@
-import { LineChart } from '@/components/charts';
+import { LineChart, EmptyState } from '@/components/charts';
 import { getMonthlyMetrics } from '@/features/dashboards/substance/data/get-monthly-metrics';
 import {
   baseSearchParamsCache,
@@ -39,6 +39,15 @@ async function LineChartContent() {
   };
 
   const result = await resolveActionResult(getMonthlyMetrics(filters));
+
+  if (!result.data || result.data.length === 0) {
+    return (
+      <EmptyState
+        title={t('dashboard.noData.title')}
+        description={t('dashboard.noData.description')}
+      />
+    );
+  }
 
   return (
     <LineChart

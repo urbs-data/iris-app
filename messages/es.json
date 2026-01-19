@@ -161,6 +161,12 @@
     },
     "dashboard": {
         "all": "Todos",
+        "noData": {
+            "title": "No hay datos disponibles",
+            "description": "No hay datos que coincidan con los filtros seleccionados. Intente ajustar el rango de fechas o los filtros para ver resultados.",
+            "kpisDescription": "No hay métricas para mostrar con los filtros actuales. Intente ajustar el rango de fechas o los filtros.",
+            "mapDescription": "No hay datos espaciales para mostrar con los filtros actuales. Intente ajustar los filtros para ver resultados en el mapa."
+        },
         "filter": {
             "dateRange": "Rango de Fechas",
             "substance": "Sustancia",

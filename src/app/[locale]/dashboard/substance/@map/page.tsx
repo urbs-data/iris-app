@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { EmptyState } from '@/components/charts';
 import { MapContent } from './map-content';
 import { getWellMetrics } from '@/features/dashboards/substance/data/get-well-metrics';
 import {
@@ -8,12 +9,14 @@ import {
 } from '@/features/dashboards/substance/searchparams';
 import { resolveActionResult } from '@/lib/actions/client';
 import { SearchParams } from 'nuqs/server';
+import { getTranslations } from 'next-intl/server';
 
 interface PageProps {
   searchParams: Promise<SearchParams>;
 }
 
 async function MapContentWrapper() {
+  const t = await getTranslations('dashboard.noData');
   const dateFrom = substanceSearchParamsCache.get('dateFrom');
   const dateTo = substanceSearchParamsCache.get('dateTo');
   const substance = substanceSearchParamsCache.get('substance');
@@ -35,6 +38,10 @@ async function MapContentWrapper() {
   };
 
   const result = await resolveActionResult(getWellMetrics(filters));
+
+  if (!result.data || result.data.length === 0) {
+    return <EmptyState title={t('title')} description={t('mapDescription')} />;
+  }
 
   return <MapContent data={result.data} guideLevel={result.guideLevel} />;
 }

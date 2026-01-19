@@ -159,6 +159,12 @@
     },
     "dashboard": {
         "all": "All",
+        "noData": {
+            "title": "No data available",
+            "description": "There is no data matching the selected filters. Try adjusting the date range or filters to see results.",
+            "kpisDescription": "There are no metrics to display with the current filters. Try adjusting the date range or filters.",
+            "mapDescription": "There is no spatial data to display with the current filters. Try adjusting the filters to see results on the map."
+        },
         "filter": {
             "dateRange": "Date range",
             "substance": "Chemical compound",

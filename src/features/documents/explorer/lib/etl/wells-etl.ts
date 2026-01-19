@@ -6,7 +6,7 @@ import { isExcelFile } from '../parsing/utils';
 import type { ETLContext } from './types';
 import { Classification } from '../../constants/classifications';
 
-function toNewPozo(row: ParsedWellRow): NewPozo {
+function toNewPozo(row: ParsedWellRow, organizationId: string): NewPozo {
   let area: string | null = null;
 
   if (row.longitud_decimal !== null && row.latitud_decimal !== null) {
@@ -19,6 +19,7 @@ function toNewPozo(row: ParsedWellRow): NewPozo {
 
   return {
     id_pozo: row.id_pozo,
+    organization_id: organizationId,
     tipo: row.tipo,
     elevacion_terreno: row.elevacion_terreno,
     coordenada_norte: row.coordenada_norte,
@@ -45,8 +46,8 @@ export class WellsETL extends TruncateLoadETL<ParsedWellRow, NewPozo> {
     return parseWellsExcel(buffer);
   }
 
-  toEntity(row: ParsedWellRow): NewPozo {
-    return toNewPozo(row);
+  toEntity(row: ParsedWellRow, organizationId: string): NewPozo {
+    return toNewPozo(row, organizationId);
   }
 
   getTable() {

@@ -161,7 +161,10 @@ interface EnrichedRow extends ParsedRow {
 /**
  * Extrae todas las entidades de las filas parseadas del Excel
  */
-export function extractEntities(rows: ParsedRow[]): ExtractedEntities {
+export function extractEntities(
+  rows: ParsedRow[],
+  organizationId: string
+): ExtractedEntities {
   // Paso 1: Enriquecer filas con IDs calculados
   const enrichedRows: EnrichedRow[] = rows.map((row) => {
     // Generar id_estudio
@@ -213,6 +216,7 @@ export function extractEntities(rows: ParsedRow[]): ExtractedEntities {
     if (!estudiosMap.has(row.id_estudio)) {
       estudiosMap.set(row.id_estudio, {
         id_estudio: row.id_estudio,
+        organization_id: organizationId,
         proveedor: row.proveedor,
         informe_final: row.informe_final,
         fecha_desde: row.fecha_desde,
@@ -227,6 +231,7 @@ export function extractEntities(rows: ParsedRow[]): ExtractedEntities {
     if (!documentosMap.has(row.id_documento)) {
       documentosMap.set(row.id_documento, {
         id_documento: row.id_documento,
+        organization_id: organizationId,
         id_estudio: row.id_estudio,
         documento: row.documento_origen
       });
@@ -239,6 +244,7 @@ export function extractEntities(rows: ParsedRow[]): ExtractedEntities {
     if (!estudiosPozosMap.has(row.id_estudio_pozo)) {
       estudiosPozosMap.set(row.id_estudio_pozo, {
         id_estudio_pozo: row.id_estudio_pozo,
+        organization_id: organizationId,
         id_estudio: row.id_estudio,
         id_pozo: row.id_pozo // Puede ser null si el pozo no existe
       });
@@ -251,6 +257,7 @@ export function extractEntities(rows: ParsedRow[]): ExtractedEntities {
     if (!muestrasMap.has(row.id_muestra)) {
       muestrasMap.set(row.id_muestra, {
         id_muestra: row.id_muestra,
+        organization_id: organizationId,
         muestra: row.muestra,
         id_estudio_pozo: row.id_estudio_pozo,
         tipo: row.tipo_mapped,
@@ -269,6 +276,7 @@ export function extractEntities(rows: ParsedRow[]): ExtractedEntities {
     if (!concentracionesMap.has(row.id_concentracion)) {
       concentracionesMap.set(row.id_concentracion, {
         id_concentracion: row.id_concentracion,
+        organization_id: organizationId,
         id_muestra: row.id_muestra,
         fecha_laboratorio: row.fecha_laboratorio,
         metodologia_muestreo: row.metodologia_muestreo,

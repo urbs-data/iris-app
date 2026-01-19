@@ -203,7 +203,7 @@ export const getGeneralMetrics = authOrganizationActionClient
     }
 
     const row = results.rows[0];
-    const samples = row.cantidad_registros;
+    const samples = row.cantidad_registros ?? 0;
     const average = row.promedio_concentracion ?? 0;
     const median = row.mediana_concentracion ?? 0;
     const min = row.minimo_concentracion ?? 0;

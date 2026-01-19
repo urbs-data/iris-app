@@ -50,7 +50,7 @@ export class SamplesETL implements ETLProcessor {
 
     let entities: ExtractedEntities;
     try {
-      entities = extractEntities(parseResult.rows);
+      entities = extractEntities(parseResult.rows, ctx.organizationId);
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Error desconocido';

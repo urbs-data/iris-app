@@ -19,6 +19,7 @@ export interface ETLContext {
   fileName: string;
   classification: string;
   subClassification?: string;
+  organizationId: string;
 }
 
 export interface ETLProcessor {

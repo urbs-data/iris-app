@@ -1,4 +1,4 @@
-import { KpiCard } from '@/components/charts';
+import { KpiCard, EmptyState } from '@/components/charts';
 import { getGeneralMetrics } from '@/features/dashboards/substance/data/get-general-metrics';
 import {
   substanceSearchParamsCache,
@@ -15,7 +15,7 @@ interface PageProps {
 }
 
 async function KpisContent() {
-  const t = await getTranslations('dashboard.kpi');
+  const t = await getTranslations();
   const dateFrom = substanceSearchParamsCache.get('dateFrom');
   const dateTo = substanceSearchParamsCache.get('dateTo');
   const substance = substanceSearchParamsCache.get('substance');
@@ -38,22 +38,39 @@ async function KpisContent() {
 
   const metrics = await resolveActionResult(getGeneralMetrics(filters));
 
+  if (metrics.samples === 0) {
+    return (
+      <EmptyState
+        title={t('dashboard.noData.title')}
+        description={t('dashboard.noData.kpisDescription')}
+      />
+    );
+  }
+
   const mainKpis = [
-    { label: t('sampleCount'), value: metrics.samples },
+    { label: t('dashboard.kpi.sampleCount'), value: metrics.samples },
     {
-      label: t('average'),
+      label: t('dashboard.kpi.average'),
       value: metrics.average.toFixed(1),
       unit: metrics.unit
     },
     {
-      label: t('median'),
+      label: t('dashboard.kpi.median'),
       value: metrics.median.toFixed(2),
       unit: metrics.unit
     },
-    { label: t('minimum'), value: metrics.min.toFixed(2), unit: metrics.unit },
-    { label: t('maximum'), value: metrics.max.toFixed(2), unit: metrics.unit },
     {
-      label: t('standardDeviation'),
+      label: t('dashboard.kpi.minimum'),
+      value: metrics.min.toFixed(2),
+      unit: metrics.unit
+    },
+    {
+      label: t('dashboard.kpi.maximum'),
+      value: metrics.max.toFixed(2),
+      unit: metrics.unit
+    },
+    {
+      label: t('dashboard.kpi.standardDeviation'),
       value: metrics.stdDev.toFixed(2),
       unit: metrics.unit
     }
@@ -61,17 +78,17 @@ async function KpisContent() {
 
   const guideKpis = [
     {
-      label: t('guidelineLevel'),
+      label: t('dashboard.kpi.guidelineLevel'),
       value: metrics.guideLevel,
       unit: metrics.unit
     },
     {
-      label: t('percentageToGuideline'),
+      label: t('dashboard.kpi.percentageToGuideline'),
       value: `${metrics.vsGuidePercent.toFixed(2)} %`,
       className: metrics.vsGuidePercent > 100 ? 'text-destructive' : ''
     },
     {
-      label: t('percentageToMaximum'),
+      label: t('dashboard.kpi.percentageToMaximum'),
       value: `${metrics.vsMaxPercent.toFixed(2)} %`,
       className: metrics.vsMaxPercent < 0 ? 'text-green-600' : ''
     }

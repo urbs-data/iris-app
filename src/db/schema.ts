@@ -4,8 +4,18 @@ import {
   varchar,
   timestamp,
   real,
-  serial
+  serial,
+  pgPolicy
 } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+
+const orgIsolationPolicy = (tableName: string) =>
+  pgPolicy(`${tableName}_org_isolation`, {
+    as: 'permissive',
+    for: 'all',
+    using: sql`organization_id = current_setting('app.current_org', true)`,
+    withCheck: sql`organization_id = current_setting('app.current_org', true)`
+  });
 
 export const countryTable = pgTable('country', {
   id: integer('id').primaryKey(),
@@ -36,6 +46,7 @@ export const productsTable = pgTable('products', {
 
 export const substancesTable = pgTable('sustancias', {
   id_sustancia: varchar('id_sustancia', { length: 100 }).primaryKey(),
+  organization_id: varchar('organization_id', { length: 100 }).notNull(),
   nombre_ingles: varchar('nombre_ingles', { length: 255 }).notNull(),
   nombre_espanol: varchar('nombre_espanol', { length: 255 }),
   alias: varchar('alias', { length: 255 }),
@@ -46,83 +57,114 @@ export const substancesTable = pgTable('sustancias', {
   unidad_guia_suelo: varchar('unidad_guia_suelo', { length: 50 })
 });
 
-export const pozosTable = pgTable('pozos', {
-  id_pozo: varchar('id_pozo', { length: 100 }).primaryKey(),
-  tipo: varchar('tipo', { length: 100 }),
-  elevacion_terreno: real('elevacion_terreno'),
-  coordenada_norte: real('coordenada_norte'),
-  coordenada_este: real('coordenada_este'),
-  latitud_decimal: real('latitud_decimal'),
-  longitud_decimal: real('longitud_decimal'),
-  fecha_relevamiento: timestamp('fecha_relevamiento'),
-  responsable_relevamiento: varchar('responsable_relevamiento', {
-    length: 100
-  }),
-  empresa_relevamiento: varchar('empresa_relevamiento', { length: 100 }),
-  comentarios: varchar('comentarios', { length: 100 }),
-  descripcion: varchar('descripcion', { length: 100 }),
-  area: varchar('area', { length: 100 })
-});
+export const pozosTable = pgTable(
+  'pozos',
+  {
+    id_pozo: varchar('id_pozo', { length: 100 }).primaryKey(),
+    organization_id: varchar('organization_id', { length: 100 }).notNull(),
+    tipo: varchar('tipo', { length: 100 }),
+    elevacion_terreno: real('elevacion_terreno'),
+    coordenada_norte: real('coordenada_norte'),
+    coordenada_este: real('coordenada_este'),
+    latitud_decimal: real('latitud_decimal'),
+    longitud_decimal: real('longitud_decimal'),
+    fecha_relevamiento: timestamp('fecha_relevamiento'),
+    responsable_relevamiento: varchar('responsable_relevamiento', {
+      length: 100
+    }),
+    empresa_relevamiento: varchar('empresa_relevamiento', { length: 100 }),
+    comentarios: varchar('comentarios', { length: 100 }),
+    descripcion: varchar('descripcion', { length: 100 }),
+    area: varchar('area', { length: 100 })
+  },
+  (t) => [orgIsolationPolicy('pozos')]
+).enableRLS();
 
-export const estudiosTable = pgTable('estudios', {
-  id_estudio: varchar('id_estudio', { length: 100 }).primaryKey(),
-  proveedor: varchar('proveedor', { length: 100 }),
-  informe_final: varchar('informe_final', { length: 100 }),
-  fecha_desde: timestamp('fecha_desde'),
-  fecha_hasta: timestamp('fecha_hasta')
-});
+export const estudiosTable = pgTable(
+  'estudios',
+  {
+    id_estudio: varchar('id_estudio', { length: 100 }).primaryKey(),
+    organization_id: varchar('organization_id', { length: 100 }).notNull(),
+    proveedor: varchar('proveedor', { length: 100 }),
+    informe_final: varchar('informe_final', { length: 100 }),
+    fecha_desde: timestamp('fecha_desde'),
+    fecha_hasta: timestamp('fecha_hasta')
+  },
+  (t) => [orgIsolationPolicy('estudios')]
+).enableRLS();
 
-export const documentosTable = pgTable('documentos', {
-  id_documento: varchar('id_documento', { length: 100 }).primaryKey(),
-  id_estudio: varchar('id_estudio', { length: 100 }).references(
-    () => estudiosTable.id_estudio
-  ),
-  documento: varchar('documento', { length: 100 })
-});
+export const documentosTable = pgTable(
+  'documentos',
+  {
+    id_documento: varchar('id_documento', { length: 100 }).primaryKey(),
+    organization_id: varchar('organization_id', { length: 100 }).notNull(),
+    id_estudio: varchar('id_estudio', { length: 100 }).references(
+      () => estudiosTable.id_estudio
+    ),
+    documento: varchar('documento', { length: 100 })
+  },
+  (t) => [orgIsolationPolicy('documentos')]
+).enableRLS();
 
-export const estudiosPozosTable = pgTable('estudios_pozos', {
-  id_estudio_pozo: varchar('id_estudio_pozo', { length: 100 }).primaryKey(),
-  id_estudio: varchar('id_estudio', { length: 100 }).references(
-    () => estudiosTable.id_estudio
-  ),
-  id_pozo: varchar('id_pozo', { length: 100 }).references(
-    () => pozosTable.id_pozo
-  )
-});
+export const estudiosPozosTable = pgTable(
+  'estudios_pozos',
+  {
+    id_estudio_pozo: varchar('id_estudio_pozo', { length: 100 }).primaryKey(),
+    organization_id: varchar('organization_id', { length: 100 }).notNull(),
+    id_estudio: varchar('id_estudio', { length: 100 }).references(
+      () => estudiosTable.id_estudio
+    ),
+    id_pozo: varchar('id_pozo', { length: 100 }).references(
+      () => pozosTable.id_pozo
+    )
+  },
+  (t) => [orgIsolationPolicy('estudios_pozos')]
+).enableRLS();
 
-export const muestrasTable = pgTable('muestras', {
-  id_muestra: varchar('id_muestra', { length: 100 }).primaryKey(),
-  muestra: varchar('muestra', { length: 100 }),
-  id_estudio_pozo: varchar('id_estudio_pozo', { length: 100 }).references(
-    () => estudiosPozosTable.id_estudio_pozo
-  ),
-  tipo: varchar('tipo', { length: 100 }),
-  profundidad: real('profundidad'),
-  fecha: timestamp('fecha')
-});
+export const muestrasTable = pgTable(
+  'muestras',
+  {
+    id_muestra: varchar('id_muestra', { length: 100 }).primaryKey(),
+    organization_id: varchar('organization_id', { length: 100 }).notNull(),
+    muestra: varchar('muestra', { length: 100 }),
+    id_estudio_pozo: varchar('id_estudio_pozo', { length: 100 }).references(
+      () => estudiosPozosTable.id_estudio_pozo
+    ),
+    tipo: varchar('tipo', { length: 100 }),
+    profundidad: real('profundidad'),
+    fecha: timestamp('fecha')
+  },
+  (t) => [orgIsolationPolicy('muestras')]
+).enableRLS();
 
-export const concentracionesTable = pgTable('concentraciones', {
-  id_concentracion: varchar('id_concentracion', { length: 100 }).primaryKey(),
-  id_muestra: varchar('id_muestra', { length: 100 }).references(
-    () => muestrasTable.id_muestra
-  ),
-  fecha_laboratorio: timestamp('fecha_laboratorio'),
-  metodologia_muestreo: varchar('metodologia_muestreo', { length: 100 }),
-  protocolo: varchar('protocolo', { length: 100 }),
-  id_sustancia: varchar('id_sustancia', { length: 100 }).references(
-    () => substancesTable.id_sustancia
-  ),
-  metodo: varchar('metodo', { length: 100 }),
-  unidad: varchar('unidad', { length: 100 }),
-  limite_deteccion: varchar('limite_deteccion', { length: 100 }),
-  limite_cuantificacion: varchar('limite_cuantificacion', { length: 100 }),
-  concentracion: real('concentracion'),
-  documento_origen: varchar('documento_origen', { length: 200 })
-});
+export const concentracionesTable = pgTable(
+  'concentraciones',
+  {
+    id_concentracion: varchar('id_concentracion', { length: 100 }).primaryKey(),
+    organization_id: varchar('organization_id', { length: 100 }).notNull(),
+    id_muestra: varchar('id_muestra', { length: 100 }).references(
+      () => muestrasTable.id_muestra
+    ),
+    fecha_laboratorio: timestamp('fecha_laboratorio'),
+    metodologia_muestreo: varchar('metodologia_muestreo', { length: 100 }),
+    protocolo: varchar('protocolo', { length: 100 }),
+    id_sustancia: varchar('id_sustancia', { length: 100 }).references(
+      () => substancesTable.id_sustancia
+    ),
+    metodo: varchar('metodo', { length: 100 }),
+    unidad: varchar('unidad', { length: 100 }),
+    limite_deteccion: varchar('limite_deteccion', { length: 100 }),
+    limite_cuantificacion: varchar('limite_cuantificacion', { length: 100 }),
+    concentracion: real('concentracion'),
+    documento_origen: varchar('documento_origen', { length: 200 })
+  },
+  (t) => [orgIsolationPolicy('concentraciones')]
+).enableRLS();
 
 export const parametrosFisicoQuimicosTable = pgTable(
   'parametros_fisico_quimicos',
   {
+    organization_id: varchar('organization_id', { length: 100 }).notNull(),
     fecha_hora: timestamp('fecha_hora'),
     id_pozo: varchar('id_pozo', { length: 100 }).references(
       () => pozosTable.id_pozo
@@ -135,8 +177,9 @@ export const parametrosFisicoQuimicosTable = pgTable(
     valor: real('valor'),
     unidad: varchar('unidad', { length: 100 }),
     documento_origen: varchar('documento_origen', { length: 200 })
-  }
-);
+  },
+  (t) => [orgIsolationPolicy('parametros_fisico_quimicos')]
+).enableRLS();
 
 export type Product = typeof productsTable.$inferSelect;
 export type NewProduct = typeof productsTable.$inferInsert;

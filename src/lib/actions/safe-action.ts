@@ -13,7 +13,7 @@ import {
   PreConditionError,
   ValidationError
 } from '@/lib/errors';
-import { getDb } from '@/db';
+import { getDb, getDbWithOrg } from '@/db';
 
 export const actionClient = createSafeActionClient({
   handleServerError(e) {
@@ -73,7 +73,7 @@ export const authActionClient = actionClientWithLogger.use(async ({ next }) => {
 export const authOrganizationActionClient = actionClientWithLogger.use(
   async ({ next }) => {
     const ctx = await getAuthOrganizationContext();
-    const db = await getDb();
+    const db = await getDbWithOrg(ctx.organization.id);
     return next({ ctx: { ...ctx, db } });
   }
 );

@@ -64,7 +64,8 @@ export const uploadDocuments = authOrganizationActionClient
           buffer,
           fileName,
           classification: parsedInput.classification,
-          subClassification: parsedInput.subClassification
+          subClassification: parsedInput.subClassification,
+          organizationId: ctx.organization.id
         });
 
         if (processor) {
@@ -73,7 +74,8 @@ export const uploadDocuments = authOrganizationActionClient
             buffer,
             fileName,
             classification: parsedInput.classification,
-            subClassification: parsedInput.subClassification
+            subClassification: parsedInput.subClassification,
+            organizationId: ctx.organization.id
           });
 
           if (!etlResult.success) {

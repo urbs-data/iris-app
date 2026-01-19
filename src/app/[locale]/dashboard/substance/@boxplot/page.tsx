@@ -1,4 +1,4 @@
-import { BoxplotChart } from '@/components/charts';
+import { BoxplotChart, EmptyState } from '@/components/charts';
 import { getQuarterlyMetrics } from '@/features/dashboards/substance/data/get-quarterly-metrics';
 import {
   substanceSearchParamsCache,
@@ -37,6 +37,15 @@ async function BoxplotContent() {
   };
 
   const result = await resolveActionResult(getQuarterlyMetrics(filters));
+
+  if (!result.data || result.data.length === 0) {
+    return (
+      <EmptyState
+        title={t('noData.title')}
+        description={t('noData.description')}
+      />
+    );
+  }
 
   return (
     <BoxplotChart
