@@ -50,17 +50,11 @@ import { OrgSwitcher } from '../org-switcher';
 
 export default function AppSidebar() {
   const pathname = usePathname();
-  const { isOpen } = useMediaQuery();
   const { user } = useUser();
-  const { organization } = useOrganization();
   const router = useRouter();
   const filteredItems = useFilteredNavItems(navItems);
   const { signOut } = useClerk();
   const t = useTranslations('nav');
-
-  React.useEffect(() => {
-    // Side effects based on sidebar state changes
-  }, [isOpen]);
 
   return (
     <Sidebar collapsible='icon'>
@@ -185,19 +179,7 @@ export default function AppSidebar() {
                     onClick={() => router.push('/dashboard/profile')}
                   >
                     <IconUserCircle className='mr-2 h-4 w-4' />
-                    Profile
-                  </DropdownMenuItem>
-                  {organization && (
-                    <DropdownMenuItem
-                      onClick={() => router.push('/dashboard/billing')}
-                    >
-                      <IconCreditCard className='mr-2 h-4 w-4' />
-                      Billing
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuItem>
-                    <IconBell className='mr-2 h-4 w-4' />
-                    Notifications
+                    {t('profile')}
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
@@ -205,7 +187,7 @@ export default function AppSidebar() {
                   onClick={() => signOut(() => router.push('/auth/sign-in'))}
                 >
                   <IconLogout className='mr-2 h-4 w-4' />
-                  Logout
+                  {t('logout')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

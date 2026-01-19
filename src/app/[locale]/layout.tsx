@@ -1,6 +1,8 @@
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
+import { ClerkProvider } from '@clerk/nextjs';
+import { enUS, esES } from '@clerk/localizations';
 
 type Props = {
   children: React.ReactNode;
@@ -9,10 +11,15 @@ type Props = {
 
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
+
+  const localization = locale === 'es' ? esES : enUS;
+
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
   return (
-    <NextIntlClientProvider locale={locale}>{children}</NextIntlClientProvider>
+    <NextIntlClientProvider locale={locale}>
+      <ClerkProvider localization={localization}>{children}</ClerkProvider>
+    </NextIntlClientProvider>
   );
 }

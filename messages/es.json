@@ -51,6 +51,7 @@
         }
     },
     "nav": {
+        "logout": "Cerrar sesión",
         "home": "Inicio",
         "dashboard": "Dashboard",
         "analyze": "Analizar",
@@ -274,6 +275,12 @@
             "rowsPerPage": "Registros por página",
             "pageInfo": "Página {page} de {total}",
             "noResults": "No hay resultados"
+        },
+        "multiSelect": {
+            "loading": "Cargando...",
+            "multiple": "Varios ({count})",
+            "emptyMessage": "No se encontraron resultados",
+            "placeholder": "Seleccione opciones..."
         }
     },
     "wellTypes": {
@@ -442,29 +449,27 @@
         "well": "Pozo",
         "wells": "Pozos",
         "searchWell": "Buscar pozo...",
-        "noWellFound": "No se encontró el pozo",
         "sampleType": "Tipo de Muestra",
         "searchSampleType": "Buscar tipo de muestra...",
         "noSampleTypeFound": "No se encontró el tipo de muestra",
         "search": "Buscar"
     },
     "auth": {
-        "login": {
-            "title": "Iniciar sesión",
-            "description": "Ingresa tu correo electrónico para acceder a tu cuenta",
-            "acceptTerms": "Al continuar, aceptas nuestros",
-            "terms": "Términos de Servicio",
-            "privacy": "Política de Privacidad",
-            "documentation": "Documentación de la aplicación",
-            "language": "Idioma"
-        },
-        "two-factor": {
-            "title": "Verificación de dos factores",
-            "enter-code": "Ingrese el código de verificación",
-            "invalid-code": "Código inválido. Por favor, intente nuevamente.",
-            "verifying": "Verificando...",
-            "verify": "Verificar"
-        },
-        "loading": "Cargando..."
+        "termsAndPrivacy": "Al hacer clic en continuar, aceptas nuestros <terms>Términos de Servicio</terms> y <privacy>Política de Privacidad</privacy>.",
+        "tenant": {
+            "selectProject": "Seleccionar Proyecto",
+            "selectProjectDescription": "Selecciona el proyecto para continuar.",
+            "country": "País",
+            "selectCountry": "Seleccionar país",
+            "selectCountryFirst": "Seleccionar país primero",
+            "site": "Sitio",
+            "selectSite": "Seleccionar sitio",
+            "selectSiteFirst": "Seleccionar sitio primero",
+            "project": "Proyecto",
+            "loading": "Cargando...",
+            "continue": "Continuar",
+            "noProjectAccess": "No tienes acceso a ningún proyecto.",
+            "noProjectAccessError": "Error al seleccionar el proyecto. Por favor, intenta nuevamente."
+        }
     }
 }

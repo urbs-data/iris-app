@@ -7,7 +7,9 @@ import { defaultLocale } from './i18n/config';
 const intlMiddleware = createMiddleware(routing);
 
 const isProtectedRoute = createRouteMatcher(['/:lang/dashboard(.*)']);
-const isSelectTenantRoute = createRouteMatcher(['/:lang/select-tenant(.*)']);
+const isSelectTenantRoute = createRouteMatcher([
+  '/:lang/auth/select-tenant(.*)'
+]);
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
   const { pathname } = req.nextUrl;
@@ -25,7 +27,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
 
     if (!orgId) {
       const locale = pathname.split('/')[1] || defaultLocale;
-      const selectTenantUrl = new URL(`/${locale}/select-tenant`, req.url);
+      const selectTenantUrl = new URL(`/${locale}/auth/select-tenant`, req.url);
       return NextResponse.redirect(selectTenantUrl);
     }
   }

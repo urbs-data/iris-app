@@ -274,7 +274,6 @@ export function UnifiedFilters({
           options={wellsData.map((w) => ({ value: w.value, label: w.label }))}
           placeholder={t('wells')}
           searchPlaceholder={t('searchWell')}
-          emptyMessage={t('noWellFound')}
           isLoading={isLoadingWells}
           className='h-9'
         />

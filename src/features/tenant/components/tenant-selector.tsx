@@ -23,8 +23,10 @@ import { Loader2 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getAvailableTenants } from '../data/get-available-tenants';
 import { resolveActionResult } from '@/lib/actions/client';
+import { useTranslations } from 'next-intl';
 
 export function TenantSelector() {
+  const t = useTranslations('auth.tenant');
   const router = useRouter();
   const { setActive, isLoaded } = useOrganizationList({
     userMemberships: {
@@ -133,9 +135,7 @@ export function TenantSelector() {
       router.push('/dashboard');
     } catch (err) {
       console.error('Error al setear la organización:', err);
-      setError(
-        'No se pudo acceder a este proyecto. Verifica que tengas permisos.'
-      );
+      setError(t('noProjectAccessError'));
       setIsSubmitting(false);
     }
   };
@@ -158,7 +158,7 @@ export function TenantSelector() {
       <Card className='w-full max-w-md'>
         <CardContent className='p-8'>
           <p className='text-muted-foreground text-center text-sm'>
-            No tienes acceso a ningún proyecto.
+            {t('noProjectAccess')}
           </p>
         </CardContent>
       </Card>
@@ -168,21 +168,19 @@ export function TenantSelector() {
   return (
     <Card className='w-full max-w-md'>
       <CardHeader className='text-center'>
-        <CardTitle className='text-2xl'>Seleccionar Proyecto</CardTitle>
-        <CardDescription>
-          Elige el país, sitio y proyecto para continuar
-        </CardDescription>
+        <CardTitle className='text-2xl'>{t('selectProject')}</CardTitle>
+        <CardDescription>{t('selectProjectDescription')}</CardDescription>
       </CardHeader>
       <CardContent className='space-y-4'>
         <div className='space-y-2'>
-          <label className='text-sm font-medium'>País</label>
+          <label className='text-sm font-medium'>{t('country')}</label>
           <Select
             value={selectedCountry}
             onValueChange={handleCountryChange}
             disabled={isSubmitting}
           >
             <SelectTrigger className='w-full'>
-              <SelectValue placeholder='Seleccionar país' />
+              <SelectValue placeholder={t('selectCountry')} />
             </SelectTrigger>
             <SelectContent>
               {countries.map((country) => (
@@ -195,7 +193,7 @@ export function TenantSelector() {
         </div>
 
         <div className='space-y-2'>
-          <label className='text-sm font-medium'>Sitio</label>
+          <label className='text-sm font-medium'>{t('site')}</label>
           <Select
             value={selectedSite}
             onValueChange={handleSiteChange}
@@ -204,9 +202,7 @@ export function TenantSelector() {
             <SelectTrigger className='w-full'>
               <SelectValue
                 placeholder={
-                  selectedCountry
-                    ? 'Seleccionar sitio'
-                    : 'Primero selecciona un país'
+                  selectedCountry ? t('selectSite') : t('selectCountryFirst')
                 }
               />
             </SelectTrigger>
@@ -221,7 +217,7 @@ export function TenantSelector() {
         </div>
 
         <div className='space-y-2'>
-          <label className='text-sm font-medium'>Proyecto</label>
+          <label className='text-sm font-medium'>{t('project')}</label>
           <Select
             value={selectedProject}
             onValueChange={handleProjectChange}
@@ -230,9 +226,7 @@ export function TenantSelector() {
             <SelectTrigger className='w-full'>
               <SelectValue
                 placeholder={
-                  selectedSite
-                    ? 'Seleccionar proyecto'
-                    : 'Primero selecciona un sitio'
+                  selectedSite ? t('selectProject') : t('selectSiteFirst')
                 }
               />
             </SelectTrigger>
@@ -258,10 +252,10 @@ export function TenantSelector() {
           {isSubmitting ? (
             <>
               <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-              Accediendo...
+              {t('loading')}
             </>
           ) : (
-            'Continuar'
+            t('continue')
           )}
         </Button>
       </CardContent>

@@ -1,12 +1,27 @@
-// import { createAzure } from '@ai-sdk/azure';
-
-// const azureProvider = createAzure({
-//   resourceName: 'cog-dr4txjkespw6g',
-//   apiKey: 'your-api-key'
-// });
-
-// export const model = azureProvider('chat-gpt-4.1-mini');
-
+import { createAzure } from '@ai-sdk/azure';
 import { openai } from '@ai-sdk/openai';
+import { LanguageModel } from 'ai';
 
-export const model = openai('gpt-4.1-mini');
+let model: LanguageModel;
+
+if (process.env.OPENAI_PROVIDER === 'azure') {
+  if (
+    !process.env.AZURE_OPENAI_RESOURCE_NAME ||
+    !process.env.AZURE_OPENAI_DEPLOYMENT_MODEL ||
+    !process.env.AZURE_OPENAI_API_KEY
+  ) {
+    throw new Error(
+      'AZURE_OPENAI_RESOURCE_NAME, AZURE_OPENAI_DEPLOYMENT_MODEL and AZURE_OPENAI_API_KEY are required'
+    );
+  }
+  const azureProvider = createAzure({
+    resourceName: process.env.AZURE_OPENAI_RESOURCE_NAME,
+    apiKey: process.env.AZURE_OPENAI_API_KEY
+  });
+  model = azureProvider(process.env.AZURE_OPENAI_DEPLOYMENT_MODEL);
+  console.log('Azure OpenAI model loaded');
+} else {
+  model = openai(process.env.OPENAI_MODEL || 'gpt-4.1-mini');
+}
+
+export { model };

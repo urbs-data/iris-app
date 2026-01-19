@@ -45,7 +45,7 @@ export function UnifiedFiltersButton({
         </Button>
       </SheetTrigger>
       <SheetContent className='overflow-y-auto p-6'>
-        <SheetHeader className='pb-4'>
+        <SheetHeader className='p-0'>
           <SheetTitle>{t('filters')}</SheetTitle>
         </SheetHeader>
         <div>

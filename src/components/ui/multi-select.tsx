@@ -18,6 +18,7 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 import { Badge } from '@/components/ui/badge';
+import { useTranslations } from 'next-intl';
 
 export interface MultiSelectOption {
   value: string;
@@ -31,7 +32,6 @@ interface MultiSelectProps {
   options: MultiSelectOption[];
   placeholder?: string;
   searchPlaceholder?: string;
-  emptyMessage?: string;
   className?: string;
   disabled?: boolean;
   isLoading?: boolean;
@@ -42,14 +42,14 @@ export function MultiSelect({
   values = [],
   onValuesChange,
   options,
-  placeholder = 'Seleccione opciones...',
+  placeholder,
   searchPlaceholder,
-  emptyMessage = 'No se encontraron resultados.',
   className,
   disabled = false,
   isLoading = false,
   maxDisplay = 2
 }: MultiSelectProps) {
+  const t = useTranslations('components.multiSelect');
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState('');
 
@@ -83,20 +83,24 @@ export function MultiSelect({
       return (
         <div className='flex items-center gap-2'>
           <Loader2 className='h-4 w-4 animate-spin' />
-          <span>Cargando...</span>
+          <span>{t('loading')}</span>
         </div>
       );
     }
 
     if (selectedOptions.length === 0) {
-      return <span className='text-muted-foreground'>{placeholder}</span>;
+      return (
+        <span className='text-muted-foreground'>
+          {placeholder || t('placeholder')}
+        </span>
+      );
     }
 
     if (selectedOptions.length === 1) {
       return selectedOptions[0].label;
     }
 
-    return `Varios (${selectedOptions.length})`;
+    return `${t('multiple', { count: selectedOptions.length })}`;
   }
 
   return (
@@ -122,7 +126,7 @@ export function MultiSelect({
           />
           <CommandList>
             <CommandEmpty>
-              {isLoading ? 'Cargando...' : emptyMessage}
+              {isLoading ? t('loading') : t('emptyMessage')}
             </CommandEmpty>
             <CommandGroup>
               {filteredOptions.map((option) => (

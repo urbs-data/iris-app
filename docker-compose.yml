@@ -1,5 +1,7 @@
 services:
   app:
+    platform: linux/amd64
+    image: irisappcontainer.azurecr.io/iris-app:latest
     build:
       context: .
       dockerfile: Dockerfile

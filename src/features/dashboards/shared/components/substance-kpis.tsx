@@ -46,8 +46,8 @@ export function SubstanceKpis({
           {t('map.viewInMap')}
         </Button>
       </CardHeader>
-      <CardContent className='flex flex-1 flex-col gap-4 divide-x overflow-hidden pt-0'>
-        <div className='grid shrink-0 grid-cols-5 gap-2 divide-x'>
+      <CardContent className='flex flex-1 flex-col gap-4 overflow-hidden pt-0'>
+        <div className='grid shrink-0 grid-cols-5 divide-x'>
           <MetricItem
             label={t('kpi.sampleCount')}
             value={generalMetrics.samples}

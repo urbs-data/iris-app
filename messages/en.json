@@ -51,6 +51,7 @@
         }
     },
     "nav": {
+        "logout": "Logout",
         "home": "Home",
         "dashboard": "Dashboard",
         "analyze": "Analyze",
@@ -272,6 +273,12 @@
             "rowsPerPage": "Rows per page",
             "pageInfo": "Page {page} of {total}",
             "noResults": "No results"
+        },
+        "multiSelect": {
+            "loading": "Loading...",
+            "multiple": "Multiple ({count})",
+            "emptyMessage": "No results found",
+            "placeholder": "Select options..."
         }
     },
     "wellTypes": {
@@ -440,29 +447,27 @@
         "well": "Well",
         "wells": "Wells",
         "searchWell": "Search well...",
-        "noWellFound": "Well not found",
         "sampleType": "Sample Type",
         "searchSampleType": "Search sample type...",
         "noSampleTypeFound": "Sample type not found",
         "search": "Search"
     },
     "auth": {
-        "login": {
-            "title": "Login",
-            "description": "Enter your email to access your account",
-            "acceptTerms": "By continuing, you accept our",
-            "terms": "Terms of Service",
-            "privacy": "Privacy Policy",
-            "documentation": "Application documentation",
-            "language": "Language"
-        },
-        "two-factor": {
-            "title": "Two-factor authentication",
-            "enter-code": "Enter the verification code",
-            "invalid-code": "Invalid code. Please try again.",
-            "verifying": "Verifying...",
-            "verify": "Verify"
-        },
-        "loading": "Loading..."
+        "termsAndPrivacy": "By clicking continue, you agree to our <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>.",
+        "tenant": {
+            "selectProject": "Select Project",
+            "selectProjectDescription": "Select the project to continue.",
+            "country": "Country",
+            "selectCountry": "Select country",
+            "selectCountryFirst": "Select country first",
+            "site": "Site",
+            "selectSite": "Select site",
+            "selectSiteFirst": "Select site first",
+            "project": "Project",
+            "loading": "Loading...",
+            "continue": "Continue",
+            "noProjectAccess": "You do not have access to any project.",
+            "noProjectAccessError": "Error selecting project. Please try again."
+        }
     }
 }
