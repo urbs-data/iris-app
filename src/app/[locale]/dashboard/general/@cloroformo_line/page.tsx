@@ -76,7 +76,10 @@ export default async function CloroformoLinePage(props: PageProps) {
   const key = serializeBaseParams({ ...searchParams });
 
   return (
-    <Suspense key={key} fallback={<Skeleton className='h-full w-full' />}>
+    <Suspense
+      key={key}
+      fallback={<Skeleton className='h-full w-full rounded-lg' />}
+    >
       <LineChartContent />
     </Suspense>
   );

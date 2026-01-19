@@ -269,7 +269,10 @@
             "to": "Hasta"
         },
         "table": {
-            "total": "Total: {0} entradas",
+            "total": "{count, plural, =0 {Sin registros} =1 {1 registro en total} other {# registros en total}}.",
+            "selected": "{selected, plural, =0 {Sin registros seleccionados} =1 {1 registro seleccionado} other {# registros seleccionados}} de {total}.",
+            "rowsPerPage": "Registros por página",
+            "pageInfo": "Página {page} de {total}",
             "noResults": "No hay resultados"
         }
     },
