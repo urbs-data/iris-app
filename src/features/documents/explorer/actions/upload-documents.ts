@@ -1,11 +1,10 @@
 'use server';
 
 import { authOrganizationActionClient } from '@/lib/actions/safe-action';
-import { getBlobContainer } from '@/lib/azure-blob';
+import { getBlobContainer, getQueueClient } from '@/lib/azure-blob';
 import { uploadDocumentsSchema } from './upload-documents-schema';
 import { resolveETLProcessor } from '../lib/etl/registry';
 import type { FileMetadata } from '../lib/types';
-
 const MONTH_NAMES_ES = [
   'Enero',
   'Febrero',
@@ -165,6 +164,22 @@ export const uploadDocuments = authOrganizationActionClient
             }
           }
         );
+
+        // Publicar mensaje en la cola de Azure
+        try {
+          const queueClient = getQueueClient('uploaded-documents-local');
+          const messageBody = {
+            metadata,
+            file_path: blobPath,
+            organization_id: ctx.organization.id
+          };
+          await queueClient.sendMessage(
+            Buffer.from(JSON.stringify(messageBody)).toString('base64')
+          );
+        } catch (queueError) {
+          // Log del error pero no fallar la subida
+          console.error('Error al publicar mensaje en la cola:', queueError);
+        }
 
         const currentResult = results.find((r) => r.fileName === fileName);
         if (currentResult) {

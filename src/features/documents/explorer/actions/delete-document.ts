@@ -8,6 +8,7 @@ import { SubClassification } from '../constants/classifications';
 import { deleteDocumentData } from '../data/delete-document-data';
 import { isExcelFile } from '../lib/parsing/utils';
 import type { FileMetadata } from '../lib/types';
+import { deleteFromElasticsearch } from '@/features/documents/search/lib/elasticsearch-client';
 
 /**
  * Determina si el archivo debe ser procesado para eliminar datos de BD
@@ -83,6 +84,15 @@ export const deleteDocument = authOrganizationActionClient
       // La metadata puede no existir, continuar
     }
 
+    // 5. Eliminar del índice de Elasticsearch
+    let deletedFromIndex = 0;
+    try {
+      deletedFromIndex = await deleteFromElasticsearch(fileName);
+    } catch (error) {
+      // Log el error pero no fallar la eliminación completa
+      console.error('Error eliminando del índice de Elasticsearch:', error);
+    }
+
     const pathParts = blobPath.split('/');
     pathParts.pop();
     const directoryPath = pathParts.join('/');
@@ -97,6 +107,7 @@ export const deleteDocument = authOrganizationActionClient
       success: true,
       message: 'Archivo eliminado correctamente',
       fileName,
-      dbDeletionStats
+      dbDeletionStats,
+      deletedFromIndex
     };
   });

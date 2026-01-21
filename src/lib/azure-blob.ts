@@ -3,9 +3,11 @@ import {
   ContainerClient,
   StorageSharedKeyCredential
 } from '@azure/storage-blob';
+import { QueueClient, QueueServiceClient } from '@azure/storage-queue';
 
 let blobServiceClient: BlobServiceClient | null = null;
 let storageCredential: StorageSharedKeyCredential | null = null;
+let queueServiceClient: QueueServiceClient | null = null;
 
 function getAccountConfig() {
   const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
@@ -48,4 +50,18 @@ export function getBlobContainer(containerName?: string): ContainerClient {
   }
 
   return getBlobServiceClient().getContainerClient(container);
+}
+
+export function getQueueServiceClient(): QueueServiceClient {
+  if (!queueServiceClient) {
+    const { accountName, accountKey } = getAccountConfig();
+    const connectionString = `DefaultEndpointsProtocol=https;AccountName=${accountName};AccountKey=${accountKey};EndpointSuffix=core.windows.net`;
+    queueServiceClient =
+      QueueServiceClient.fromConnectionString(connectionString);
+  }
+  return queueServiceClient;
+}
+
+export function getQueueClient(queueName: string): QueueClient {
+  return getQueueServiceClient().getQueueClient(queueName);
 }

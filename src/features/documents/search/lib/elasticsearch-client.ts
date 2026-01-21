@@ -229,3 +229,46 @@ export async function searchElasticsearch(
     totalDocuments: uniqueFilesCount
   };
 }
+
+export async function deleteFromElasticsearch(
+  filename: string
+): Promise<number> {
+  const esUrl = getEnvVar('ELASTICSEARCH_URL');
+  const esApiKey = getEnvVar('ELASTICSEARCH_API_KEY');
+  const esIndex = getEnvVar('ELASTICSEARCH_INDEX');
+
+  const query = {
+    query: {
+      term: {
+        'sourcefile.keyword': filename
+      }
+    }
+  };
+
+  try {
+    const response = await fetch(`${esUrl}/${esIndex}/_delete_by_query`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `ApiKey ${esApiKey}`
+      },
+      body: JSON.stringify(query)
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Elasticsearch delete error: ${response.status} - ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    const deletedCount = result.deleted || 0;
+
+    return deletedCount;
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error';
+    throw new Error(`Error eliminando documentos del índice: ${errorMessage}`);
+  }
+}
