@@ -94,36 +94,9 @@ export interface Project {
   clerkOrgId: string;
 }
 
-// Definición única de proyectos - países y sitios se generan automáticamente
-export const PROJECTS: Project[] = [
-  {
-    id: 'proyecto-1',
-    label: 'Proyecto 1',
-    countryId: 'argentina',
-    countryLabel: 'Argentina',
-    siteId: 'berazategui',
-    siteLabel: 'Berazategui',
-    clerkOrgId: 'org_37zbB0nabOiSlx3ahAaNAbFrpUZ'
-  },
-  {
-    id: 'proyecto-2',
-    label: 'Proyecto 2',
-    countryId: 'EEUU',
-    countryLabel: 'EEUU',
-    siteId: 'berazategui',
-    siteLabel: 'Berazategui',
-    clerkOrgId: 'org_38RVApbyfuKPvX0tEdfN2EATyr5'
-  },
-  {
-    id: 'proyecto-3',
-    label: 'Proyecto 3',
-    countryId: 'argentina',
-    countryLabel: 'Argentina',
-    siteId: 'berazategui',
-    siteLabel: 'Berazategui',
-    clerkOrgId: 'org_XXXXX3'
-  }
-];
+import projectsData from './projects.json';
+
+export const PROJECTS: Project[] = projectsData as Project[];
 
 export const COUNTRIES: Country[] = Array.from(
   new Map(

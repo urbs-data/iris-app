@@ -26,10 +26,11 @@ function extractFileName(path: string): string {
 export const getFiles = authOrganizationActionClient
   .metadata({ actionName: 'getFiles' })
   .inputSchema(getFilesSchema)
-  .action(async ({ parsedInput }) => {
+  .action(async ({ parsedInput, ctx }) => {
     const container = getBlobContainer();
+    const organizationId = ctx.organization.id;
     const userPath = parsedInput.path === '/' ? '' : parsedInput.path;
-    const fullPath = `${userPath}${userPath && !userPath.endsWith('/') ? '/' : ''}`;
+    const fullPath = `${organizationId}/${userPath}${userPath && !userPath.endsWith('/') ? '/' : ''}`;
 
     const folders: FileItem[] = [];
     const fileBlobs: Array<{ name: string; properties: any }> = [];
@@ -87,7 +88,7 @@ export const getFiles = authOrganizationActionClient
 
     allItems.sort((a, b) => {
       if (a.type !== b.type) return a.type === 'folder' ? -1 : 1;
-      if (a.type === 'folder') return a.name.localeCompare(b.name);
+      if (a.type === 'folder') return b.name.localeCompare(a.name);
       return (
         new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime()
       );

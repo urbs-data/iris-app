@@ -58,54 +58,45 @@ export const deleteDocument = authOrganizationActionClient
     const { blobPath } = parsedInput;
     const container = getBlobContainer();
 
-    try {
-      // 1. Obtener metadata del archivo para determinar si necesita limpieza de BD
-      const metadata = await getFileMetadata(container, blobPath);
-      const fileName = metadata?.filename || blobPath.split('/').pop() || '';
+    // 1. Obtener metadata del archivo para determinar si necesita limpieza de BD
+    const metadata = await getFileMetadata(container, blobPath);
+    const fileName = metadata?.filename || blobPath.split('/').pop() || '';
 
-      // 2. Eliminar datos de BD si es una muestra de laboratorio
-      let dbDeletionStats = null;
-      if (
-        metadata &&
-        shouldDeleteDatabaseData(metadata.sub_classification, fileName)
-      ) {
-        dbDeletionStats = await deleteDocumentData(ctx.db, fileName);
-      }
-
-      // 3. Eliminar el blob principal
-      const blobClient = container.getBlobClient(blobPath);
-      await blobClient.delete();
-
-      // 4. Eliminar el archivo de metadata
-      try {
-        const metadataBlob = container.getBlobClient(
-          `${blobPath}.metadata.json`
-        );
-        await metadataBlob.delete();
-      } catch {
-        // La metadata puede no existir, continuar
-      }
-
-      // 5. Eliminar directorios vacíos recursivamente
-      const pathParts = blobPath.split('/');
-      pathParts.pop(); // Remover el nombre del archivo
-      const directoryPath = pathParts.join('/');
-
-      // 6. Revalidar el path para refrescar la UI
-      revalidatePath('/dashboard/explorer');
-      if (directoryPath) {
-        revalidatePath(`/dashboard/explorer?path=/${directoryPath}`);
-      }
-
-      return {
-        success: true,
-        message: 'Archivo eliminado correctamente',
-        fileName,
-        dbDeletionStats
-      };
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Error desconocido';
-      throw new Error(`Error al eliminar el archivo: ${message}`);
+    // 2. Eliminar datos de BD si es una muestra de laboratorio
+    let dbDeletionStats = null;
+    if (
+      metadata &&
+      shouldDeleteDatabaseData(metadata.sub_classification, fileName)
+    ) {
+      dbDeletionStats = await deleteDocumentData(ctx.db, fileName);
     }
+
+    // 3. Eliminar el blob principal
+    const blobClient = container.getBlobClient(blobPath);
+    await blobClient.delete();
+
+    // 4. Eliminar el archivo de metadata
+    try {
+      const metadataBlob = container.getBlobClient(`${blobPath}.metadata.json`);
+      await metadataBlob.delete();
+    } catch {
+      // La metadata puede no existir, continuar
+    }
+
+    const pathParts = blobPath.split('/');
+    pathParts.pop();
+    const directoryPath = pathParts.join('/');
+
+    // 6. Revalidar el path para refrescar la UI
+    revalidatePath('/dashboard/explorer');
+    if (directoryPath) {
+      revalidatePath(`/dashboard/explorer?path=/${directoryPath}`);
+    }
+
+    return {
+      success: true,
+      message: 'Archivo eliminado correctamente',
+      fileName,
+      dbDeletionStats
+    };
   });

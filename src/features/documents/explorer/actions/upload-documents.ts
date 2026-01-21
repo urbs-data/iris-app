@@ -6,7 +6,29 @@ import { uploadDocumentsSchema } from './upload-documents-schema';
 import { resolveETLProcessor } from '../lib/etl/registry';
 import type { FileMetadata } from '../lib/types';
 
+const MONTH_NAMES_ES = [
+  'Enero',
+  'Febrero',
+  'Marzo',
+  'Abril',
+  'Mayo',
+  'Junio',
+  'Julio',
+  'Agosto',
+  'Septiembre',
+  'Octubre',
+  'Noviembre',
+  'Diciembre'
+];
+
+function formatMonth(date: Date): string {
+  const monthNumber = date.getMonth() + 1;
+  const monthName = MONTH_NAMES_ES[date.getMonth()];
+  return `${monthNumber.toString().padStart(2, '0')} - ${monthName}`;
+}
+
 function generateBlobPath(
+  organizationId: string,
   date: Date,
   classification: string,
   subClassification: string | undefined,
@@ -14,9 +36,9 @@ function generateBlobPath(
   fileName: string
 ): string {
   const year = date.getFullYear().toString();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const month = formatMonth(date);
 
-  const parts = [year, month, classification];
+  const parts = [organizationId, year, month, classification];
 
   if (subClassification) {
     parts.push(subClassification);
@@ -98,6 +120,7 @@ export const uploadDocuments = authOrganizationActionClient
         }
 
         const blobPath = generateBlobPath(
+          ctx.organization.id,
           parsedInput.date,
           parsedInput.classification,
           parsedInput.subClassification,
@@ -119,7 +142,7 @@ export const uploadDocuments = authOrganizationActionClient
 
         const metadata: FileMetadata = {
           year: parsedInput.date.getFullYear().toString(),
-          month: (parsedInput.date.getMonth() + 1).toString().padStart(2, '0'),
+          month: formatMonth(parsedInput.date),
           classification: parsedInput.classification,
           sub_classification: parsedInput.subClassification || null,
           date: parsedInput.date.toISOString(),

@@ -18,7 +18,7 @@ const FILE_TYPE_TO_EXTENSION: Record<string, string> = {
 export const getDocuments = authOrganizationActionClient
   .metadata({ actionName: 'getDocuments' })
   .inputSchema(getDocumentsSchema)
-  .action(async ({ parsedInput }): Promise<SearchResult> => {
+  .action(async ({ parsedInput, ctx }): Promise<SearchResult> => {
     const page = parsedInput.page || 1;
     const limit = parsedInput.limit || 10;
     const { q, year, classification, subClassification, fileType } =
@@ -44,6 +44,7 @@ export const getDocuments = authOrganizationActionClient
       : undefined;
 
     const esFilters = buildElasticsearchFilters({
+      organizationId: ctx.organization.id,
       classification: effectiveClassification,
       subClassification,
       extension: effectiveExtension,

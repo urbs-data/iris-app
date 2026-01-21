@@ -90,6 +90,9 @@
         "deleteConfirmationDescription": "This action cannot be undone. The file will be deleted and all related data will be removed.",
         "cancel": "Cancel",
         "delete": "Delete",
+        "fileDeleted": "File deleted successfully",
+        "fileDeleteError": "Error deleting file",
+        "unknownError": "Unknown error",
         "columns": {
             "type": "Type",
             "name": "Name",
@@ -254,6 +257,12 @@
         "mapError": "Error loading map. Please try again."
     },
     "components": {
+        "alertModal": {
+            "areYouSure": "Are you sure?",
+            "thisActionCannotBeUndone": "This action cannot be undone.",
+            "cancel": "Cancel",
+            "continue": "Continue"
+        },
         "combobox": {
             "placeholder": "Select...",
             "searchPlaceholder": "Search",

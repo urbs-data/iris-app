@@ -27,12 +27,19 @@ function getEnvVar(name: string): string {
 }
 
 export function buildElasticsearchFilters(params: {
+  organizationId?: string;
   classification?: string;
   subClassification?: string;
   extension?: string;
   year?: number;
 }): ElasticsearchFilter[] {
   const filters: ElasticsearchFilter[] = [];
+
+  if (params.organizationId) {
+    filters.push({
+      term: { 'organization_id.keyword': params.organizationId }
+    });
+  }
 
   if (params.classification) {
     filters.push({ term: { classification: params.classification } });
@@ -128,6 +135,7 @@ export async function searchElasticsearch(
     from: fromOffset,
     size: params.pageSize,
     _source: [
+      'organization_id',
       'sourcefile',
       'sourcepage',
       'date',
@@ -136,7 +144,7 @@ export async function searchElasticsearch(
       'area',
       'extension',
       'year',
-      'storage_url'
+      'storage_url_organization'
     ],
     aggs: {
       unique_files: {
@@ -203,7 +211,7 @@ export async function searchElasticsearch(
         content,
         sourcepage: (source.sourcepage as string) || '',
         sourcefile: (source.sourcefile as string) || '',
-        storageUrl: (source.storage_url as string) || '',
+        storageUrl: (source.storage_url_organization as string) || '',
         captions,
         score: hit._score,
         classification: source.classification as string | undefined,

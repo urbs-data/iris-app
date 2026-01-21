@@ -1,0 +1,29 @@
+[
+  {
+    "id": "proyecto-1",
+    "label": "Proyecto 1",
+    "countryId": "argentina",
+    "countryLabel": "Argentina",
+    "siteId": "berazategui",
+    "siteLabel": "Berazategui",
+    "clerkOrgId": "org_37zbB0nabOiSlx3ahAaNAbFrpUZ"
+  },
+  {
+    "id": "proyecto-2",
+    "label": "Proyecto 2",
+    "countryId": "EEUU",
+    "countryLabel": "EEUU",
+    "siteId": "berazategui",
+    "siteLabel": "Berazategui",
+    "clerkOrgId": "org_38RVApbyfuKPvX0tEdfN2EATyr5"
+  },
+  {
+    "id": "proyecto-3",
+    "label": "Proyecto 3",
+    "countryId": "argentina",
+    "countryLabel": "Argentina",
+    "siteId": "berazategui",
+    "siteLabel": "Berazategui",
+    "clerkOrgId": "org_XXXXX3"
+  }
+]

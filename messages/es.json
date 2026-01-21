@@ -92,6 +92,9 @@
         "deleteConfirmationDescription": "Esta acción no se puede deshacer. Se eliminará el archivo y todos los datos relacionados.",
         "cancel": "Cancelar",
         "delete": "Eliminar",
+        "fileDeleted": "Archivo eliminado correctamente",
+        "fileDeleteError": "Error al eliminar el archivo",
+        "unknownError": "Error desconocido",
         "columns": {
             "type": "Tipo",
             "name": "Nombre",
@@ -256,6 +259,12 @@
         "mapError": "Error al cargar el mapa. Intente nuevamente."
     },
     "components": {
+        "alertModal": {
+            "areYouSure": "¿Estás seguro?",
+            "thisActionCannotBeUndone": "Esta acción no se puede deshacer.",
+            "cancel": "Cancelar",
+            "continue": "Continuar"
+        },
         "combobox": {
             "placeholder": "Seleccionar...",
             "searchPlaceholder": "Buscar",
