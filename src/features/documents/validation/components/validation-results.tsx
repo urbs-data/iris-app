@@ -62,7 +62,6 @@ export function ValidationResultsContent() {
   return (
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
-        <h2 className='text-2xl font-bold'>{t('results.title')}</h2>
         <div className='flex items-center gap-2'>
           <Button variant='outline' onClick={handleNewValidation}>
             <RefreshCw className='mr-2 h-4 w-4' />
