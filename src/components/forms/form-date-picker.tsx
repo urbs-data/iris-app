@@ -19,6 +19,8 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 import { BaseFormFieldProps, DatePickerConfig } from '@/types/base-form';
+import { useTranslations, useFormatter, useLocale } from 'next-intl';
+import { enUS, es } from 'date-fns/locale';
 
 interface FormDatePickerProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -40,12 +42,11 @@ function FormDatePicker<
   disabled,
   className
 }: FormDatePickerProps<TFieldValues, TName>) {
-  const {
-    minDate,
-    maxDate,
-    disabledDates = [],
-    placeholder = 'Pick a date'
-  } = config;
+  const { minDate, maxDate, disabledDates = [], placeholder } = config;
+
+  const format = useFormatter();
+  const currentLocale = useLocale();
+  const locale = currentLocale === 'es' ? es : enUS;
 
   return (
     <FormField
@@ -64,13 +65,13 @@ function FormDatePicker<
               <FormControl>
                 <Button
                   variant='outline'
-                  className={`w-full pl-3 text-left font-normal ${
+                  className={`w-fit pl-3 text-left font-normal ${
                     !field.value && 'text-muted-foreground'
                   }`}
                   disabled={disabled}
                 >
                   {field.value ? (
-                    format(field.value, 'PPP')
+                    format.dateTime(field.value, { dateStyle: 'medium' })
                   ) : (
                     <span>{placeholder}</span>
                   )}
@@ -91,6 +92,7 @@ function FormDatePicker<
                   );
                 }}
                 initialFocus
+                locale={locale}
               />
             </PopoverContent>
           </Popover>

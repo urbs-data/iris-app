@@ -106,10 +106,7 @@ export function UnifiedFilters({
           from: dateFrom ? parseISO(dateFrom) : undefined,
           to: dateTo ? parseISO(dateTo) : undefined
         }
-      : {
-          from: parseISO(SUBSTANCE_DEFAULTS.dateFrom),
-          to: new Date()
-        };
+      : undefined;
 
   const [localFilters, setLocalFilters] = useState<LocalFilters>({
     dateRange: initialDateRange,
@@ -197,7 +194,7 @@ export function UnifiedFilters({
         <Label className='text-sm font-medium'>{t('dateRange')}</Label>
         <DateRangePicker
           value={localFilters.dateRange}
-          onValueChange={(range) =>
+          onChange={(range) =>
             setLocalFilters((prev) => ({ ...prev, dateRange: range }))
           }
           placeholder={t('dateRange')}

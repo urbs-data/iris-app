@@ -258,6 +258,17 @@
         "mapError": "Error loading map. Please try again."
     },
     "components": {
+        "breadcrumbs": {
+            "dashboard": "Home",
+            "dashboard-general": "General Analysis",
+            "dashboard-substance": "Concentration Analysis",
+            "search": "Search",
+            "explorer": "Explorer",
+            "validate": "Validation",
+            "upload": "Upload Documents",
+            "results": "Results",
+            "profile": "Profile"
+        },
         "alertModal": {
             "areYouSure": "Are you sure?",
             "thisActionCannotBeUndone": "This action cannot be undone.",
@@ -272,10 +283,9 @@
         "dateRangePicker": {
             "year": "Year",
             "month": "Month",
-            "yearSearchPlaceholder": "Search year",
-            "monthSearchPlaceholder": "Search month",
             "from": "From",
-            "to": "To"
+            "to": "To",
+            "clearSelection": "Clear selection"
         },
         "table": {
             "total": "{count, plural, =0 {No records} =1 {1 record in total} other {# records in total}}.",

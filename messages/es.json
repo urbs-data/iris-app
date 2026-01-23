@@ -260,6 +260,17 @@
         "mapError": "Error al cargar el mapa. Intente nuevamente."
     },
     "components": {
+        "breadcrumbs": {
+            "dashboard": "Inicio",
+            "dashboard-general": "Análisis General",
+            "dashboard-substance": "Análisis de Concentraciones",
+            "search": "Buscador",
+            "explorer": "Explorador",
+            "validate": "Validación",
+            "upload": "Cargar Documentos",
+            "results": "Resultados",
+            "profile": "Perfil"
+        },
         "alertModal": {
             "areYouSure": "¿Estás seguro?",
             "thisActionCannotBeUndone": "Esta acción no se puede deshacer.",
@@ -274,10 +285,9 @@
         "dateRangePicker": {
             "year": "Año",
             "month": "Mes",
-            "yearSearchPlaceholder": "Buscar año",
-            "monthSearchPlaceholder": "Buscar mes",
             "from": "Desde",
-            "to": "Hasta"
+            "to": "Hasta",
+            "clearSelection": "Limpiar selección"
         },
         "table": {
             "total": "{count, plural, =0 {Sin registros} =1 {1 registro en total} other {# registros en total}}.",
