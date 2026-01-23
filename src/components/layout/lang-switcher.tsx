@@ -36,7 +36,7 @@ export function LangSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='ghost' size='icon' className='h-9 w-9'>
+        <Button variant='secondary' size='icon' className='h-9 w-9'>
           <span className='text-base'>
             {localeFlags[currentLocale as Locale]}
           </span>
