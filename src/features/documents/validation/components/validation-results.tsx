@@ -14,11 +14,11 @@ import { ExportPdfButton } from './export-pdf-button';
 export function ValidationResultsContent() {
   const router = useRouter();
   const t = useTranslations('validation');
-  const { results, clearResults } = useValidation();
+  const { results } = useValidation();
   const [selectedTab, setSelectedTab] = useState<ValidationStatus>('ERROR');
 
   if (!results) {
-    router.replace('/dashboard/validate');
+    router.push('/dashboard/validate');
     return null;
   }
 
@@ -55,7 +55,6 @@ export function ValidationResultsContent() {
   }, [filteredResults]);
 
   const handleNewValidation = () => {
-    clearResults();
     router.push('/dashboard/validate');
   };
 
