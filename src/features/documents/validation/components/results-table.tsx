@@ -21,29 +21,26 @@ export function ResultsTable({ datos }: ResultsTableProps) {
   const headers = Object.keys(datos[0]);
 
   return (
-    <Card className='mt-2 border-gray-200 py-0'>
+    <Card className='mt-2 max-w-[75vw] border-gray-200 py-0'>
       <div className='max-h-[250px] overflow-auto'>
-        <ScrollArea className='w-full'>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                {headers.map((key) => (
-                  <TableHead key={key}>{key}</TableHead>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {headers.map((key) => (
+                <TableHead key={key}>{key}</TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {datos.map((dato, i) => (
+              <TableRow key={i}>
+                {Object.values(dato).map((value, j) => (
+                  <TableCell key={j}>{String(value ?? '')}</TableCell>
                 ))}
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {datos.map((dato, i) => (
-                <TableRow key={i}>
-                  {Object.values(dato).map((value, j) => (
-                    <TableCell key={j}>{String(value ?? '')}</TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <ScrollBar orientation='horizontal' />
-        </ScrollArea>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </Card>
   );

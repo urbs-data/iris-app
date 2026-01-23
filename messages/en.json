@@ -299,6 +299,22 @@
             "multiple": "Multiple ({count})",
             "emptyMessage": "No results found",
             "placeholder": "Select options..."
+        },
+        "fileUploader": {
+            "dropFilesHere": "Drop the files here",
+            "dragAndDrop": "Drag 'n' drop files here, or click to select files",
+            "youCanUpload": "You can upload",
+            "multipleFiles": "multiple",
+            "filesUpTo": "files (up to {size} each)",
+            "fileWith": "a file with {size}",
+            "cannotUploadMoreThanOne": "Cannot upload more than 1 file at a time",
+            "cannotUploadMoreThan": "Cannot upload more than {count} files",
+            "fileRejected": "File {name} was rejected",
+            "uploading": "Uploading {target}...",
+            "uploaded": "{target} uploaded",
+            "failedToUpload": "Failed to upload {target}",
+            "removeFile": "Remove file",
+            "atLeastOneFile": "You must select at least one file"
         }
     },
     "wellTypes": {

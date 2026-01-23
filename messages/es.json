@@ -301,6 +301,22 @@
             "multiple": "Varios ({count})",
             "emptyMessage": "No se encontraron resultados",
             "placeholder": "Seleccione opciones..."
+        },
+        "fileUploader": {
+            "dropFilesHere": "Suelta los archivos aquí",
+            "dragAndDrop": "Arrastra y suelta archivos aquí, o haz clic para seleccionar archivos",
+            "youCanUpload": "Puedes subir",
+            "multipleFiles": "múltiples",
+            "filesUpTo": "archivos (hasta {size} cada uno)",
+            "fileWith": "un archivo de {size}",
+            "cannotUploadMoreThanOne": "No se pueden subir más de 1 archivo a la vez",
+            "cannotUploadMoreThan": "No se pueden subir más de {count} archivos",
+            "fileRejected": "El archivo {name} fue rechazado",
+            "uploading": "Subiendo {target}...",
+            "uploaded": "{target} subido",
+            "failedToUpload": "Error al subir {target}",
+            "removeFile": "Eliminar archivo",
+            "atLeastOneFile": "Debes seleccionar al menos un archivo"
         }
     },
     "wellTypes": {

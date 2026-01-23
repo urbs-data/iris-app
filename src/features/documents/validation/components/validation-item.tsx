@@ -38,7 +38,7 @@ export function ValidationItem({ result, index }: ValidationItemProps) {
           </span>
         </div>
       </AccordionTrigger>
-      <AccordionContent className='px-4 py-3'>
+      <AccordionContent className='overflow-hidden px-4 py-3'>
         <div className='space-y-3'>
           <div className='font-medium'>{result.codigo}</div>
           <div className='text-gray-700'>{formattedDescription}</div>
