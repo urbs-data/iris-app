@@ -196,6 +196,7 @@
             "documentation": "documentation"
         },
         "map": {
+            "title": "Distribution map",
             "viewInMap": "View in map",
             "spatialDistribution": "Spatial distribution",
             "light": "Light",
@@ -360,7 +361,7 @@
         },
         "results": {
             "title": "Validation results",
-            "noResults": "No validations with status '{status}' to show.",
+            "noResults": "No validations with status {status} to show.",
             "success": "Success",
             "warning": "Warning",
             "error": "Error",

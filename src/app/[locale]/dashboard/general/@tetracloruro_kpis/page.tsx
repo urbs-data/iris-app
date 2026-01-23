@@ -1,5 +1,5 @@
 import {
-  SubstanceKpis,
+  SubstanceKpisWithMap,
   SubstanceKpisSkeleton
 } from '@/features/dashboards/shared/components/substance-kpis';
 import { EmptyState } from '@/components/charts';
@@ -56,7 +56,7 @@ async function KpisContent() {
   }
 
   return (
-    <SubstanceKpis
+    <SubstanceKpisWithMap
       title={t('general.carbonTetrachloride')}
       generalMetrics={generalMetrics}
       wellMetrics={wellMetricsResult.data}

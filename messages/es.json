@@ -198,6 +198,7 @@
             "documentation": "documentación"
         },
         "map": {
+            "title": "Mapa de distribución",
             "viewInMap": "Ver en mapa",
             "spatialDistribution": "Distribución espacial",
             "light": "Claro",
@@ -362,7 +363,7 @@
         },
         "results": {
             "title": "Resultados de la validación",
-            "noResults": "No hay validaciones con estado '{status}' para mostrar.",
+            "noResults": "No hay validaciones con estado {status} para mostrar.",
             "success": "Éxito",
             "warning": "Advertencia",
             "error": "Error",

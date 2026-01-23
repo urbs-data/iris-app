@@ -9,10 +9,11 @@ interface NoResultsProps {
 
 export function NoResults({ status }: NoResultsProps) {
   const t = useTranslations('validation');
+  const statusLabel = t(statusConfig[status].labelKey);
 
   return (
     <div className='rounded-md border bg-gray-50 py-8 text-center'>
-      {t('results.noResults', { status: t(statusConfig[status].labelKey) })}
+      {t('results.noResults', { status: statusLabel })}
     </div>
   );
 }
