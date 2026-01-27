@@ -87,11 +87,20 @@ export const uploadDocuments = authOrganizationActionClient
     for (const file of parsedInput.files) {
       const fileName = file.name;
 
-      try {
-        const arrayBuffer = await file.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
 
-        const processor = resolveETLProcessor({
+      const processor = resolveETLProcessor({
+        db: ctx.db,
+        buffer,
+        fileName,
+        classification: parsedInput.classification,
+        subClassification: parsedInput.subClassification,
+        organizationId: ctx.organization.id
+      });
+
+      if (processor) {
+        const etlResult = await processor.process({
           db: ctx.db,
           buffer,
           fileName,
@@ -100,115 +109,78 @@ export const uploadDocuments = authOrganizationActionClient
           organizationId: ctx.organization.id
         });
 
-        if (processor) {
-          const etlResult = await processor.process({
-            db: ctx.db,
-            buffer,
-            fileName,
-            classification: parsedInput.classification,
-            subClassification: parsedInput.subClassification,
-            organizationId: ctx.organization.id
-          });
-
-          if (!etlResult.success) {
-            results.push({
-              fileName,
-              uploaded: false,
-              etlProcessed: true,
-              etlResult,
-              error: 'ETL falló, archivo no subido'
-            });
-            continue;
-          }
-
-          results.push({
-            fileName,
-            uploaded: false,
-            etlProcessed: true,
-            etlResult
-          });
-        }
-
-        const blobPath = generateBlobPath(
-          ctx.organization.id,
-          parsedInput.date,
-          parsedInput.classification,
-          parsedInput.subClassification,
-          parsedInput.area,
-          fileName
-        );
-
-        const blockBlobClient = container.getBlockBlobClient(blobPath);
-        await blockBlobClient.upload(buffer, buffer.length, {
-          blobHTTPHeaders: {
-            blobContentType: file.type
-          }
-        });
-
-        const user = ctx.session.user;
-        const fullName = [user.firstName, user.lastName]
-          .filter(Boolean)
-          .join(' ');
-
-        const metadata: FileMetadata = {
-          year: parsedInput.date.getFullYear().toString(),
-          month: formatMonth(parsedInput.date),
-          classification: parsedInput.classification,
-          sub_classification: parsedInput.subClassification || null,
-          date: parsedInput.date.toISOString(),
-          area: parsedInput.area || null,
-          filename: fileName,
-          uploaded_by: fullName || user.email || 'Usuario',
-          upload_date: new Date().toISOString(),
-          extension: fileName.split('.').pop() || ''
-        };
-
-        const metadataBlobClient = container.getBlockBlobClient(
-          `${blobPath}.metadata.json`
-        );
-        await metadataBlobClient.upload(
-          JSON.stringify(metadata, null, 2),
-          JSON.stringify(metadata, null, 2).length,
-          {
-            blobHTTPHeaders: {
-              blobContentType: 'application/json'
-            }
-          }
-        );
-
-        try {
-          const queueClient = getQueueClient('uploaded-documents-local');
-          const messageBody = {
-            metadata,
-            file_path: blobPath,
-            organization_id: ctx.organization.id
-          };
-          await queueClient.sendMessage(
-            Buffer.from(JSON.stringify(messageBody)).toString('base64')
+        if (!etlResult.success) {
+          throw new Error(
+            `ETL falló, archivo no subido: ${etlResult.errors.join(', ')}`
           );
-        } catch (queueError) {
-          // Log del error pero no fallar la subida
-          console.error('Error al publicar mensaje en la cola:', queueError);
         }
+      }
 
-        const currentResult = results.find((r) => r.fileName === fileName);
-        if (currentResult) {
-          currentResult.uploaded = true;
-        } else {
-          results.push({
-            fileName,
-            uploaded: true,
-            etlProcessed: false
-          });
+      const blobPath = generateBlobPath(
+        ctx.organization.id,
+        parsedInput.date,
+        parsedInput.classification,
+        parsedInput.subClassification,
+        parsedInput.area,
+        fileName
+      );
+
+      const blockBlobClient = container.getBlockBlobClient(blobPath);
+      await blockBlobClient.upload(buffer, buffer.length, {
+        blobHTTPHeaders: {
+          blobContentType: file.type
         }
-      } catch (error) {
-        const message =
-          error instanceof Error ? error.message : 'Error desconocido';
+      });
+
+      const user = ctx.session.user;
+      const fullName = [user.firstName, user.lastName]
+        .filter(Boolean)
+        .join(' ');
+
+      const metadata: FileMetadata = {
+        year: parsedInput.date.getFullYear().toString(),
+        month: formatMonth(parsedInput.date),
+        classification: parsedInput.classification,
+        sub_classification: parsedInput.subClassification || null,
+        date: parsedInput.date.toISOString(),
+        area: parsedInput.area || null,
+        filename: fileName,
+        uploaded_by: fullName || user.email || 'Usuario',
+        upload_date: new Date().toISOString(),
+        extension: fileName.split('.').pop() || ''
+      };
+
+      const metadataBlobClient = container.getBlockBlobClient(
+        `${blobPath}.metadata.json`
+      );
+      await metadataBlobClient.upload(
+        JSON.stringify(metadata, null, 2),
+        JSON.stringify(metadata, null, 2).length,
+        {
+          blobHTTPHeaders: {
+            blobContentType: 'application/json'
+          }
+        }
+      );
+
+      const queueClient = getQueueClient('uploaded-documents-local');
+      const messageBody = {
+        metadata,
+        file_path: blobPath,
+        organization_id: ctx.organization.id
+      };
+      await queueClient.sendMessage(
+        Buffer.from(JSON.stringify(messageBody)).toString('base64')
+      );
+
+      const currentResult = results.find((r) => r.fileName === fileName);
+      if (currentResult) {
+        currentResult.uploaded = true;
+      } else {
         results.push({
           fileName,
-          uploaded: false,
-          etlProcessed: false,
-          error: message
+          uploaded: true,
+          etlProcessed: false
         });
       }
     }

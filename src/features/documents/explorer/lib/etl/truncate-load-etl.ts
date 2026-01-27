@@ -1,4 +1,5 @@
 import type { Table } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 import type { ETLProcessor, ETLContext, ETLResult, ParseResult } from './types';
 
 const BATCH_SIZE = 500;
@@ -33,31 +34,29 @@ export abstract class TruncateLoadETL<TRow, TEntity> implements ETLProcessor {
       this.toEntity(row, ctx.organizationId)
     );
 
-    try {
-      await ctx.db.transaction(async (tx) => {
-        const deleted = await tx.delete(this.getTable()).returning();
-        result.stats.deleted = deleted.length;
+    await ctx.db.transaction(async (tx) => {
+      await tx.execute(
+        sql`select set_config('app.current_org', ${ctx.organizationId}, true)`
+      );
 
-        let inserted = 0;
+      const deleted = await tx.delete(this.getTable()).returning();
+      result.stats.deleted = deleted.length;
 
-        for (let i = 0; i < entities.length; i += BATCH_SIZE) {
-          const batch = entities.slice(i, i + BATCH_SIZE);
-          const insertResult = await tx
-            .insert(this.getTable())
-            .values(batch)
-            .returning();
-          inserted += insertResult.length;
-        }
+      let inserted = 0;
 
-        result.stats.inserted = inserted;
-      });
+      for (let i = 0; i < entities.length; i += BATCH_SIZE) {
+        const batch = entities.slice(i, i + BATCH_SIZE);
+        const insertResult = await tx
+          .insert(this.getTable())
+          .values(batch)
+          .returning();
+        inserted += insertResult.length;
+      }
 
-      result.success = true;
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Error desconocido';
-      result.errors.push(`Error en la transacción de BD: ${message}`);
-    }
+      result.stats.inserted = inserted;
+    });
+
+    result.success = true;
 
     return result;
   }

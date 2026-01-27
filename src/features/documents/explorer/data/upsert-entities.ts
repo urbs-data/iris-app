@@ -11,6 +11,7 @@ import {
   type NewMuestra,
   type NewConcentracion
 } from '@/db/schema';
+import { sql } from 'drizzle-orm';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type DbClient = NodePgDatabase<any>;
@@ -24,17 +25,18 @@ export async function upsertEstudios(
 ): Promise<number> {
   if (estudios.length === 0) return 0;
 
+  console.log('upsertEstudios', estudios);
+
   const result = await db
     .insert(estudiosTable)
     .values(estudios)
     .onConflictDoUpdate({
       target: estudiosTable.id_estudio,
       set: {
-        organization_id: estudiosTable.organization_id,
-        proveedor: estudiosTable.proveedor,
-        informe_final: estudiosTable.informe_final,
-        fecha_desde: estudiosTable.fecha_desde,
-        fecha_hasta: estudiosTable.fecha_hasta
+        proveedor: sql`EXCLUDED.proveedor`,
+        informe_final: sql`EXCLUDED.informe_final`,
+        fecha_desde: sql`EXCLUDED.fecha_desde`,
+        fecha_hasta: sql`EXCLUDED.fecha_hasta`
       }
     })
     .returning({ id: estudiosTable.id_estudio });
@@ -57,9 +59,8 @@ export async function upsertDocumentos(
     .onConflictDoUpdate({
       target: documentosTable.id_documento,
       set: {
-        organization_id: documentosTable.organization_id,
-        id_estudio: documentosTable.id_estudio,
-        documento: documentosTable.documento
+        id_estudio: sql`EXCLUDED.id_estudio`,
+        documento: sql`EXCLUDED.documento`
       }
     })
     .returning({ id: documentosTable.id_documento });
@@ -82,9 +83,8 @@ export async function upsertEstudiosPozos(
     .onConflictDoUpdate({
       target: estudiosPozosTable.id_estudio_pozo,
       set: {
-        organization_id: estudiosPozosTable.organization_id,
-        id_estudio: estudiosPozosTable.id_estudio,
-        id_pozo: estudiosPozosTable.id_pozo
+        id_estudio: sql`EXCLUDED.id_estudio`,
+        id_pozo: sql`EXCLUDED.id_pozo`
       }
     })
     .returning({ id: estudiosPozosTable.id_estudio_pozo });
@@ -107,12 +107,11 @@ export async function upsertMuestras(
     .onConflictDoUpdate({
       target: muestrasTable.id_muestra,
       set: {
-        organization_id: muestrasTable.organization_id,
-        muestra: muestrasTable.muestra,
-        id_estudio_pozo: muestrasTable.id_estudio_pozo,
-        tipo: muestrasTable.tipo,
-        profundidad: muestrasTable.profundidad,
-        fecha: muestrasTable.fecha
+        muestra: sql`EXCLUDED.muestra`,
+        id_estudio_pozo: sql`EXCLUDED.id_estudio_pozo`,
+        tipo: sql`EXCLUDED.tipo`,
+        profundidad: sql`EXCLUDED.profundidad`,
+        fecha: sql`EXCLUDED.fecha`
       }
     })
     .returning({ id: muestrasTable.id_muestra });

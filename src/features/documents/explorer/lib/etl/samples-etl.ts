@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm';
 import { parseLabExcel } from '../parsers/lab-parser';
 import { extractEntities, type ExtractedEntities } from '../entity-extractor';
 import { deleteDocumentData } from '../../data/delete-document-data';
@@ -48,67 +49,60 @@ export class SamplesETL implements ETLProcessor {
 
     result.stats.rowsParsed = parseResult.rows.length;
 
-    let entities: ExtractedEntities;
-    try {
-      entities = extractEntities(parseResult.rows, ctx.organizationId);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Error desconocido';
-      result.errors.push(`Error extrayendo entidades: ${message}`);
-      return result;
-    }
+    const entities: ExtractedEntities = extractEntities(
+      parseResult.rows,
+      ctx.organizationId
+    );
 
-    try {
-      await ctx.db.transaction(async (tx) => {
-        const deleteResult = await deleteDocumentData(
-          tx as DbClient,
-          ctx.fileName
-        );
+    await ctx.db.transaction(async (tx) => {
+      await tx.execute(
+        sql`select set_config('app.current_org', ${ctx.organizationId}, true)`
+      );
 
-        const totalDeleted =
-          deleteResult.deletedConcentraciones +
-          deleteResult.deletedMuestras +
-          deleteResult.deletedEstudiosPozos +
-          deleteResult.deletedDocumentos +
-          deleteResult.deletedEstudios;
+      const deleteResult = await deleteDocumentData(
+        tx as DbClient,
+        ctx.fileName
+      );
 
-        result.stats.deleted = totalDeleted;
+      const totalDeleted =
+        deleteResult.deletedConcentraciones +
+        deleteResult.deletedMuestras +
+        deleteResult.deletedEstudiosPozos +
+        deleteResult.deletedDocumentos +
+        deleteResult.deletedEstudios;
 
-        const insertedEstudios = await upsertEstudios(
-          tx as DbClient,
-          entities.estudios
-        );
-        const insertedDocumentos = await upsertDocumentos(
-          tx as DbClient,
-          entities.documentos
-        );
-        const insertedEstudiosPozos = await upsertEstudiosPozos(
-          tx as DbClient,
-          entities.estudiosPozos
-        );
-        const insertedMuestras = await upsertMuestras(
-          tx as DbClient,
-          entities.muestras
-        );
-        const insertedConcentraciones = await insertConcentraciones(
-          tx as DbClient,
-          entities.concentraciones
-        );
+      result.stats.deleted = totalDeleted;
 
-        result.stats.inserted =
-          insertedEstudios +
-          insertedDocumentos +
-          insertedEstudiosPozos +
-          insertedMuestras +
-          insertedConcentraciones;
-      });
+      const insertedEstudios = await upsertEstudios(
+        tx as DbClient,
+        entities.estudios
+      );
+      const insertedDocumentos = await upsertDocumentos(
+        tx as DbClient,
+        entities.documentos
+      );
+      const insertedEstudiosPozos = await upsertEstudiosPozos(
+        tx as DbClient,
+        entities.estudiosPozos
+      );
+      const insertedMuestras = await upsertMuestras(
+        tx as DbClient,
+        entities.muestras
+      );
+      const insertedConcentraciones = await insertConcentraciones(
+        tx as DbClient,
+        entities.concentraciones
+      );
 
-      result.success = true;
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Error desconocido';
-      result.errors.push(`Error en la transacción de BD: ${message}`);
-    }
+      result.stats.inserted =
+        insertedEstudios +
+        insertedDocumentos +
+        insertedEstudiosPozos +
+        insertedMuestras +
+        insertedConcentraciones;
+    });
+
+    result.success = true;
 
     return result;
   }

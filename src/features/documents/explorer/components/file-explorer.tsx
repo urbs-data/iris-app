@@ -9,7 +9,7 @@ export async function FileExplorer() {
   const data = await resolveActionResult(getFiles({ path }));
 
   return (
-    <div className='space-y-4'>
+    <div className='flex flex-1 flex-col space-y-4'>
       <FileBreadcrumbs currentPath={data.currentPath} />
 
       <FileList files={data.files} currentPath={data.currentPath} />

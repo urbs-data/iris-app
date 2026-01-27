@@ -31,7 +31,7 @@ export default async function Page(props: PageProps) {
 
   return (
     <PageContainer
-      scrollable
+      scrollable={false}
       pageTitle={t('title')}
       pageHeaderAction={
         <Link

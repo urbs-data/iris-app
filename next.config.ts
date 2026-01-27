@@ -7,7 +7,9 @@ const baseConfig: NextConfig = {
   experimental: {
     serverActions: {
       bodySizeLimit: '100mb'
-    }
+    },
+    serverSourceMaps: true,
+    turbopackSourceMaps: true
   },
   images: {
     remotePatterns: [
@@ -32,17 +34,18 @@ const baseConfig: NextConfig = {
   output: 'standalone'
 };
 
-let configWithPlugins = baseConfig;
+const configWithIntl = createNextIntlPlugin()(baseConfig);
 
-// Conditionally enable Sentry configuration
-configWithPlugins = withSentryConfig(configWithPlugins, {
+const nextConfig = withSentryConfig(configWithIntl, {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
   // FIXME: Add your Sentry organization and project names
   org: process.env.NEXT_PUBLIC_SENTRY_ORG,
   project: process.env.NEXT_PUBLIC_SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+
   // Only print logs for uploading source maps in CI
-  silent: !process.env.CI,
+  silent: false,
 
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
@@ -56,19 +59,18 @@ configWithPlugins = withSentryConfig(configWithPlugins, {
   // side errors will fail.
   tunnelRoute: '/monitoring',
 
-  webpack: {
-    treeshake: {
-      removeDebugLogging: true
-    },
-    reactComponentAnnotation: {
-      enabled: true
-    }
+  disableLogger: true,
+
+  reactComponentAnnotation: {
+    enabled: true
   },
 
-  // Disable Sentry telemetry
-  telemetry: false
-});
-const withNextIntl = createNextIntlPlugin();
+  telemetry: true,
+  debug: true,
 
-const nextConfig = withNextIntl(configWithPlugins);
+  sourcemaps: {
+    disable: false
+  }
+});
+
 export default nextConfig;

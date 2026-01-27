@@ -18,7 +18,8 @@ const sentryOptions: Sentry.NodeOptions | Sentry.EdgeOptions = {
   tracesSampleRate: 1,
 
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
-  debug: false
+  debug: false,
+  integrations: [Sentry.extraErrorDataIntegration({ depth: 10 })]
 };
 
 export async function register() {

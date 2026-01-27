@@ -3,6 +3,7 @@ import {
   DEFAULT_SERVER_ERROR_MESSAGE
 } from 'next-safe-action';
 import { z } from 'zod';
+import * as Sentry from '@sentry/nextjs';
 
 import { getAuthContext, getAuthOrganizationContext } from '@/lib/context';
 import { logger } from '@/lib/logger';
@@ -25,7 +26,11 @@ export const actionClient = createSafeActionClient({
       e instanceof GatewayError
     ) {
       return e.message;
-    } else if (process.env.NODE_ENV == 'development') {
+    }
+
+    Sentry.captureException(e);
+
+    if (process.env.NODE_ENV == 'development') {
       console.log(e); // eslint-disable-line no-console
       return e.name + ' -- ' + e.message;
     }
