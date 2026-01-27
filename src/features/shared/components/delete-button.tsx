@@ -21,7 +21,7 @@ export function DeleteButton({
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const t = useTranslations('documents.fileExplorer');
+  const t = useTranslations('fileExplorer');
 
   const onConfirm = async () => {
     try {
