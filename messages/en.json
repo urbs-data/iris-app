@@ -258,6 +258,10 @@
         "mapError": "Error loading map. Please try again."
     },
     "components": {
+        "infoSidebar": {
+            "learnMore": "Learn more",
+            "noContentAvailable": "No content available"
+        },
         "breadcrumbs": {
             "dashboard": "Home",
             "dashboard-general": "General Analysis",

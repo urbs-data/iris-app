@@ -260,6 +260,10 @@
         "mapError": "Error al cargar el mapa. Intente nuevamente."
     },
     "components": {
+        "infoSidebar": {
+            "learnMore": "Aprender más",
+            "noContentAvailable": "No hay contenido disponible"
+        },
         "breadcrumbs": {
             "dashboard": "Inicio",
             "dashboard-general": "Análisis General",

@@ -166,6 +166,76 @@ export const billingInfoContent: InfobarContent = {
   ]
 };
 
+export const searchInfoContentEs: InfobarContent = {
+  title: 'Búsqueda de Documentos',
+  sections: [
+    {
+      title: 'Descripción General',
+      description:
+        'La página de Búsqueda te permite consultar y filtrar documentos de manera rápida y eficiente. Utiliza los filtros disponibles para encontrar documentos específicos por fecha, clasificación, subclasificación y área. La búsqueda incluye paginación, ordenamiento y capacidades de filtrado del lado del servidor.',
+      links: []
+    },
+    {
+      title: 'Filtros de Búsqueda',
+      description:
+        'Usa la barra de herramientas para filtrar documentos por diferentes criterios: clasificación (muestras, procesos de remediación, reportes, etc.), subclasificación, área del sitio (A, B, C) y rango de fechas. Los resultados se actualizan automáticamente según tus selecciones.',
+      links: []
+    },
+    {
+      title: 'Resultados',
+      description:
+        'La tabla de resultados muestra los documentos que coinciden con tus criterios de búsqueda. Puedes ordenar las columnas haciendo clic en los encabezados y navegar entre páginas para explorar todos los resultados encontrados.',
+      links: []
+    },
+    {
+      title: 'Carga de Documentos',
+      description:
+        'Para cargar nuevos documentos al sistema, dirígete al Explorador de Documentos. Allí podrás subir uno o más archivos simultáneamente, asignándoles la fecha, clasificación, subclasificación y área correspondiente.',
+      links: [
+        {
+          title: 'Ir al Explorador',
+          url: '/dashboard/explorer'
+        }
+      ]
+    }
+  ]
+};
+
+export const searchInfoContentEn: InfobarContent = {
+  title: 'Document Search',
+  sections: [
+    {
+      title: 'Overview',
+      description:
+        'The Search page allows you to query and filter documents quickly and efficiently. Use the available filters to find specific documents by date, classification, subclassification, and area. Search includes pagination, sorting, and server-side filtering capabilities.',
+      links: []
+    },
+    {
+      title: 'Search Filters',
+      description:
+        'Use the toolbar to filter documents by different criteria: classification (samples, remediation processes, reports, etc.), subclassification, site area (A, B, C), and date range. Results update automatically based on your selections.',
+      links: []
+    },
+    {
+      title: 'Results',
+      description:
+        'The results table displays documents matching your search criteria. You can sort columns by clicking on headers and navigate through pages to explore all found results.',
+      links: []
+    },
+    {
+      title: 'Document Upload',
+      description:
+        'To upload new documents to the system, go to the Document Explorer. There you can upload one or more files simultaneously, assigning them the corresponding date, classification, subclassification, and area.',
+      links: [
+        {
+          title: 'Go to Explorer',
+          url: '/dashboard/explorer'
+        }
+      ]
+    }
+  ]
+};
+
 export const productInfoContent: InfobarContent = {
   title: 'Product Management',
   sections: [

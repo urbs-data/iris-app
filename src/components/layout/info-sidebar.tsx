@@ -13,6 +13,7 @@ import {
   InfobarTrigger,
   useInfobar
 } from '@/components/ui/infobar';
+import { useTranslations } from 'next-intl';
 
 // Default/fallback data when no content is set
 const defaultData = {
@@ -36,6 +37,7 @@ export function InfoSidebar({
 }: React.ComponentProps<typeof Infobar>) {
   const { content } = useInfobar();
   const data = content || defaultData;
+  const t = useTranslations('components.infoSidebar');
 
   return (
     <Infobar {...props}>
@@ -69,7 +71,7 @@ export function InfoSidebar({
                     {section.links && section.links.length > 0 && (
                       <div className='flex flex-col gap-2'>
                         <h4 className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
-                          Learn more
+                          {t('learnMore')}
                         </h4>
                         <ul className='flex flex-col gap-1.5'>
                           {section.links.map((link, linkIndex) => (
@@ -91,7 +93,7 @@ export function InfoSidebar({
                 ))
               ) : (
                 <div className='text-muted-foreground px-2 py-4 text-center text-sm'>
-                  No content available
+                  {t('noContentAvailable')}
                 </div>
               )}
             </div>
