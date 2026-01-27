@@ -14,6 +14,12 @@ const isSelectTenantRoute = createRouteMatcher([
 export default clerkMiddleware(async (auth, req: NextRequest) => {
   const { pathname } = req.nextUrl;
 
+  const isSentryRoute = pathname.startsWith('/monitoring');
+
+  if (isSentryRoute) {
+    return NextResponse.next();
+  }
+
   const localeRedirect = intlMiddleware(req);
   if (localeRedirect) return localeRedirect;
 

@@ -5,6 +5,8 @@ import { getBlobContainer, getQueueClient } from '@/lib/azure-blob';
 import { uploadDocumentsSchema } from './upload-documents-schema';
 import { resolveETLProcessor } from '../lib/etl/registry';
 import type { FileMetadata } from '../lib/types';
+import { logger } from '@/lib/logger';
+
 const MONTH_NAMES_ES = [
   'Enero',
   'Febrero',
@@ -72,6 +74,15 @@ export const uploadDocuments = authOrganizationActionClient
       };
       error?: string;
     }> = [];
+
+    logger('uploadDocuments', {
+      organizationId: ctx.organization.id,
+      date: parsedInput.date,
+      classification: parsedInput.classification,
+      subClassification: parsedInput.subClassification,
+      area: parsedInput.area,
+      files: parsedInput.files.map((file) => file.name)
+    });
 
     for (const file of parsedInput.files) {
       const fileName = file.name;
@@ -165,7 +176,6 @@ export const uploadDocuments = authOrganizationActionClient
           }
         );
 
-        // Publicar mensaje en la cola de Azure
         try {
           const queueClient = getQueueClient('uploaded-documents-local');
           const messageBody = {
