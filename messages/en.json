@@ -163,6 +163,12 @@
     },
     "dashboard": {
         "all": "All",
+        "general": {
+            "title": "General Analysis"
+        },
+        "substance": {
+            "title": "Concentration Analysis"
+        },
         "noData": {
             "title": "No data available",
             "description": "There is no data matching the selected filters. Try adjusting the date range or filters to see results.",

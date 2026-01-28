@@ -165,6 +165,12 @@
     },
     "dashboard": {
         "all": "Todos",
+        "general": {
+            "title": "Análisis General"
+        },
+        "substance": {
+            "title": "Análisis de Concentraciones"
+        },
         "noData": {
             "title": "No hay datos disponibles",
             "description": "No hay datos que coincidan con los filtros seleccionados. Intente ajustar el rango de fechas o los filtros para ver resultados.",

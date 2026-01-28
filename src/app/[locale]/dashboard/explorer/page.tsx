@@ -12,27 +12,37 @@ import {
   serialize
 } from '@/features/documents/explorer/searchparams';
 import { cn } from '@/lib/utils';
+import {
+  explorerInfoContentEs,
+  explorerInfoContentEn
+} from '@/config/infoconfig';
 
 export const metadata = {
   title: 'Dashboard: Explorador de Archivos'
 };
 
-type PageProps = {
+interface PageProps {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<SearchParams>;
-};
+}
 
 export default async function Page(props: PageProps) {
   const searchParams = await props.searchParams;
+  const { locale } = await props.params;
   const t = await getTranslations('fileExplorer');
 
   searchParamsCache.parse(searchParams);
 
   const key = serialize({ ...searchParams });
 
+  const infoContent =
+    locale === 'en' ? explorerInfoContentEn : explorerInfoContentEs;
+
   return (
     <PageContainer
       scrollable={false}
       pageTitle={t('title')}
+      infoContent={infoContent}
       pageHeaderAction={
         <Link
           href='/dashboard/explorer/upload'

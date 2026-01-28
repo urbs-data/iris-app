@@ -8,7 +8,6 @@ import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
 import { SearchParams } from 'nuqs/server';
 import { Suspense } from 'react';
-import { productInfoContent } from '@/config/infoconfig';
 
 export const metadata = {
   title: 'Dashboard: Products'
@@ -30,7 +29,6 @@ export default async function Page(props: pageProps) {
     <PageContainer
       scrollable={false}
       pageTitle='Products'
-      infoContent={productInfoContent}
       pageHeaderAction={
         <Link
           href='/dashboard/product/new'

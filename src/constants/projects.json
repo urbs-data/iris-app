@@ -1,7 +1,7 @@
 [
   {
-    "id": "proyecto-1",
-    "label": "Proyecto 1",
+    "id": "proyecto-iscr",
+    "label": "Proyecto ISCR",
     "countryId": "argentina",
     "countryLabel": "Argentina",
     "siteId": "berazategui",
@@ -9,8 +9,8 @@
     "clerkOrgId": "org_38folzUP9dtd6eiF3KSDq7t2Reo"
   },
   {
-    "id": "proyecto-1",
-    "label": "Proyecto 1",
+    "id": "proyecto-iscr-dev",
+    "label": "Proyecto ISCR-DEV",
     "countryId": "argentina",
     "countryLabel": "Argentina",
     "siteId": "berazategui",
@@ -20,8 +20,8 @@
   {
     "id": "proyecto-2",
     "label": "Proyecto 2",
-    "countryId": "EEUU",
-    "countryLabel": "EEUU",
+    "countryId": "argentina",
+    "countryLabel": "Argentina",
     "siteId": "berazategui",
     "siteLabel": "Berazategui",
     "clerkOrgId": "org_38forXJSysx9qwIzb4tbvNynay9"
