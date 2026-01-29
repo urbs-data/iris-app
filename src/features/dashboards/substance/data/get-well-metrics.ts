@@ -61,77 +61,73 @@ export const getWellMetrics = authOrganizationActionClient
         SELECT *
         FROM sustancias
       ),
-      datos_calculados AS (
+      datos_con_limite AS (
         SELECT 
-          p.id_pozo as pozo,
+          p.id_pozo,
           p.latitud_decimal,
           p.longitud_decimal,
+          m.fecha,
           c.unidad,
-          MAX(
+          CASE 
+            WHEN ${tipoMuestra} = 'Suelo' THEN s.nivel_guia_suelo
+            ELSE s.nivel_guia
+          END AS nivel_guia,
+          COALESCE(
+            c.concentracion,
             CASE 
-              WHEN ${tipoMuestra} = 'Suelo' THEN s.nivel_guia_suelo
-              ELSE s.nivel_guia
+              WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
+              THEN CAST(c.limite_deteccion AS real)
+              ELSE NULL
             END
-          ) as nivel_guia,
-          TO_CHAR(MIN(m.fecha), 'YYYY-MM') as primer_periodo,
-          TO_CHAR(MAX(m.fecha), 'YYYY-MM') as ultimo_periodo,
-          COUNT(*) AS cantidad_registros,
-          AVG(
-            COALESCE(
-              c.concentracion,
-              CASE 
-                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
-                THEN CAST(c.limite_deteccion AS real)
-                ELSE NULL
-              END
-            )
-          ) AS promedio_concentracion,
-          STDDEV_SAMP(
-            COALESCE(
-              c.concentracion,
-              CASE 
-                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
-                THEN CAST(c.limite_deteccion AS real)
-                ELSE NULL
-              END
-            )
-          ) AS desvio_concentracion,
-          MIN(
-            COALESCE(
-              c.concentracion,
-              CASE 
-                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
-                THEN CAST(c.limite_deteccion AS real)
-                ELSE NULL
-              END
-            )
-          ) AS minimo_concentracion,
-          MAX(
-            COALESCE(
-              c.concentracion,
-              CASE 
-                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
-                THEN CAST(c.limite_deteccion AS real)
-                ELSE NULL
-              END
-            )
-          ) AS maximo_concentracion,
-          PERCENTILE_CONT(0.5) WITHIN GROUP (
-            ORDER BY COALESCE(
-              c.concentracion,
-              CASE 
-                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
-                THEN CAST(c.limite_deteccion AS real)
-                ELSE NULL
-              END
-            )
-          ) AS mediana_concentracion
+          ) AS valor_concentracion
         FROM raw_concentraciones c
           INNER JOIN raw_muestras m ON c.id_muestra = m.id_muestra
           INNER JOIN raw_estudios_pozos e ON m.id_estudio_pozo = e.id_estudio_pozo
           INNER JOIN raw_pozos p ON LOWER(e.id_pozo) = LOWER(p.id_pozo)
           INNER JOIN raw_sustancias s ON c.id_sustancia = s.id_sustancia
-        GROUP BY p.id_pozo, p.latitud_decimal, p.longitud_decimal, c.unidad
+        WHERE COALESCE(
+          c.concentracion,
+          CASE 
+            WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
+            THEN CAST(c.limite_deteccion AS real)
+            ELSE NULL
+          END
+        ) IS NOT NULL
+      ),
+      ultimo_periodo_por_pozo AS (
+        SELECT 
+          LOWER(id_pozo) as id_pozo,
+          TO_CHAR(MAX(fecha), 'YYYY-MM') as ultimo_periodo
+        FROM datos_con_limite
+        GROUP BY LOWER(id_pozo)
+      ),
+      max_ultimo_periodo AS (
+        SELECT 
+          LOWER(d.id_pozo) as id_pozo,
+          MAX(d.valor_concentracion) as maximo_concentracion_ultimo
+        FROM datos_con_limite d
+          INNER JOIN ultimo_periodo_por_pozo up ON LOWER(d.id_pozo) = up.id_pozo
+        WHERE TO_CHAR(d.fecha, 'YYYY-MM') = up.ultimo_periodo
+        GROUP BY LOWER(d.id_pozo)
+      ),
+      datos_calculados AS (
+        SELECT 
+          d.id_pozo as pozo,
+          d.latitud_decimal,
+          d.longitud_decimal,
+          d.unidad,
+          MAX(d.nivel_guia) as nivel_guia,
+          TO_CHAR(MIN(d.fecha), 'YYYY-MM') as primer_periodo,
+          TO_CHAR(MAX(d.fecha), 'YYYY-MM') as ultimo_periodo,
+          COUNT(*) AS cantidad_registros,
+          AVG(d.valor_concentracion) AS promedio_concentracion,
+          STDDEV_SAMP(d.valor_concentracion) AS desvio_concentracion,
+          MIN(d.valor_concentracion) AS minimo_concentracion,
+          MAX(mup.maximo_concentracion_ultimo) AS maximo_concentracion,
+          PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY d.valor_concentracion) AS mediana_concentracion
+        FROM datos_con_limite d
+          LEFT JOIN max_ultimo_periodo mup ON LOWER(d.id_pozo) = mup.id_pozo
+        GROUP BY d.id_pozo, d.latitud_decimal, d.longitud_decimal, d.unidad
       )
       SELECT 
         pozo,

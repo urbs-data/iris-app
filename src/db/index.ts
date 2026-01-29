@@ -43,7 +43,7 @@ async function getDb(): Promise<ReturnType<typeof drizzle>> {
         connectionString,
         max: 5,
         idleTimeoutMillis: 30000,
-        connectionTimeoutMillis: 2000
+        connectionTimeoutMillis: 15000 // 15 segundos para cold starts
       };
       poolInstance = new Pool(poolOptions);
 

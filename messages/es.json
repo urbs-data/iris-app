@@ -239,6 +239,7 @@
             "well": "Pozo",
             "firstSample": "Primer muestra",
             "lastSample": "Última muestra",
+            "maximumLastSample": "Peor última muestra",
             "percentageToGuideline": "% vs Guía",
             "percentageToMaximum": "% vs Máx",
             "percentageToGuidelineTooltip": "Variación porcentual del último valor medio respecto al nivel guía. Un valor negativo indica que está por debajo del nivel guía.",
@@ -260,10 +261,29 @@
         "somethingWentWrong": "Algo salió mal",
         "substanceDashboardError": "Error al cargar el tablero de sustancias.",
         "tryAgain": "Intentar de nuevo",
+        "retry": "Reintentar",
         "kpisError": "Error al cargar los KPIs. Intente nuevamente.",
         "lineChartError": "Error al cargar el gráfico. Intente nuevamente.",
         "boxplotError": "Error al cargar el gráfico. Intente nuevamente.",
-        "mapError": "Error al cargar el mapa. Intente nuevamente."
+        "mapError": "Error al cargar el mapa. Intente nuevamente.",
+        "generalDashboard": {
+            "title": "Error al cargar el dashboard",
+            "message": "No se pudieron cargar los datos. Por favor, intenta de nuevo."
+        },
+        "generalKpis": {
+            "title": "Error al cargar KPIs",
+            "tetracloruroMessage": "No se pudieron cargar los indicadores de tetracloruro.",
+            "cloroformoMessage": "No se pudieron cargar los indicadores de cloroformo."
+        },
+        "generalChart": {
+            "title": "Error al cargar gráfico",
+            "tetracloruroMessage": "No se pudo cargar el gráfico de tetracloruro.",
+            "cloroformoMessage": "No se pudo cargar el gráfico de cloroformo."
+        },
+        "loadingData": {
+            "title": "Error al cargar datos",
+            "message": "Algo salió mal al cargar esta sección."
+        }
     },
     "components": {
         "infoSidebar": {

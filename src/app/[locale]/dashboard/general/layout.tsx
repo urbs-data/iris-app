@@ -34,7 +34,7 @@ export default async function GeneralLayout({
       pageTitle={t('title')}
       infoContent={infoContent}
     >
-      <div className='flex flex-1 flex-col gap-2 overflow-hidden'>
+      <div className='flex flex-1 flex-col gap-2 overflow-hidden lg:max-h-[calc(100dvh-52px-80px)]'>
         <div className='shrink-0'>
           <Suspense fallback={<Skeleton className='h-10 w-full' />}>
             <UnifiedFiltersButton showSubstanceFilter={false} />

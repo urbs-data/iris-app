@@ -29,7 +29,7 @@ export function SubstanceKpis({
   className
 }: SubstanceKpisProps) {
   const t = useTranslations('dashboard');
-  const sortedWellMetrics = [...wellMetrics].sort((a, b) => b.mean - a.mean);
+  const sortedWellMetrics = [...wellMetrics].sort((a, b) => b.max - a.max);
 
   return (
     <Card className={cn('flex h-full flex-col', className)}>
@@ -92,14 +92,14 @@ export function SubstanceKpis({
                 <th className='px-2 py-1.5 text-left font-medium'>
                   {t('kpi.well')}
                 </th>
-                <th className='px-2 py-1.5 text-right font-medium'>
-                  {t('kpi.average')}
-                </th>
                 <th className='px-2 py-1.5 text-center font-medium'>
                   {t('kpi.firstSample')}
                 </th>
                 <th className='px-2 py-1.5 text-center font-medium'>
                   {t('kpi.lastSample')}
+                </th>
+                <th className='px-2 py-1.5 text-right font-medium'>
+                  {t('kpi.maximumLastSample')}
                 </th>
               </tr>
             </thead>
@@ -107,21 +107,21 @@ export function SubstanceKpis({
               {sortedWellMetrics.map((well) => (
                 <tr key={well.wellId} className='border-b last:border-b-0'>
                   <td className='px-2 py-1.5 font-medium'>{well.wellId}</td>
-                  <td
-                    className={cn(
-                      'px-2 py-1.5 text-right tabular-nums',
-                      well.mean > generalMetrics.guideLevel
-                        ? 'text-destructive font-semibold'
-                        : ''
-                    )}
-                  >
-                    {well.mean.toFixed(2)} {unit}
-                  </td>
                   <td className='text-muted-foreground px-2 py-1.5 text-center'>
                     {well.firstPeriod}
                   </td>
                   <td className='text-muted-foreground px-2 py-1.5 text-center'>
                     {well.lastPeriod}
+                  </td>
+                  <td
+                    className={cn(
+                      'px-2 py-1.5 text-right tabular-nums',
+                      well.max > generalMetrics.guideLevel
+                        ? 'text-destructive font-semibold'
+                        : ''
+                    )}
+                  >
+                    {well.max.toFixed(2)} {unit}
                   </td>
                 </tr>
               ))}

@@ -237,6 +237,7 @@
             "well": "Well",
             "firstSample": "First sample",
             "lastSample": "Last sample",
+            "maximumLastSample": "Worst last sample",
             "percentageToGuideline": "% vs Guideline",
             "percentageToMaximum": "% vs Maximum",
             "percentageToGuidelineTooltip": "Percentage variation of the last average value compared to the guideline level. A negative value indicates that it is below the guideline level.",
@@ -258,10 +259,29 @@
         "somethingWentWrong": "Something went wrong",
         "substanceDashboardError": "Error loading substance dashboard.",
         "tryAgain": "Try again",
+        "retry": "Retry",
         "kpisError": "Error loading KPIs. Please try again.",
         "lineChartError": "Error loading chart. Please try again.",
         "boxplotError": "Error loading chart. Please try again.",
-        "mapError": "Error loading map. Please try again."
+        "mapError": "Error loading map. Please try again.",
+        "generalDashboard": {
+            "title": "Error loading dashboard",
+            "message": "Could not load the data. Please try again."
+        },
+        "generalKpis": {
+            "title": "Error loading KPIs",
+            "tetracloruroMessage": "Could not load carbon tetrachloride indicators.",
+            "cloroformoMessage": "Could not load chloroform indicators."
+        },
+        "generalChart": {
+            "title": "Error loading chart",
+            "tetracloruroMessage": "Could not load carbon tetrachloride chart.",
+            "cloroformoMessage": "Could not load chloroform chart."
+        },
+        "loadingData": {
+            "title": "Error loading data",
+            "message": "Something went wrong loading this section."
+        }
     },
     "components": {
         "infoSidebar": {
