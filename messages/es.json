@@ -127,6 +127,8 @@
         "subclassificationError": "La subclasificación es requerida",
         "areaLabel": "Área",
         "areaPlaceholder": "Selecciona un área",
+        "tipoLabel": "Tipo de documento",
+        "tipoPlaceholder": "Selecciona un tipo",
         "filesLabel": "Documentos",
         "dragMoreFiles": "Arrastra más archivos o haz clic para agregar",
         "clickToSelectFiles": "Haz clic para seleccionar archivos",
@@ -152,6 +154,12 @@
         "Pozos": "Pozos",
         "Sustancias": "Sustancias",
         "Otros": "Otros"
+    },
+    "documentTypes": {
+        "EDD Muestras": "EDD Muestras",
+        "EDD Parametros Fisico Quimicos": "EDD Parámetros Físico Químicos",
+        "Pozos": "Pozos",
+        "Sustancias": "Sustancias"
     },
     "documentSubclassifications": {
         "Cadenas de custodia": "Cadenas de custodia",

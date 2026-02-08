@@ -11,22 +11,11 @@ import {
 } from '../../data/upsert-entities';
 import { isExcelFile } from '../parsing/utils';
 import type { ETLProcessor, ETLContext, ETLResult, DbClient } from './types';
-import {
-  Classification,
-  SubClassification
-} from '../../constants/classifications';
+import { DocumentType } from '../../constants/classifications';
 
 export class SamplesETL implements ETLProcessor {
   canProcess(ctx: ETLContext): boolean {
-    const isSampleSubclassification =
-      ctx.subClassification === SubClassification.MuestrasSuelo ||
-      ctx.subClassification === SubClassification.MuestrasAgua;
-
-    return (
-      ctx.classification === Classification.Muestras &&
-      isSampleSubclassification &&
-      isExcelFile(ctx.fileName)
-    );
+    return ctx.tipo === DocumentType.EDDMuestras && isExcelFile(ctx.fileName);
   }
 
   async process(ctx: ETLContext): Promise<ETLResult> {

@@ -1,8 +1,4 @@
 import { z } from 'zod';
-import {
-  Classification,
-  SubClassification
-} from '../constants/classifications';
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024;
 
@@ -27,6 +23,7 @@ export const uploadDocumentsSchema = z
     classification: z.string().min(1, 'uploadDocument.classificationError'),
     subClassification: z.string().optional(),
     area: z.string().optional(),
+    tipo: z.string().nullable().optional(),
     files: z
       .array(z.instanceof(File))
       .min(1, 'uploadDocument.atLeastOneFile')
@@ -36,13 +33,7 @@ export const uploadDocumentsSchema = z
       )
   })
   .superRefine((data, ctx) => {
-    const requiresExcel =
-      data.subClassification === SubClassification.MuestrasSuelo ||
-      data.subClassification === SubClassification.MuestrasAgua ||
-      data.classification === Classification.Pozos ||
-      data.classification === Classification.Sustancias;
-
-    if (requiresExcel) {
+    if (data.tipo) {
       const hasNonExcelFiles = data.files.some((file) => !isExcelFile(file));
 
       if (hasNonExcelFiles) {

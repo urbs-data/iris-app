@@ -4,7 +4,7 @@ import { pozosTable, type NewPozo } from '@/db/schema';
 import { TruncateLoadETL } from './truncate-load-etl';
 import { isExcelFile } from '../parsing/utils';
 import type { ETLContext } from './types';
-import { Classification } from '../../constants/classifications';
+import { DocumentType } from '../../constants/classifications';
 
 function toNewPozo(row: ParsedWellRow, organizationId: string): NewPozo {
   let area: string | null = null;
@@ -37,9 +37,7 @@ function toNewPozo(row: ParsedWellRow, organizationId: string): NewPozo {
 
 export class WellsETL extends TruncateLoadETL<ParsedWellRow, NewPozo> {
   canProcess(ctx: ETLContext): boolean {
-    return (
-      ctx.classification === Classification.Pozos && isExcelFile(ctx.fileName)
-    );
+    return ctx.tipo === DocumentType.Pozos && isExcelFile(ctx.fileName);
   }
 
   parse(buffer: Buffer) {

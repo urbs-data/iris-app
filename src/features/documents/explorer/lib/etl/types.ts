@@ -20,6 +20,7 @@ export interface ETLContext {
   classification: string;
   subClassification?: string;
   organizationId: string;
+  tipo?: string | null;
 }
 
 export interface ETLProcessor {

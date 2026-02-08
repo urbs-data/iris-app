@@ -6,6 +6,7 @@ import { uploadDocumentsSchema } from './upload-documents-schema';
 import { resolveETLProcessor } from '../lib/etl/registry';
 import type { FileMetadata } from '../lib/types';
 import { logger } from '@/lib/logger';
+import { ValidationError } from '@/lib/errors';
 
 const MONTH_NAMES_ES = [
   'Enero',
@@ -87,7 +88,8 @@ export const uploadDocuments = authOrganizationActionClient
         fileName,
         classification: parsedInput.classification,
         subClassification: parsedInput.subClassification,
-        organizationId: ctx.organization.id
+        organizationId: ctx.organization.id,
+        tipo: parsedInput.tipo
       });
 
       if (processor) {
@@ -97,13 +99,12 @@ export const uploadDocuments = authOrganizationActionClient
           fileName,
           classification: parsedInput.classification,
           subClassification: parsedInput.subClassification,
-          organizationId: ctx.organization.id
+          organizationId: ctx.organization.id,
+          tipo: parsedInput.tipo
         });
 
         if (!etlResult.success) {
-          throw new Error(
-            `ETL falló, archivo no subido: ${etlResult.errors.join(', ')}`
-          );
+          throw new ValidationError(etlResult.errors.join(', '));
         }
       }
 
@@ -138,7 +139,8 @@ export const uploadDocuments = authOrganizationActionClient
         filename: fileName,
         uploaded_by: fullName || user.email || 'Usuario',
         upload_date: new Date().toISOString(),
-        extension: fileName.split('.').pop() || ''
+        extension: fileName.split('.').pop() || '',
+        tipo: parsedInput.tipo || null
       };
 
       const metadataBlobClient = container.getBlockBlobClient(

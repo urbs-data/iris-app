@@ -10,7 +10,6 @@ export const Classification = {
   InformesAvance: 'Informes de avance',
   Pozos: 'Pozos',
   Sustancias: 'Sustancias',
-  ParametrosFisicoQuimicos: 'Parametros Fisico Quimicos',
   Otros: 'Otros'
 } as const;
 
@@ -53,9 +52,15 @@ export const CLASSIFICATIONS_MAP: Record<string, string[]> = {
   [Classification.InformesAvance]: [SubClassification.Otros],
   [Classification.Pozos]: [SubClassification.Otros],
   [Classification.Sustancias]: [SubClassification.Otros],
-  [Classification.ParametrosFisicoQuimicos]: [SubClassification.Otros],
   [Classification.Otros]: [SubClassification.Otros]
 };
+
+export const DocumentType = {
+  EDDMuestras: 'EDD Muestras',
+  EDDParametrosFisicoQuimicos: 'EDD Parametros Fisico Quimicos',
+  Pozos: 'Pozos',
+  Sustancias: 'Sustancias'
+} as const;
 
 export const AREAS = Object.values(Area);
 
@@ -64,3 +69,5 @@ export type ClassificationType =
 export type SubClassificationType =
   (typeof SubClassification)[keyof typeof SubClassification];
 export type AreaType = (typeof Area)[keyof typeof Area];
+export type DocumentTypeValue =
+  (typeof DocumentType)[keyof typeof DocumentType];

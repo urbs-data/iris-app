@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler } from 'react-hook-form';
 import { toast } from 'sonner';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { FormDatePicker } from '@/components/forms/form-date-picker';
@@ -22,7 +22,8 @@ import {
 import {
   CLASSIFICATIONS_MAP,
   AREAS,
-  Classification
+  Classification,
+  DocumentType
 } from '../constants/classifications';
 
 export function UploadDocumentsForm() {
@@ -30,6 +31,7 @@ export function UploadDocumentsForm() {
   const t = useTranslations('uploadDocument');
   const tClassifications = useTranslations('documentClassifications');
   const tSubclassifications = useTranslations('documentSubclassifications');
+  const tDocumentTypes = useTranslations('documentTypes');
   const [files, setFiles] = useState<File[]>([]);
 
   const form = useZodForm({
@@ -68,6 +70,15 @@ export function UploadDocumentsForm() {
     []
   );
 
+  const tipoOptions = useMemo(
+    () =>
+      Object.values(DocumentType).map((value) => ({
+        value,
+        label: tDocumentTypes(value)
+      })),
+    [tDocumentTypes]
+  );
+
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: UploadDocumentsSchema) => {
       return resolveActionResult(uploadDocuments(data));
@@ -77,7 +88,7 @@ export function UploadDocumentsForm() {
       router.push('/dashboard/explorer');
     },
     onError: (error) => {
-      toast.error(t('uploadError'));
+      toast.error(error.message);
     }
   });
 
@@ -132,6 +143,14 @@ export function UploadDocumentsForm() {
                 label={t('areaLabel')}
                 placeholder={t('areaPlaceholder')}
                 options={areaOptions}
+              />
+
+              <FormSelect
+                control={form.control}
+                name='tipo'
+                label={t('tipoLabel')}
+                placeholder={t('tipoPlaceholder')}
+                options={tipoOptions}
               />
             </div>
 

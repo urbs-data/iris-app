@@ -10,14 +10,14 @@ import {
 } from '@/db/schema';
 import { isExcelFile } from '../parsing/utils';
 import type { ETLProcessor, ETLContext, ETLResult, DbClient } from './types';
-import { Classification } from '../../constants/classifications';
+import { DocumentType } from '../../constants/classifications';
 
 const BATCH_SIZE = 500;
 
 export class ParametrosFisicoQuimicosETL implements ETLProcessor {
   canProcess(ctx: ETLContext): boolean {
     return (
-      ctx.classification === Classification.ParametrosFisicoQuimicos &&
+      ctx.tipo === DocumentType.EDDParametrosFisicoQuimicos &&
       isExcelFile(ctx.fileName)
     );
   }

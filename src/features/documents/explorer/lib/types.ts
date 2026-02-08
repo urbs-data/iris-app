@@ -9,6 +9,7 @@ export interface FileMetadata {
   uploaded_by: string;
   upload_date: string;
   extension: string;
+  tipo: string | null;
 }
 
 export interface FileItem {
