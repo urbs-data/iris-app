@@ -10,6 +10,7 @@ export const Classification = {
   InformesAvance: 'Informes de avance',
   Pozos: 'Pozos',
   Sustancias: 'Sustancias',
+  ParametrosFisicoQuimicos: 'Parametros Fisico Quimicos',
   Otros: 'Otros'
 } as const;
 
@@ -52,6 +53,7 @@ export const CLASSIFICATIONS_MAP: Record<string, string[]> = {
   [Classification.InformesAvance]: [SubClassification.Otros],
   [Classification.Pozos]: [SubClassification.Otros],
   [Classification.Sustancias]: [SubClassification.Otros],
+  [Classification.ParametrosFisicoQuimicos]: [SubClassification.Otros],
   [Classification.Otros]: [SubClassification.Otros]
 };
 

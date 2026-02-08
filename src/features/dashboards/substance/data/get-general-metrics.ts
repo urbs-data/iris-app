@@ -35,6 +35,7 @@ export const getGeneralMetrics = authOrganizationActionClient
         SELECT *
         FROM muestras
         WHERE tipo = ${tipoMuestra}
+          AND fecha >= '2024-07-01'
           ${parsedInput.dateFrom ? sql`AND fecha >= ${parsedInput.dateFrom}::timestamp` : sql``}
           ${parsedInput.dateTo ? sql`AND fecha <= ${parsedInput.dateTo}::timestamp` : sql``}
       ),

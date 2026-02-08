@@ -1,0 +1,910 @@
+{
+  "id": "a84efa35-ec97-425f-ac4b-3924a5823dc1",
+  "prevId": "8f2763b2-ddb6-4656-9173-c061a297a3cd",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.concentraciones": {
+      "name": "concentraciones",
+      "schema": "",
+      "columns": {
+        "id_concentracion": {
+          "name": "id_concentracion",
+          "type": "varchar(100)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_muestra": {
+          "name": "id_muestra",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fecha_laboratorio": {
+          "name": "fecha_laboratorio",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "metodologia_muestreo": {
+          "name": "metodologia_muestreo",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "protocolo": {
+          "name": "protocolo",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id_sustancia": {
+          "name": "id_sustancia",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "metodo": {
+          "name": "metodo",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "unidad": {
+          "name": "unidad",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "limite_deteccion": {
+          "name": "limite_deteccion",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "limite_cuantificacion": {
+          "name": "limite_cuantificacion",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "concentracion": {
+          "name": "concentracion",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "documento_origen": {
+          "name": "documento_origen",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "concentraciones_id_muestra_muestras_id_muestra_fk": {
+          "name": "concentraciones_id_muestra_muestras_id_muestra_fk",
+          "tableFrom": "concentraciones",
+          "tableTo": "muestras",
+          "columnsFrom": [
+            "id_muestra"
+          ],
+          "columnsTo": [
+            "id_muestra"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "concentraciones_id_sustancia_sustancias_id_sustancia_fk": {
+          "name": "concentraciones_id_sustancia_sustancias_id_sustancia_fk",
+          "tableFrom": "concentraciones",
+          "tableTo": "sustancias",
+          "columnsFrom": [
+            "id_sustancia"
+          ],
+          "columnsTo": [
+            "id_sustancia"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "concentraciones_org_isolation": {
+          "name": "concentraciones_org_isolation",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "public"
+          ],
+          "using": "organization_id = current_setting('app.current_org', true)",
+          "withCheck": "organization_id = current_setting('app.current_org', true)"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.country": {
+      "name": "country",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_es": {
+          "name": "name_es",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "zone": {
+          "name": "zone",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.destination": {
+      "name": "destination",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_es": {
+          "name": "name_es",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "country_id": {
+          "name": "country_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "destination_country_id_country_id_fk": {
+          "name": "destination_country_id_country_id_fk",
+          "tableFrom": "destination",
+          "tableTo": "country",
+          "columnsFrom": [
+            "country_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.documentos": {
+      "name": "documentos",
+      "schema": "",
+      "columns": {
+        "id_documento": {
+          "name": "id_documento",
+          "type": "varchar(100)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_estudio": {
+          "name": "id_estudio",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "documento": {
+          "name": "documento",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "documentos_id_estudio_estudios_id_estudio_fk": {
+          "name": "documentos_id_estudio_estudios_id_estudio_fk",
+          "tableFrom": "documentos",
+          "tableTo": "estudios",
+          "columnsFrom": [
+            "id_estudio"
+          ],
+          "columnsTo": [
+            "id_estudio"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "documentos_org_isolation": {
+          "name": "documentos_org_isolation",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "public"
+          ],
+          "using": "organization_id = current_setting('app.current_org', true)",
+          "withCheck": "organization_id = current_setting('app.current_org', true)"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.estudios_pozos": {
+      "name": "estudios_pozos",
+      "schema": "",
+      "columns": {
+        "id_estudio_pozo": {
+          "name": "id_estudio_pozo",
+          "type": "varchar(100)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id_estudio": {
+          "name": "id_estudio",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id_pozo": {
+          "name": "id_pozo",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "estudios_pozos_id_estudio_estudios_id_estudio_fk": {
+          "name": "estudios_pozos_id_estudio_estudios_id_estudio_fk",
+          "tableFrom": "estudios_pozos",
+          "tableTo": "estudios",
+          "columnsFrom": [
+            "id_estudio"
+          ],
+          "columnsTo": [
+            "id_estudio"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "estudios_pozos_id_pozo_pozos_id_pozo_fk": {
+          "name": "estudios_pozos_id_pozo_pozos_id_pozo_fk",
+          "tableFrom": "estudios_pozos",
+          "tableTo": "pozos",
+          "columnsFrom": [
+            "id_pozo"
+          ],
+          "columnsTo": [
+            "id_pozo"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "estudios_pozos_org_isolation": {
+          "name": "estudios_pozos_org_isolation",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "public"
+          ],
+          "using": "organization_id = current_setting('app.current_org', true)",
+          "withCheck": "organization_id = current_setting('app.current_org', true)"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.estudios": {
+      "name": "estudios",
+      "schema": "",
+      "columns": {
+        "id_estudio": {
+          "name": "id_estudio",
+          "type": "varchar(100)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "proveedor": {
+          "name": "proveedor",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "informe_final": {
+          "name": "informe_final",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fecha_desde": {
+          "name": "fecha_desde",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fecha_hasta": {
+          "name": "fecha_hasta",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "estudios_org_isolation": {
+          "name": "estudios_org_isolation",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "public"
+          ],
+          "using": "organization_id = current_setting('app.current_org', true)",
+          "withCheck": "organization_id = current_setting('app.current_org', true)"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.muestras": {
+      "name": "muestras",
+      "schema": "",
+      "columns": {
+        "id_muestra": {
+          "name": "id_muestra",
+          "type": "varchar(100)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "muestra": {
+          "name": "muestra",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id_estudio_pozo": {
+          "name": "id_estudio_pozo",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "profundidad": {
+          "name": "profundidad",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fecha": {
+          "name": "fecha",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "muestras_id_estudio_pozo_estudios_pozos_id_estudio_pozo_fk": {
+          "name": "muestras_id_estudio_pozo_estudios_pozos_id_estudio_pozo_fk",
+          "tableFrom": "muestras",
+          "tableTo": "estudios_pozos",
+          "columnsFrom": [
+            "id_estudio_pozo"
+          ],
+          "columnsTo": [
+            "id_estudio_pozo"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "muestras_org_isolation": {
+          "name": "muestras_org_isolation",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "public"
+          ],
+          "using": "organization_id = current_setting('app.current_org', true)",
+          "withCheck": "organization_id = current_setting('app.current_org', true)"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.parametros_fisico_quimicos_new": {
+      "name": "parametros_fisico_quimicos_new",
+      "schema": "",
+      "columns": {
+        "id_parametro_fq": {
+          "name": "id_parametro_fq",
+          "type": "varchar(100)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fecha_hora_medicion": {
+          "name": "fecha_hora_medicion",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id_pozo": {
+          "name": "id_pozo",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "programa_muestreo": {
+          "name": "programa_muestreo",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id_muestra": {
+          "name": "id_muestra",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "profundidad_inicio": {
+          "name": "profundidad_inicio",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "profundidad_fin": {
+          "name": "profundidad_fin",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "unidad_profundidad": {
+          "name": "unidad_profundidad",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parametro": {
+          "name": "parametro",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "valor_medicion": {
+          "name": "valor_medicion",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "unidad_medicion": {
+          "name": "unidad_medicion",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comentarios": {
+          "name": "comentarios",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "documento_origen": {
+          "name": "documento_origen",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "parametros_fisico_quimicos_new_id_pozo_pozos_id_pozo_fk": {
+          "name": "parametros_fisico_quimicos_new_id_pozo_pozos_id_pozo_fk",
+          "tableFrom": "parametros_fisico_quimicos_new",
+          "tableTo": "pozos",
+          "columnsFrom": [
+            "id_pozo"
+          ],
+          "columnsTo": [
+            "id_pozo"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "parametros_fisico_quimicos_new_id_muestra_muestras_id_muestra_fk": {
+          "name": "parametros_fisico_quimicos_new_id_muestra_muestras_id_muestra_fk",
+          "tableFrom": "parametros_fisico_quimicos_new",
+          "tableTo": "muestras",
+          "columnsFrom": [
+            "id_muestra"
+          ],
+          "columnsTo": [
+            "id_muestra"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "parametros_fisico_quimicos_org_isolation": {
+          "name": "parametros_fisico_quimicos_org_isolation",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "public"
+          ],
+          "using": "organization_id = current_setting('app.current_org', true)",
+          "withCheck": "organization_id = current_setting('app.current_org', true)"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.pozos": {
+      "name": "pozos",
+      "schema": "",
+      "columns": {
+        "id_pozo": {
+          "name": "id_pozo",
+          "type": "varchar(100)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cota_tuberia": {
+          "name": "cota_tuberia",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "elevacion_terreno": {
+          "name": "elevacion_terreno",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "coordenada_norte": {
+          "name": "coordenada_norte",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "coordenada_este": {
+          "name": "coordenada_este",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "latitud_decimal": {
+          "name": "latitud_decimal",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "longitud_decimal": {
+          "name": "longitud_decimal",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fecha_relevamiento": {
+          "name": "fecha_relevamiento",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "responsable_relevamiento": {
+          "name": "responsable_relevamiento",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "empresa_relevamiento": {
+          "name": "empresa_relevamiento",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comentarios": {
+          "name": "comentarios",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "descripcion": {
+          "name": "descripcion",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "area": {
+          "name": "area",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "pozos_org_isolation": {
+          "name": "pozos_org_isolation",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "public"
+          ],
+          "using": "organization_id = current_setting('app.current_org', true)",
+          "withCheck": "organization_id = current_setting('app.current_org', true)"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "public.products": {
+      "name": "products",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "photo_url": {
+          "name": "photo_url",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "price": {
+          "name": "price",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sustancias": {
+      "name": "sustancias",
+      "schema": "",
+      "columns": {
+        "id_sustancia": {
+          "name": "id_sustancia",
+          "type": "varchar(100)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nombre_ingles": {
+          "name": "nombre_ingles",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nombre_espanol": {
+          "name": "nombre_espanol",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "alias": {
+          "name": "alias",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "categoria": {
+          "name": "categoria",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nivel_guia": {
+          "name": "nivel_guia",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "unidad_guia": {
+          "name": "unidad_guia",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nivel_guia_suelo": {
+          "name": "nivel_guia_suelo",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "unidad_guia_suelo": {
+          "name": "unidad_guia_suelo",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -193,6 +193,7 @@ export function UnifiedFilters({
       <div className='space-y-2'>
         <Label className='text-sm font-medium'>{t('dateRange')}</Label>
         <DateRangePicker
+          minDate={new Date(2024, 6, 1)}
           value={localFilters.dateRange}
           onChange={(range) =>
             setLocalFilters((prev) => ({ ...prev, dateRange: range }))

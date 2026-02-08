@@ -63,6 +63,7 @@ export const pozosTable = pgTable(
     id_pozo: varchar('id_pozo', { length: 100 }).primaryKey(),
     organization_id: varchar('organization_id', { length: 100 }).notNull(),
     tipo: varchar('tipo', { length: 100 }),
+    cota_tuberia: real('cota_tuberia'),
     elevacion_terreno: real('elevacion_terreno'),
     coordenada_norte: real('coordenada_norte'),
     coordenada_este: real('coordenada_este'),
@@ -162,21 +163,34 @@ export const concentracionesTable = pgTable(
 ).enableRLS();
 
 export const parametrosFisicoQuimicosTable = pgTable(
-  'parametros_fisico_quimicos',
+  'parametros_fisico_quimicos_new',
   {
+    id_parametro_fq: varchar('id_parametro_fq', { length: 100 }).primaryKey(),
     organization_id: varchar('organization_id', { length: 100 }).notNull(),
-    fecha_hora: timestamp('fecha_hora'),
+    fecha_hora_medicion: timestamp('fecha_hora_medicion'), // FIELD_MEASUREMENT_DATETIME
+
+    // Identificadores de sitio y ubicación
     id_pozo: varchar('id_pozo', { length: 100 }).references(
       () => pozosTable.id_pozo
-    ),
-    muestra: varchar('muestra', { length: 100 }),
-    profundidad_inicio: real('profundidad_inicio'),
-    profundidad_fin: real('profundidad_fin'),
-    unidad_profundidad: varchar('unidad_profundidad', { length: 20 }),
-    parametro: varchar('parametro', { length: 100 }),
-    valor: real('valor'),
-    unidad: varchar('unidad', { length: 100 }),
-    documento_origen: varchar('documento_origen', { length: 200 })
+    ), // LOCATION_ID
+    programa_muestreo: varchar('programa_muestreo', { length: 100 }), // SAMPLING_PROGRAM
+    id_muestra: varchar('id_muestra', { length: 100 }).references(
+      () => muestrasTable.id_muestra
+    ), // tendriamos que buscarla porque tenemos FIELD_SAMPLE_ID
+
+    // Profundidad
+    profundidad_inicio: real('profundidad_inicio'), // FIELD_MEASUREMENT_START_DEPTH
+    profundidad_fin: real('profundidad_fin'), // FIELD_MEASUREMENT_END_DEPTH
+    unidad_profundidad: varchar('unidad_profundidad', { length: 20 }), // FIELD_MEASUREMENT_DEPTH_UNITS
+
+    // Parámetro y medición
+    parametro: varchar('parametro', { length: 100 }), // FIELD_PARAMETER
+    valor_medicion: real('valor_medicion'), // FIELD_MEASUREMENT_VALUE
+    unidad_medicion: varchar('unidad_medicion', { length: 50 }), // FIELD_MEASUREMENT_UNITS
+
+    // Metadatos
+    comentarios: varchar('comentarios', { length: 500 }), // FIELD_MEASUREMENT_COMMENTS
+    documento_origen: varchar('documento_origen', { length: 200 }) // DOCUMENT
   },
   (t) => [orgIsolationPolicy('parametros_fisico_quimicos')]
 ).enableRLS();

@@ -30,6 +30,7 @@ interface DateRangePickerProps {
   className?: string;
   minYear?: number;
   maxYear?: number;
+  minDate?: Date;
   disabled?: boolean;
   numberOfMonths?: number;
 }
@@ -71,6 +72,7 @@ export function DateRangePicker({
   className,
   minYear = 2020,
   maxYear = new Date().getFullYear(),
+  minDate,
   disabled = false,
   numberOfMonths = 2
 }: DateRangePickerProps) {
@@ -90,11 +92,14 @@ export function DateRangePicker({
 
   const years = React.useMemo(() => {
     const yearList: number[] = [];
-    for (let year = minYear; year <= maxYear; year++) {
+    const effectiveMinYear = minDate
+      ? Math.max(minYear, minDate.getFullYear())
+      : minYear;
+    for (let year = effectiveMinYear; year <= maxYear; year++) {
       yearList.push(year);
     }
     return yearList;
-  }, [minYear, maxYear]);
+  }, [minYear, maxYear, minDate]);
 
   const handleDateChange = (newDate: DateRange | undefined) => {
     setDate(newDate);
@@ -183,6 +188,7 @@ export function DateRangePicker({
           onSelect={handleDateChange}
           numberOfMonths={numberOfMonths}
           locale={locale}
+          fromDate={minDate}
         />
         {date?.from && (
           <div className='border-t p-3'>

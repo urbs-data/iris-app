@@ -43,6 +43,20 @@
       "when": 1768821903068,
       "tag": "0005_adorable_gravity",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1770231889172,
+      "tag": "0006_striped_invisible_woman",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1770575642743,
+      "tag": "0007_steep_odin",
+      "breakpoints": true
     }
   ]
 }

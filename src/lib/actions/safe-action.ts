@@ -78,8 +78,7 @@ export const authActionClient = actionClientWithLogger.use(async ({ next }) => {
 export const authOrganizationActionClient = actionClientWithLogger.use(
   async ({ next }) => {
     const ctx = await getAuthOrganizationContext();
-    // const db = await getDbWithOrg(ctx.organization.id);
-    const db = await getDbWithOrg('org_38folzUP9dtd6eiF3KSDq7t2Reo');
+    const db = await getDbWithOrg(ctx.organization.id);
     return next({ ctx: { ...ctx, db } });
   }
 );

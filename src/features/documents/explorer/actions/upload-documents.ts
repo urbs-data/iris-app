@@ -75,15 +75,6 @@ export const uploadDocuments = authOrganizationActionClient
       error?: string;
     }> = [];
 
-    logger('uploadDocuments', {
-      organizationId: ctx.organization.id,
-      date: parsedInput.date,
-      classification: parsedInput.classification,
-      subClassification: parsedInput.subClassification,
-      area: parsedInput.area,
-      files: parsedInput.files.map((file) => file.name)
-    });
-
     for (const file of parsedInput.files) {
       const fileName = file.name;
 

@@ -1,0 +1,1 @@
+ALTER TABLE "pozos" ADD COLUMN "cota_tuberia" real;
