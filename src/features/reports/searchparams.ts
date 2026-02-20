@@ -6,7 +6,7 @@ import {
 
 export const reportsSearchParams = {
   page: parseAsInteger.withDefault(1),
-  perPage: parseAsInteger.withDefault(10)
+  perPage: parseAsInteger.withDefault(50)
 };
 
 export const reportsSearchParamsCache =

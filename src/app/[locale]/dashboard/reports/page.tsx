@@ -3,8 +3,12 @@ import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
 import { SearchParams } from 'nuqs/server';
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
-import { reportsSearchParamsCache } from '@/features/reports/searchparams';
-import ReportsPageContent from '@/features/reports/components/reports-page-content';
+import {
+  reportsSearchParamsCache,
+  reportsSerialize
+} from '@/features/reports/searchparams';
+import RecentReportsListing from '@/features/reports/components/recent-reports-listing';
+import { NewReportButton } from '@/features/reports/components/new-report-button';
 
 export const metadata = {
   title: 'Dashboard: Reports'
@@ -20,10 +24,22 @@ export default async function ReportsPage(props: PageProps) {
   const t = await getTranslations('reports');
 
   reportsSearchParamsCache.parse(searchParams);
+  const key = reportsSerialize({ ...searchParams });
 
   return (
-    <PageContainer scrollable={false} pageTitle={t('title')}>
-      <ReportsPageContent searchParams={searchParams} />
+    <PageContainer
+      scrollable={false}
+      pageTitle={t('title')}
+      pageHeaderAction={<NewReportButton />}
+    >
+      <Suspense
+        key={key}
+        fallback={
+          <DataTableSkeleton columnCount={5} rowCount={5} withToolbar={false} />
+        }
+      >
+        <RecentReportsListing />
+      </Suspense>
     </PageContainer>
   );
 }

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { ClerkProvider } from '@clerk/nextjs';
 import { enUS, esES } from '@clerk/localizations';
+import { NiceModalProvider } from '@/components/layout/nice-modal-provider';
 
 type Props = {
   children: React.ReactNode;
@@ -19,7 +20,9 @@ export default async function LocaleLayout({ children, params }: Props) {
   }
   return (
     <NextIntlClientProvider locale={locale}>
-      <ClerkProvider localization={localization}>{children}</ClerkProvider>
+      <ClerkProvider localization={localization}>
+        <NiceModalProvider>{children}</NiceModalProvider>
+      </ClerkProvider>
     </NextIntlClientProvider>
   );
 }
