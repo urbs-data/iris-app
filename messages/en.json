@@ -60,6 +60,7 @@
         "search": "Search",
         "explorer": "Explorer",
         "validation": "Validation",
+        "reports": "Reports",
         "profile": "Profile",
         "documentation": "Documentation",
         "group": {
@@ -303,6 +304,7 @@
             "search": "Search",
             "explorer": "Explorer",
             "validate": "Validation",
+            "reports": "Reports",
             "upload": "Upload Documents",
             "results": "Results",
             "profile": "Profile"
@@ -501,6 +503,60 @@
                 "preliminar": {
                     "error": "The following sample and substance combinations in the preliminar are not in the EDD"
                 }
+            }
+        }
+    },
+    "reports": {
+        "title": "Reports",
+        "tabs": {
+            "individual": "Individual report",
+            "preset": "Preset"
+        },
+        "individual": {
+            "title": "Generate individual report"
+        },
+        "preset": {
+            "title": "Generate from preset",
+            "helper": "Preset endpoint is temporarily mocked until backend support is available."
+        },
+        "fields": {
+            "reportType": "Report type",
+            "reportTypeSearch": "Search report type...",
+            "preset": "Preset",
+            "presetSearch": "Search preset...",
+            "dateRange": "Date range",
+            "dateRangePlaceholder": "Select a date range",
+            "from": "Date from",
+            "to": "Date to",
+            "wells": "Wells",
+            "wellsPlaceholder": "Select wells",
+            "wellsSearch": "Search well...",
+            "empty": "No results"
+        },
+        "types": {
+            "well_depth": "Well depth",
+            "sampling_params": "Sampling params",
+            "concentrations": "Concentrations"
+        },
+        "export": {
+            "downloadIndividual": "Download report",
+            "downloadPreset": "Download preset",
+            "downloading": "Downloading...",
+            "success": "Report generated successfully",
+            "successPreset": "Preset generated successfully",
+            "download": "Download report",
+            "error": "Could not generate the report",
+            "missingDates": "You must select start and end dates",
+            "missingSelection": "You must select a report type or a preset"
+        },
+        "recent": {
+            "title": "Recently generated reports",
+            "columns": {
+                "name": "Name",
+                "generatedAt": "Generated at",
+                "range": "Range",
+                "user": "User",
+                "action": "Action"
             }
         }
     },

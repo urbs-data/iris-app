@@ -1,0 +1,1 @@
+ALTER TABLE "reportes" ALTER COLUMN "url_archivo" SET DATA TYPE varchar(400);

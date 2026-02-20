@@ -5,7 +5,8 @@ import {
   timestamp,
   real,
   serial,
-  pgPolicy
+  pgPolicy,
+  pgEnum
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
@@ -56,6 +57,33 @@ export const substancesTable = pgTable('sustancias', {
   nivel_guia_suelo: real('nivel_guia_suelo'),
   unidad_guia_suelo: varchar('unidad_guia_suelo', { length: 50 })
 });
+
+export const reportTypeEnum = pgEnum('tipo_reporte', [
+  'well_depth',
+  'sampling_params',
+  'concentrations'
+]);
+export const reportPresetEnum = pgEnum('preset', ['formulario_6_provincia_ba']);
+
+export const reportsTable = pgTable(
+  'reportes',
+  {
+    id_reporte: varchar('id_reporte', { length: 100 }).primaryKey(),
+    organization_id: varchar('organization_id', { length: 100 }).notNull(),
+    fecha_desde: timestamp('fecha_desde').notNull(),
+    fecha_hasta: timestamp('fecha_hasta').notNull(),
+    extension: varchar('extension', { length: 10 }).notNull(),
+    nombre_archivo: varchar('nombre_archivo', { length: 100 }).notNull(),
+    tipo_reporte: reportTypeEnum('tipo_reporte'),
+    preset: reportPresetEnum('preset'),
+    id_usuario: varchar('id_usuario', { length: 100 }).notNull(),
+    email_usuario: varchar('email_usuario', { length: 100 }).notNull(),
+    nombre_usuario: varchar('nombre_usuario', { length: 100 }).notNull(),
+    url_archivo: varchar('url_archivo', { length: 400 }).notNull(),
+    created_at: timestamp('created_at').notNull().defaultNow()
+  },
+  (t) => [orgIsolationPolicy('reportes')]
+).enableRLS();
 
 export const pozosTable = pgTable(
   'pozos',

@@ -41,6 +41,10 @@ export function useBreadcrumbs() {
       { title: t('dashboard'), link: '/dashboard' },
       { title: t('validate'), link: '/dashboard/validate' }
     ],
+    '/dashboard/reports': [
+      { title: t('dashboard'), link: '/dashboard' },
+      { title: t('reports'), link: '/dashboard/reports' }
+    ],
     '/dashboard/validate/results': [
       { title: t('dashboard'), link: '/dashboard' },
       { title: t('validate'), link: '/dashboard/validate' },

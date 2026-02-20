@@ -73,6 +73,13 @@ export const navItems: NavItem[] = [
     group: 'group.documents'
   },
   {
+    title: 'reports',
+    url: '/dashboard/reports',
+    icon: 'post',
+    items: [],
+    group: 'group.documents'
+  },
+  {
     title: 'profile',
     url: '/dashboard/profile',
     icon: 'account',

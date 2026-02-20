@@ -60,6 +60,7 @@
         "search": "Buscador",
         "explorer": "Explorador",
         "validation": "Validación",
+        "reports": "Reportes",
         "profile": "Perfil",
         "documentation": "Documentación",
         "group": {
@@ -305,6 +306,7 @@
             "search": "Buscador",
             "explorer": "Explorador",
             "validate": "Validación",
+            "reports": "Reportes",
             "upload": "Cargar Documentos",
             "results": "Resultados",
             "profile": "Perfil"
@@ -503,6 +505,60 @@
                 "preliminar": {
                     "error": "Las siguientes combinaciones de muestra y sustancia del preliminar no estan en el EDD"
                 }
+            }
+        }
+    },
+    "reports": {
+        "title": "Reportes",
+        "tabs": {
+            "individual": "Reporte Individual",
+            "preset": "Preset"
+        },
+        "individual": {
+            "title": "Generar reporte individual"
+        },
+        "preset": {
+            "title": "Generar por preset",
+            "helper": "El endpoint de presets está mockeado temporalmente hasta que backend quede disponible."
+        },
+        "fields": {
+            "reportType": "Tipo de reporte",
+            "reportTypeSearch": "Buscar tipo de reporte...",
+            "preset": "Preset",
+            "presetSearch": "Buscar preset...",
+            "dateRange": "Rango de fechas",
+            "dateRangePlaceholder": "Selecciona un rango de fechas",
+            "from": "Fecha desde",
+            "to": "Fecha hasta",
+            "wells": "Pozos",
+            "wellsPlaceholder": "Selecciona pozos",
+            "wellsSearch": "Buscar pozo...",
+            "empty": "Sin resultados"
+        },
+        "types": {
+            "well_depth": "Profundidad de pozo",
+            "sampling_params": "Parámetros de muestreo",
+            "concentrations": "Concentraciones"
+        },
+        "export": {
+            "downloadIndividual": "Descargar reporte",
+            "downloadPreset": "Descargar preset",
+            "downloading": "Descargando...",
+            "success": "Reporte generado correctamente",
+            "successPreset": "Preset generado correctamente",
+            "download": "Descargar reporte",
+            "error": "No se pudo generar el reporte",
+            "missingDates": "Debes seleccionar fecha desde y fecha hasta",
+            "missingSelection": "Debes seleccionar un tipo de reporte o un preset"
+        },
+        "recent": {
+            "title": "Reportes generados recientemente",
+            "columns": {
+                "name": "Nombre",
+                "generatedAt": "Generado",
+                "range": "Rango",
+                "user": "Usuario",
+                "action": "Acción"
             }
         }
     },

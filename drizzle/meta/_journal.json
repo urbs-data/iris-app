@@ -57,6 +57,27 @@
       "when": 1770575642743,
       "tag": "0007_steep_odin",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1771533827842,
+      "tag": "0008_grey_polaris",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1771610264151,
+      "tag": "0009_magenta_xorn",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1771613555334,
+      "tag": "0010_overrated_nemesis",
+      "breakpoints": true
     }
   ]
 }
