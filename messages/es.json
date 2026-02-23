@@ -538,7 +538,13 @@
         "types": {
             "well_depth": "Profundidad de pozo",
             "sampling_params": "Parámetros de muestreo",
-            "concentrations": "Concentraciones"
+            "concentrations": "Concentraciones",
+            "analysis_performed": "Análisis realizado"
+        },
+        "presetConfig": {
+            "title": "Configuración por reporte",
+            "reportsIncluded": "{count} reportes incluidos",
+            "include": "Incluir"
         },
         "export": {
             "downloadIndividual": "Descargar reporte",
@@ -549,7 +555,7 @@
             "download": "Descargar reporte",
             "error": "No se pudo generar el reporte",
             "missingDates": "Debes seleccionar fecha desde y fecha hasta",
-            "missingSelection": "Debes seleccionar un tipo de reporte o un preset"
+            "missingSelection": "Debes seleccionar al menos un reporte"
         },
         "recent": {
             "title": "Reportes generados recientemente",

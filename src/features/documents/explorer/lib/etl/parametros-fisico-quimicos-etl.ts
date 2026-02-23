@@ -123,7 +123,7 @@ export class ParametrosFisicoQuimicosETL implements ETLProcessor {
       fecha_hora_medicion: row.fecha_hora_medicion,
       id_pozo: row.id_pozo,
       programa_muestreo: row.programa_muestreo,
-      id_muestra: idMuestra,
+      muestra: muestra,
       profundidad_inicio: row.profundidad_inicio,
       profundidad_fin: row.profundidad_fin,
       unidad_profundidad: row.unidad_profundidad,

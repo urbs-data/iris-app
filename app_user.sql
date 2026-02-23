@@ -22,7 +22,10 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE
   public.parametros_fisico_quimicos,
   public.pozos,
   public.products,
-  public.sustancias
+  public.sustancias,
+  public.reportes,
+  public.reporte_configuraciones,
+  public.parametros_muestras
 TO app_user;
 
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO app_user;

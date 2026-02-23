@@ -536,7 +536,13 @@
         "types": {
             "well_depth": "Well depth",
             "sampling_params": "Sampling params",
-            "concentrations": "Concentrations"
+            "concentrations": "Concentrations",
+            "analysis_performed": "Analysis performed"
+        },
+        "presetConfig": {
+            "title": "Report-level configuration",
+            "reportsIncluded": "{count} reports included",
+            "include": "Include"
         },
         "export": {
             "downloadIndividual": "Download report",
@@ -547,7 +553,7 @@
             "download": "Download report",
             "error": "Could not generate the report",
             "missingDates": "You must select start and end dates",
-            "missingSelection": "You must select a report type or a preset"
+            "missingSelection": "You must select at least one report"
         },
         "recent": {
             "title": "Recently generated reports",

@@ -5,6 +5,7 @@ import {
   timestamp,
   real,
   serial,
+  json,
   pgPolicy,
   pgEnum
 } from 'drizzle-orm/pg-core';
@@ -61,9 +62,9 @@ export const substancesTable = pgTable('sustancias', {
 export const reportTypeEnum = pgEnum('tipo_reporte', [
   'well_depth',
   'sampling_params',
-  'concentrations'
+  'concentrations',
+  'analysis_performed'
 ]);
-export const reportPresetEnum = pgEnum('preset', ['formulario_6_provincia_ba']);
 
 export const reportsTable = pgTable(
   'reportes',
@@ -74,8 +75,6 @@ export const reportsTable = pgTable(
     fecha_hasta: timestamp('fecha_hasta').notNull(),
     extension: varchar('extension', { length: 10 }).notNull(),
     nombre_archivo: varchar('nombre_archivo', { length: 100 }).notNull(),
-    tipo_reporte: reportTypeEnum('tipo_reporte'),
-    preset: reportPresetEnum('preset'),
     id_usuario: varchar('id_usuario', { length: 100 }).notNull(),
     email_usuario: varchar('email_usuario', { length: 100 }).notNull(),
     nombre_usuario: varchar('nombre_usuario', { length: 100 }).notNull(),
@@ -84,6 +83,17 @@ export const reportsTable = pgTable(
   },
   (t) => [orgIsolationPolicy('reportes')]
 ).enableRLS();
+
+export const reporteConfiguracionesTable = pgTable('reporte_configuraciones', {
+  id: varchar('id', { length: 100 })
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  id_reporte: varchar('id_reporte', { length: 100 })
+    .notNull()
+    .references(() => reportsTable.id_reporte),
+  tipo_reporte: reportTypeEnum('tipo_reporte').notNull(),
+  pozos: json('pozos').$type<string[]>()
+});
 
 export const pozosTable = pgTable(
   'pozos',
@@ -150,6 +160,23 @@ export const estudiosPozosTable = pgTable(
   (t) => [orgIsolationPolicy('estudios_pozos')]
 ).enableRLS();
 
+export const parametrosMuestrasTable = pgTable(
+  'parametros_muestras',
+  {
+    id_parametro_muestra: varchar('id_parametro_muestra', { length: 100 })
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    organization_id: varchar('organization_id', { length: 100 }).notNull(),
+    id_laboratorio: integer('id_laboratorio'),
+    ccc: integer('ccc'),
+    pi: integer('pi'),
+    fecha_muestra: timestamp('fecha_muestra'),
+    muestra: varchar('muestra', { length: 100 }),
+    analisis: varchar('analisis', { length: 200 })
+  },
+  (t) => [orgIsolationPolicy('parametros_muestras')]
+).enableRLS();
+
 export const muestrasTable = pgTable(
   'muestras',
   {
@@ -202,9 +229,7 @@ export const parametrosFisicoQuimicosTable = pgTable(
       () => pozosTable.id_pozo
     ), // LOCATION_ID
     programa_muestreo: varchar('programa_muestreo', { length: 100 }), // SAMPLING_PROGRAM
-    id_muestra: varchar('id_muestra', { length: 100 }).references(
-      () => muestrasTable.id_muestra
-    ), // tendriamos que buscarla porque tenemos FIELD_SAMPLE_ID
+    muestra: varchar('muestra', { length: 100 }), // FIELD_SAMPLE_ID
 
     // Profundidad
     profundidad_inicio: real('profundidad_inicio'), // FIELD_MEASUREMENT_START_DEPTH
@@ -251,3 +276,8 @@ export type ParametroFisicoQuimico =
   typeof parametrosFisicoQuimicosTable.$inferSelect;
 export type NewParametroFisicoQuimico =
   typeof parametrosFisicoQuimicosTable.$inferInsert;
+
+export type ReporteConfiguracion =
+  typeof reporteConfiguracionesTable.$inferSelect;
+export type NewReporteConfiguracion =
+  typeof reporteConfiguracionesTable.$inferInsert;

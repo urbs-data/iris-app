@@ -48,11 +48,9 @@ export const exportReport = authOrganizationActionClient
       method: 'POST',
       headers,
       body: JSON.stringify({
-        preset: parsedInput.preset,
-        report_type: parsedInput.reportType,
         fecha_desde: parsedInput.fechaDesde,
         fecha_hasta: parsedInput.fechaHasta,
-        pozos: parsedInput.pozos?.length ? parsedInput.pozos : null
+        configuraciones: parsedInput.configuraciones
       })
     });
 

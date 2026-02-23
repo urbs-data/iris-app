@@ -1,7 +1,7 @@
 'use client';
 
 import NiceModal from '@ebay/nice-modal-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
@@ -19,14 +19,16 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
-import { Form } from '@/components/ui/form';
+import { Form, FormControl, FormField } from '@/components/ui/form';
 import { FormCombobox } from '@/components/forms/form-combobox';
 import { FormMultiSelect } from '@/components/forms/form-multi-select';
 import { FormDatePicker } from '@/components/forms/form-date-picker';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useEnhancedModal } from '@/hooks/use-enhanced-modal';
 import { exportReport } from '../actions/export-report';
 import {
   REPORT_TYPES,
+  PRESET_REPORT_MAP,
   PRESET_OPTIONS,
   type ReportType,
   type PresetValue,
@@ -71,6 +73,8 @@ interface FormValues {
   fechaDesde?: Date;
   fechaHasta?: Date;
   wells: string[];
+  configurations: Record<string, string[]>;
+  enabledReports: Record<string, boolean>;
 }
 
 function ModeCard({
@@ -126,7 +130,9 @@ export const ReportFormModal = NiceModal.create(() => {
       reportType: '',
       fechaDesde: today,
       fechaHasta: today,
-      wells: []
+      wells: [],
+      configurations: {},
+      enabledReports: {}
     }
   });
 
@@ -162,15 +168,27 @@ export const ReportFormModal = NiceModal.create(() => {
     setMode(newMode);
     if (newMode === 'preset') {
       form.setValue('reportType', '');
+      form.setValue('wells', []);
+      form.setValue('configurations', {});
+      form.setValue('enabledReports', {});
     } else {
       form.setValue('preset', '');
+      form.setValue('configurations', {});
+      form.setValue('enabledReports', {});
     }
   };
 
   const mutation = useMutation({
     mutationFn: async () => {
-      const { preset, reportType, fechaDesde, fechaHasta, wells } =
-        form.getValues();
+      const {
+        preset,
+        reportType,
+        fechaDesde,
+        fechaHasta,
+        wells,
+        configurations,
+        enabledReports
+      } = form.getValues();
 
       if (!fechaDesde || !fechaHasta) {
         throw new Error(t('export.missingDates'));
@@ -179,13 +197,27 @@ export const ReportFormModal = NiceModal.create(() => {
       const desde = formatDateValue(fechaDesde);
       const hasta = formatDateValue(fechaHasta);
 
+      const configuraciones =
+        mode === 'preset' && preset
+          ? (PRESET_REPORT_MAP[preset as PresetValue] ?? [])
+              .filter((key) => enabledReports?.[key] !== false)
+              .map((key) => ({
+                reporte: key,
+                pozos: configurations[key] ?? []
+              }))
+          : reportType
+            ? [{ reporte: reportType as ReportType, pozos: wells }]
+            : [];
+
+      if (!configuraciones.length) {
+        throw new Error(t('export.missingSelection'));
+      }
+
       return resolveActionResult(
         exportReport({
-          reportType: (reportType as ReportType) || undefined,
-          preset: (preset as PresetValue) || undefined,
           fechaDesde: desde,
           fechaHasta: hasta,
-          pozos: wells
+          configuraciones
         })
       );
     },
@@ -200,12 +232,64 @@ export const ReportFormModal = NiceModal.create(() => {
 
   const presetValue = form.watch('preset');
   const reportTypeValue = form.watch('reportType');
+  const enabledReportsValue = form.watch('enabledReports');
   const hasSelection = !!presetValue || !!reportTypeValue;
-  const isDisabled = !hasSelection || mutation.isPending;
+  const presetReportTypes =
+    mode === 'preset' && presetValue
+      ? (PRESET_REPORT_MAP[presetValue as PresetValue] ?? [])
+      : [];
+  const enabledPresetReportsCount =
+    mode === 'preset' && !!presetValue
+      ? presetReportTypes.filter(
+          (reportType) => enabledReportsValue?.[reportType] !== false
+        ).length
+      : 0;
+  const hasEnabledPresetReports =
+    mode === 'preset' && !!presetValue
+      ? presetReportTypes.some(
+          (reportType) => enabledReportsValue?.[reportType] !== false
+        )
+      : true;
+  const isDisabled =
+    !hasSelection ||
+    mutation.isPending ||
+    (mode === 'preset' && !!presetValue && !hasEnabledPresetReports);
+
+  useEffect(() => {
+    if (mode !== 'preset') {
+      return;
+    }
+
+    if (!presetValue) {
+      form.setValue('configurations', {});
+      form.setValue('enabledReports', {});
+      return;
+    }
+
+    const reportTypes = PRESET_REPORT_MAP[presetValue as PresetValue] ?? [];
+    const currentConfigurations = form.getValues('configurations');
+    const nextConfigurations = reportTypes.reduce<Record<string, string[]>>(
+      (acc, reportKey) => {
+        acc[reportKey] = currentConfigurations?.[reportKey] ?? [];
+        return acc;
+      },
+      {}
+    );
+    const nextEnabledReports = reportTypes.reduce<Record<string, boolean>>(
+      (acc, reportKey) => {
+        acc[reportKey] = true;
+        return acc;
+      },
+      {}
+    );
+
+    form.setValue('configurations', nextConfigurations);
+    form.setValue('enabledReports', nextEnabledReports);
+  }, [mode, presetValue, form]);
 
   return (
     <Dialog open={modal.visible} onOpenChange={modal.handleOpenChange}>
-      <DialogContent className='sm:max-w-[700px]'>
+      <DialogContent className='max-h-[90vh] overflow-y-auto sm:max-w-[700px]'>
         <DialogHeader>
           <DialogTitle>Nuevo reporte</DialogTitle>
           <DialogDescription>
@@ -267,15 +351,81 @@ export const ReportFormModal = NiceModal.create(() => {
               />
             </div>
 
-            <FormMultiSelect
-              control={form.control}
-              name='wells'
-              label={t('fields.wells')}
-              options={wellOptions}
-              placeholder={t('fields.wellsPlaceholder')}
-              searchPlaceholder={t('fields.wellsSearch')}
-              isLoading={isLoadingWells}
-            />
+            {mode === 'specific' ? (
+              <FormMultiSelect
+                control={form.control}
+                name='wells'
+                label={t('fields.wells')}
+                options={wellOptions}
+                placeholder={t('fields.wellsPlaceholder')}
+                searchPlaceholder={t('fields.wellsSearch')}
+                isLoading={isLoadingWells}
+              />
+            ) : null}
+
+            {mode === 'preset' && presetValue ? (
+              <div className='space-y-4 border-t pt-6'>
+                <div className='flex items-center justify-between gap-2'>
+                  <h3 className='text-foreground text-xl font-semibold'>
+                    {t('presetConfig.title')}
+                  </h3>
+                  <span className='bg-muted text-muted-foreground rounded-md px-2 py-1 text-sm font-medium'>
+                    {t('presetConfig.reportsIncluded', {
+                      count: enabledPresetReportsCount
+                    })}
+                  </span>
+                </div>
+
+                <div className='space-y-4'>
+                  {presetReportTypes.map((reportType) => {
+                    const isReportEnabled =
+                      enabledReportsValue?.[reportType] !== false;
+                    return (
+                      <div
+                        key={reportType}
+                        className={cn(
+                          'bg-card space-y-4 rounded-xl border p-4',
+                          !isReportEnabled && 'opacity-70'
+                        )}
+                      >
+                        <div className='flex items-center justify-between gap-2'>
+                          <h4 className='text-foreground text-lg font-semibold'>
+                            {t(`types.${reportType}`)}
+                          </h4>
+                          <FormField
+                            control={form.control}
+                            name={`enabledReports.${reportType}` as never}
+                            render={({ field }) => (
+                              <label className='flex items-center gap-2 text-sm font-medium'>
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value ?? true}
+                                    onCheckedChange={(checked) =>
+                                      field.onChange(Boolean(checked))
+                                    }
+                                  />
+                                </FormControl>
+                                {t('presetConfig.include')}
+                              </label>
+                            )}
+                          />
+                        </div>
+                        <FormMultiSelect
+                          control={form.control}
+                          name={`configurations.${reportType}` as never}
+                          label={t('fields.wells')}
+                          options={wellOptions}
+                          placeholder={t('fields.wellsPlaceholder')}
+                          searchPlaceholder={t('fields.wellsSearch')}
+                          isLoading={isLoadingWells}
+                          disabled={!isReportEnabled}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : null}
 
             <DialogFooter>
               <Button

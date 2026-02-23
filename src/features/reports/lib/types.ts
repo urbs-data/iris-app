@@ -1,7 +1,8 @@
 export const REPORT_TYPES = [
   'well_depth',
   'sampling_params',
-  'concentrations'
+  'concentrations',
+  'analysis_performed'
 ] as const;
 
 export type ReportType = (typeof REPORT_TYPES)[number];
@@ -13,9 +14,16 @@ export const PRESET_OPTIONS = [
   }
 ] as const;
 
-export const PRESET_TYPES = ['formulario_6_provincia_ba'] as const;
-
 export type PresetValue = (typeof PRESET_OPTIONS)[number]['value'];
+
+export const PRESET_REPORT_MAP: Record<PresetValue, ReportType[]> = {
+  formulario_6_provincia_ba: [
+    'well_depth',
+    'sampling_params',
+    'concentrations',
+    'analysis_performed'
+  ]
+};
 
 export interface RecentExport {
   id: string;
