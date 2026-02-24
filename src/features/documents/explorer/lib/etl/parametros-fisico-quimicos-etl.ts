@@ -13,6 +13,23 @@ import { DocumentType } from '../../constants/classifications';
 
 const BATCH_SIZE = 500;
 
+const PARAMETRO_ESTANDAR: Record<string, string> = {
+  'Profundidad al agua': 'Profundidad al agua',
+  'Oxígeno Disuelto': 'OD',
+  pH: 'pH',
+  Temperatura: 'Temp',
+  'Conductividad Específica': 'CE',
+  'Sólidos Totales Disueltos': 'STD',
+  ORP: 'ORP',
+  'Oxigeno Disuelto': 'OD',
+  'Conductividad Especifica': 'CE',
+  'Solidos Disueltos Totales': 'STD',
+  Oxigeno_Disuelto: 'OD',
+  Conductividad_Especifica: 'CE',
+  Total_Solidos_Disueltos: 'STD',
+  Nivel_estático_del_agua: 'Profundidad al agua'
+};
+
 export class ParametrosFisicoQuimicosETL implements ETLProcessor {
   canProcess(ctx: ETLContext): boolean {
     return (
@@ -100,7 +117,7 @@ export class ParametrosFisicoQuimicosETL implements ETLProcessor {
       profundidad_inicio: row.profundidad_inicio,
       profundidad_fin: row.profundidad_fin,
       unidad_profundidad: row.unidad_profundidad,
-      parametro: row.parametro,
+      parametro: PARAMETRO_ESTANDAR[row.parametro] ?? row.parametro,
       valor_medicion: row.valor_medicion,
       unidad_medicion: row.unidad_medicion,
       comentarios: row.comentarios,

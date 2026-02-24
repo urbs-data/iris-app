@@ -51,7 +51,23 @@ export async function getAuthContext() {
 
 export async function getAuthOrganizationContext() {
   const authData = await getClerkAuth();
-  const organization = await getClerkOrganization();
+  let organization: {
+    id: string;
+    slug: string;
+    role: string | undefined;
+    permissions: string[] | undefined;
+  };
+
+  if (process.env.NODE_ENV === 'development') {
+    organization = {
+      id: 'org_38folzUP9dtd6eiF3KSDq7t2Reo',
+      slug: 'iris-app',
+      role: 'admin',
+      permissions: ['read', 'write']
+    };
+  } else {
+    organization = await getClerkOrganization();
+  }
 
   return {
     session: {
