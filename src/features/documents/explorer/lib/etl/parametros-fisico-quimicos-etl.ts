@@ -5,11 +5,10 @@ import {
 } from '../parsers/parametros-fisico-quimicos-parser';
 import {
   parametrosFisicoQuimicosTable,
-  muestrasTable,
   type NewParametroFisicoQuimico
 } from '@/db/schema';
 import { isExcelFile } from '../parsing/utils';
-import type { ETLProcessor, ETLContext, ETLResult, DbClient } from './types';
+import type { ETLProcessor, ETLContext, ETLResult } from './types';
 import { DocumentType } from '../../constants/classifications';
 
 const BATCH_SIZE = 500;
@@ -56,16 +55,13 @@ export class ParametrosFisicoQuimicosETL implements ETLProcessor {
       result.stats.deleted = deleted.length;
 
       // Transform rows with lazy-loaded muestra lookup
-      const muestrasCache = new Map<string, string>();
       const entities: NewParametroFisicoQuimico[] = [];
 
       for (const row of parseResult.rows) {
         const entity = await this.toEntity(
-          tx as DbClient,
           row,
           ctx.organizationId,
-          ctx.fileName,
-          muestrasCache
+          ctx.fileName
         );
         entities.push(entity);
       }
@@ -90,40 +86,17 @@ export class ParametrosFisicoQuimicosETL implements ETLProcessor {
   }
 
   private async toEntity(
-    tx: DbClient,
     row: ParsedParametroFisicoQuimicoRow,
     organizationId: string,
-    fileName: string,
-    muestrasCache: Map<string, string>
+    fileName: string
   ): Promise<NewParametroFisicoQuimico> {
-    let idMuestra: string | null = null;
-
-    if (row.field_sample_id) {
-      if (muestrasCache.has(row.field_sample_id)) {
-        idMuestra = muestrasCache.get(row.field_sample_id)!;
-      } else {
-        const muestraResult = await tx
-          .select({ id_muestra: muestrasTable.id_muestra })
-          .from(muestrasTable)
-          .where(eq(muestrasTable.muestra, row.field_sample_id))
-          .limit(1);
-
-        if (muestraResult.length > 0) {
-          idMuestra = muestraResult[0].id_muestra;
-          muestrasCache.set(row.field_sample_id, idMuestra);
-        } else {
-          muestrasCache.set(row.field_sample_id, null as any);
-        }
-      }
-    }
-
     return {
       id_parametro_fq: crypto.randomUUID(),
       organization_id: organizationId,
       fecha_hora_medicion: row.fecha_hora_medicion,
       id_pozo: row.id_pozo,
       programa_muestreo: row.programa_muestreo,
-      muestra: muestra,
+      muestra: row.field_sample_id,
       profundidad_inicio: row.profundidad_inicio,
       profundidad_fin: row.profundidad_fin,
       unidad_profundidad: row.unidad_profundidad,

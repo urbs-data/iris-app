@@ -307,6 +307,7 @@
             "explorer": "Explorador",
             "validate": "Validación",
             "reports": "Reportes",
+            "new": "Nuevo reporte",
             "upload": "Cargar Documentos",
             "results": "Resultados",
             "profile": "Perfil"
@@ -539,7 +540,7 @@
             "well_depth": "Profundidad de pozo",
             "sampling_params": "Parámetros de muestreo",
             "concentrations": "Concentraciones",
-            "analysis_performed": "Análisis realizado"
+            "analysis_performed": "Avance Tareas de Remediación"
         },
         "presetConfig": {
             "title": "Configuración por reporte",
@@ -566,6 +567,24 @@
                 "user": "Usuario",
                 "action": "Acción"
             }
+        },
+        "generator": {
+            "title": "Generador de Reportes",
+            "globalFilters": "Filtros Globales",
+            "globalFiltersDesc": "Define el rango de fechas para todos los reportes generados.",
+            "addReport": "Agregar reporte",
+            "reportTitlePlaceholder": "Nombre del reporte",
+            "reportTypeLabel": "Tipo de Reporte",
+            "reportTypeHint": "Selecciona la categoría principal para cargar filtros.",
+            "specificFiltersLabel": "Filtros Específicos",
+            "selectTypeFirst": "Selecciona un tipo de reporte para ver los filtros disponibles.",
+            "addMoreTitle": "¿Necesitas otro reporte?",
+            "addMoreDesc": "Haz clic aquí o usa el botón superior para agregar una nueva salida de datos.",
+            "summary": "Resumen",
+            "filesReady": "{count, plural, =0 {Sin archivos} one {# archivo} other {# archivos}}",
+            "cancel": "Cancelar",
+            "zipPlaceholder": "Ej: Reportes_Mensuales_Octubre",
+            "generateAll": "Generar Todo"
         }
     },
     "substance": {

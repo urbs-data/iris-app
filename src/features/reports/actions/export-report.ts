@@ -50,6 +50,7 @@ export const exportReport = authOrganizationActionClient
       body: JSON.stringify({
         fecha_desde: parsedInput.fechaDesde,
         fecha_hasta: parsedInput.fechaHasta,
+        nombre: parsedInput.nombre,
         configuraciones: parsedInput.configuraciones
       })
     });

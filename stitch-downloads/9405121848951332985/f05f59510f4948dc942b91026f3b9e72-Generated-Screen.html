@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nuevo Reporte Modal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style data-purpose="custom-transitions">
+    /* Smooth transition for showing/hiding form sections */
+    .form-section {
+      transition: all 0.3s ease-in-out;
+    }
+    .hidden-section {
+      display: none;
+    }
+  </style>
+</head>
+<body class="bg-gray-200 flex items-center justify-center min-h-screen font-sans">
+<!-- BEGIN: ModalOverlay -->
+<div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center p-4 z-50">
+<!-- BEGIN: ReportModal -->
+<main class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden" data-purpose="report-modal">
+<!-- BEGIN: ModalHeader -->
+<header class="px-8 pt-8 pb-4 flex justify-between items-start">
+<div>
+<h1 class="text-2xl font-bold text-gray-900">Nuevo reporte</h1>
+<p class="text-gray-500 mt-1">Complete los datos para generar y descargar un reporte.</p>
+</div>
+<button aria-label="Cerrar" class="text-gray-400 hover:text-gray-600 transition-colors">
+<svg class="h-6 w-6" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</header>
+<!-- END: ModalHeader -->
+<div class="px-8 pb-8">
+<!-- BEGIN: SelectionCards -->
+<section class="grid grid-cols-2 gap-4 mb-8" data-purpose="mode-selection">
+<!-- Preset Option -->
+<div class="cursor-pointer border-2 rounded-xl p-4 transition-all duration-200 border-blue-600 bg-blue-50 ring-2 ring-blue-100 ring-opacity-50" id="option-preset" onclick="selectMode('preset')">
+<div class="flex items-center justify-between mb-2">
+<span class="font-semibold text-gray-900 text-lg">Usar Preset</span>
+<div class="w-5 h-5 rounded-full border-4 border-blue-600 bg-white" id="radio-preset"></div>
+</div>
+<p class="text-sm text-gray-600 leading-tight">Selecciona una configuración guardada previamente.</p>
+</div>
+<!-- Specific Option -->
+<div class="cursor-pointer border-2 border-gray-100 rounded-xl p-4 transition-all duration-200 hover:border-gray-200 bg-gray-50/50" id="option-specific" onclick="selectMode('specific')">
+<div class="flex items-center justify-between mb-2">
+<span class="font-semibold text-gray-900 text-lg">Reporte específico</span>
+<div class="w-5 h-5 rounded-full border-2 border-gray-300 bg-white" id="radio-specific"></div>
+</div>
+<p class="text-sm text-gray-600 leading-tight">Configura manualmente los parámetros del reporte.</p>
+</div>
+</section>
+<!-- END: SelectionCards -->
+<!-- BEGIN: DynamicFormContent -->
+<form class="space-y-6" id="report-form">
+<!-- This section changes based on selection -->
+<div id="preset-field-group">
+<label class="block text-sm font-semibold text-gray-700 mb-2" for="preset-select">Preset</label>
+<div class="relative">
+<select class="w-full rounded-lg border-gray-200 py-3 pl-4 pr-10 focus:border-blue-500 focus:ring-blue-500 appearance-none text-gray-700" id="preset-select">
+<option>Formulario 6 Provincia BA</option>
+<option>Reporte Mensual Producción</option>
+<option>Resumen Semanal Pozos</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-400">
+<svg class="h-5 w-5" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" fill-rule="evenodd"></path></svg>
+</div>
+</div>
+</div>
+<div class="hidden-section" id="specific-field-group">
+<label class="block text-sm font-semibold text-gray-700 mb-2" for="type-select">Tipo de reporte</label>
+<div class="relative">
+<select class="w-full rounded-lg border-gray-200 py-3 pl-4 pr-10 focus:border-blue-500 focus:ring-blue-500 appearance-none text-gray-700" id="type-select">
+<option disabled="" selected="" value="">Tipo de reporte</option>
+<option>Producción por zona</option>
+<option>Mantenimiento preventivo</option>
+<option>Consumo energético</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-400">
+<svg class="h-5 w-5" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" fill-rule="evenodd"></path></svg>
+</div>
+</div>
+</div>
+<!-- Shared Fields -->
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-2" for="date-from">Fecha desde</label>
+<div class="relative">
+<input class="w-full rounded-lg border-gray-200 py-3 pl-4 pr-10 focus:border-blue-500 focus:ring-blue-500 text-gray-700" id="date-from" type="text" value="3 jul 2025"/>
+<div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-400">
+<svg class="h-5 w-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+</div>
+</div>
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-2" for="date-to">Fecha hasta</label>
+<div class="relative">
+<input class="w-full rounded-lg border-gray-200 py-3 pl-4 pr-10 focus:border-blue-500 focus:ring-blue-500 text-gray-700" id="date-to" type="text" value="20 feb 2026"/>
+<div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-400">
+<svg class="h-5 w-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+</div>
+</div>
+</div>
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-2" for="wells-select">Pozos</label>
+<div class="relative">
+<select class="w-full rounded-lg border-gray-200 py-3 pl-4 pr-10 focus:border-blue-500 focus:ring-blue-500 appearance-none text-gray-700" id="wells-select">
+<option disabled="" selected="" value="">Selecciona pozos</option>
+<option>Todos los pozos</option>
+<option>Cuenca Austral</option>
+<option>Cuenca Neuquina</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-gray-400">
+<svg class="h-5 w-5" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" fill-rule="evenodd"></path></svg>
+</div>
+</div>
+</div>
+</form>
+<!-- END: DynamicFormContent -->
+<!-- BEGIN: ActionButtons -->
+<footer class="mt-10 flex justify-end space-x-4">
+<button class="px-8 py-3 rounded-lg border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-colors" type="button">
+            Cancelar
+          </button>
+<button class="px-8 py-3 rounded-lg bg-[#5373bd] text-white font-semibold flex items-center hover:bg-blue-700 transition-colors shadow-sm" form="report-form" type="submit">
+<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+            Descargar reporte
+          </button>
+</footer>
+<!-- END: ActionButtons -->
+</div>
+</main>
+<!-- END: ReportModal -->
+</div>
+<!-- END: ModalOverlay -->
+<script data-purpose="toggle-logic">
+    /**
+     * Handles the switching between 'Preset' and 'Specific' report modes.
+     * Updates visual styles of selection cards and toggles form field visibility.
+     */
+    function selectMode(mode) {
+      const presetCard = document.getElementById('option-preset');
+      const specificCard = document.getElementById('option-specific');
+      const presetRadio = document.getElementById('radio-preset');
+      const specificRadio = document.getElementById('radio-specific');
+      
+      const presetFields = document.getElementById('preset-field-group');
+      const specificFields = document.getElementById('specific-field-group');
+
+      if (mode === 'preset') {
+        // Update Card Styles
+        presetCard.classList.add('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-100', 'ring-opacity-50');
+        presetCard.classList.remove('border-gray-100', 'bg-gray-50/50');
+        specificCard.classList.remove('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-100', 'ring-opacity-50');
+        specificCard.classList.add('border-gray-100', 'bg-gray-50/50');
+
+        // Update Radio UI
+        presetRadio.classList.replace('border-gray-300', 'border-blue-600');
+        presetRadio.classList.add('border-4');
+        specificRadio.classList.replace('border-blue-600', 'border-gray-300');
+        specificRadio.classList.remove('border-4');
+
+        // Toggle Fields
+        presetFields.classList.remove('hidden-section');
+        specificFields.classList.add('hidden-section');
+      } else {
+        // Update Card Styles
+        specificCard.classList.add('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-100', 'ring-opacity-50');
+        specificCard.classList.remove('border-gray-100', 'bg-gray-50/50');
+        presetCard.classList.remove('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-100', 'ring-opacity-50');
+        presetCard.classList.add('border-gray-100', 'bg-gray-50/50');
+
+        // Update Radio UI
+        specificRadio.classList.replace('border-gray-300', 'border-blue-600');
+        specificRadio.classList.add('border-4');
+        presetRadio.classList.replace('border-blue-600', 'border-gray-300');
+        presetRadio.classList.remove('border-4');
+
+        // Toggle Fields
+        specificFields.classList.remove('hidden-section');
+        presetFields.classList.add('hidden-section');
+      }
+    }
+  </script>
+</body></html>

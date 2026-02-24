@@ -1,13 +1,10 @@
-'use client';
-
-import NiceModal from '@ebay/nice-modal-react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ReportFormModal } from './report-form-modal';
 
 export function NewReportButton() {
-  const handleOpenNewReport = () => {
-    NiceModal.show(ReportFormModal);
-  };
-
-  return <Button onClick={handleOpenNewReport}>Nuevo reporte</Button>;
+  return (
+    <Button asChild>
+      <Link href='/dashboard/reports/new'>Nuevo reporte</Link>
+    </Button>
+  );
 }

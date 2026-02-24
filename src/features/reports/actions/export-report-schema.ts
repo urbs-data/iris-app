@@ -6,9 +6,11 @@ const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 export const exportReportSchema = z.object({
   fechaDesde: z.string().regex(dateRegex),
   fechaHasta: z.string().regex(dateRegex),
+  nombre: z.string().optional(),
   configuraciones: z
     .array(
       z.object({
+        nombre: z.string(),
         reporte: z.enum(REPORT_TYPES),
         pozos: z.array(z.string()).optional()
       })

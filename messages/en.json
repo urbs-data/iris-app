@@ -305,6 +305,7 @@
             "explorer": "Explorer",
             "validate": "Validation",
             "reports": "Reports",
+            "new": "New report",
             "upload": "Upload Documents",
             "results": "Results",
             "profile": "Profile"
@@ -537,7 +538,7 @@
             "well_depth": "Well depth",
             "sampling_params": "Sampling params",
             "concentrations": "Concentrations",
-            "analysis_performed": "Analysis performed"
+            "analysis_performed": "Progress of Remediation Tasks"
         },
         "presetConfig": {
             "title": "Report-level configuration",
@@ -564,6 +565,24 @@
                 "user": "User",
                 "action": "Action"
             }
+        },
+        "generator": {
+            "title": "Report Generator",
+            "globalFilters": "Global Filters",
+            "globalFiltersDesc": "Set the date range for all generated reports.",
+            "addReport": "Add report",
+            "reportTitlePlaceholder": "Report name",
+            "reportTypeLabel": "Report Type",
+            "reportTypeHint": "Select the main category to load filters.",
+            "specificFiltersLabel": "Specific Filters",
+            "selectTypeFirst": "Select a report type to see available filters.",
+            "addMoreTitle": "Need another report?",
+            "addMoreDesc": "Click here or use the button above to add a new data output.",
+            "summary": "Summary",
+            "filesReady": "{count, plural, =0 {No files} one {# file} other {# files}}",
+            "cancel": "Cancel",
+            "zipPlaceholder": "E.g.: Monthly_Reports_October",
+            "generateAll": "Generate All"
         }
     },
     "substance": {

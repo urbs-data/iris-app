@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Byontek - Reportería</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#506ab9",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#15171d",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar-item-active {
+            background-color: #eaecf0;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-tab {
+            background-color: #f9f9fb;
+            box-shadow: 0 0 4px rgba(0,0,0,0.1);
+            color: #111318;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-64 flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between py-6 px-4">
+<div class="flex flex-col gap-8">
+<!-- Logo -->
+<div class="flex items-center gap-3 px-2">
+<div class="bg-primary rounded-full size-10 flex items-center justify-center text-white">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-slate-900 dark:text-slate-100 text-base font-bold leading-tight">Byontek</h1>
+<p class="text-slate-500 dark:text-slate-400 text-xs">Gestión de Activos</p>
+</div>
+</div>
+<!-- Nav Links -->
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-sm font-medium">Inicio</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm font-medium">Documentos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">water_drop</span>
+<span class="text-sm font-medium">Pozos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="text-sm font-medium">Producción</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">build</span>
+<span class="text-sm font-medium">Mantenimiento</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 sidebar-item-active text-slate-900 dark:text-white rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">assignment</span>
+<span class="text-sm font-medium">Reportería</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Nav -->
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Configuración</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-sm font-medium">Salir</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark">
+<div class="max-w-5xl mx-auto px-8 py-8">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 mb-4 text-sm font-medium text-slate-500 dark:text-slate-400">
+<a class="hover:text-primary transition-colors" href="#">Inicio</a>
+<span>/</span>
+<span class="text-slate-900 dark:text-slate-100">Reportería</span>
+</nav>
+<!-- Page Header -->
+<div class="flex justify-between items-center mb-8">
+<h1 class="text-4xl font-black text-slate-900 dark:text-slate-100 tracking-tight">Reportería</h1>
+</div>
+<!-- Tab Switcher -->
+<div class="p-1 bg-slate-200 dark:bg-slate-800 rounded-xl flex w-fit mb-8">
+<button class="px-6 py-2.5 rounded-lg text-sm font-semibold transition-all active-tab">
+                        Reporte Individual
+                    </button>
+<button class="px-6 py-2.5 rounded-lg text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-all">
+                        Presets de Reportes
+                    </button>
+</div>
+<!-- Main Card Area -->
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-8">
+<h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-8">Generar Reporte Individual</h2>
+<form class="space-y-8">
+<!-- Top Row: Type and Dates -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Tipo de reporte</label>
+<div class="relative">
+<select class="w-full appearance-none bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 pr-10 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
+<option>Producción Diaria</option>
+<option>Mantenimiento Preventivo</option>
+<option>Incidencias de Seguridad</option>
+<option>Consumo Energético</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3.5 text-slate-400 pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Fecha Inicio</label>
+<div class="relative">
+<input class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" type="date"/>
+<span class="material-symbols-outlined absolute right-3 top-3.5 text-slate-400 pointer-events-none text-sm">calendar_month</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Fecha Fin</label>
+<div class="relative">
+<input class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none" type="date"/>
+<span class="material-symbols-outlined absolute right-3 top-3.5 text-slate-400 pointer-events-none text-sm">calendar_month</span>
+</div>
+</div>
+</div>
+<!-- Multi-select Pozos -->
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Selección de Pozos</label>
+<button class="text-sm text-primary font-medium hover:underline" type="button">Seleccionar todos</button>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4">
+<div class="relative group">
+<!-- Selection Trigger / Tags Area -->
+<div class="min-h-[48px] w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2 flex flex-wrap gap-2 items-center cursor-pointer focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
+<!-- Selected Tags -->
+<div class="flex items-center gap-1.5 px-2 py-1 bg-primary/10 text-primary text-xs font-bold rounded-md">
+<span>B-001 (Pampa)</span>
+<span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary/70">close</span>
+</div>
+<div class="flex items-center gap-1.5 px-2 py-1 bg-primary/10 text-primary text-xs font-bold rounded-md">
+<span>B-005 (Valle)</span>
+<span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary/70">close</span>
+</div>
+<!-- Placeholder/Search Trigger -->
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-sm text-slate-900 dark:text-slate-100 min-w-[120px]" placeholder="Buscar y seleccionar pozos..." type="text"/>
+<span class="material-symbols-outlined text-slate-400 ml-auto">expand_more</span>
+</div>
+<!-- Dropdown Menu (Visible on focus/interaction) -->
+<div class="absolute z-10 w-full mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl overflow-hidden">
+<div class="p-2 border-b border-slate-100 dark:border-slate-800">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2 text-slate-400 text-lg">search</span>
+<input class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-0" placeholder="Filtrar por nombre o código..." type="text"/>
+</div>
+</div>
+<div class="max-h-60 overflow-y-auto custom-scrollbar">
+<!-- Option Items -->
+<div class="px-4 py-2.5 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer">
+<span class="text-sm text-slate-700 dark:text-slate-300">B-002 (Litoral)</span>
+<span class="material-symbols-outlined text-transparent text-sm">check</span>
+</div>
+<div class="px-4 py-2.5 flex items-center justify-between bg-primary/5 hover:bg-primary/10 cursor-pointer">
+<span class="text-sm font-semibold text-primary">B-001 (Pampa)</span>
+<span class="material-symbols-outlined text-primary text-sm">check</span>
+</div>
+<div class="px-4 py-2.5 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer">
+<span class="text-sm text-slate-700 dark:text-slate-300">X-109 (Norte)</span>
+<span class="material-symbols-outlined text-transparent text-sm">check</span>
+</div>
+<div class="px-4 py-2.5 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer">
+<span class="text-sm text-slate-700 dark:text-slate-300">B-010 (Selva)</span>
+<span class="material-symbols-outlined text-transparent text-sm">check</span>
+</div>
+<div class="px-4 py-2.5 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer">
+<span class="text-sm text-slate-700 dark:text-slate-300">C-404 (Salar)</span>
+<span class="material-symbols-outlined text-transparent text-sm">check</span>
+</div>
+<!-- Info for large list -->
+<div class="px-4 py-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800">
+<p class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Mostrando 5 de 64 pozos</p>
+</div>
+</div>
+</div>
+</div></div>
+</div>
+<!-- Action Button -->
+<div class="flex justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
+<button class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-lg font-bold transition-all shadow-md active:scale-95" type="submit">
+<span class="material-symbols-outlined">download</span>
+                                Descargar Excel
+                            </button>
+</div>
+</form>
+</div>
+<!-- Hidden Preset View (Logic placeholder for visual reference) -->
+<div class="mt-8 bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-xl p-6 hidden">
+<div class="flex gap-4 items-start">
+<div class="bg-primary/20 p-2 rounded-lg text-primary">
+<span class="material-symbols-outlined">info</span>
+</div>
+<div>
+<p class="text-sm text-slate-900 dark:text-slate-100 font-bold mb-1">Preset seleccionado: Formulario 6 a autoridades</p>
+<p class="text-sm text-slate-600 dark:text-slate-400">Este preset incluye: Reporte de Producción, Reporte Ambiental de Emisiones, Reporte de Residuos Sólidos y Bitácora de Operaciones.</p>
+</div>
+</div>
+</div>
+<!-- Recently Generated Reports Section -->
+<div class="mt-12">
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-100 mb-4">Reportes Generados Recientemente</h3>
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+<table class="w-full text-left text-sm">
+<thead class="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+<tr>
+<th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-400">Nombre del Reporte</th>
+<th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-400">Fecha de Generación</th>
+<th class="px-6 py-4 font-semibold text-slate-600 dark:text-slate-400">Formato</th>
+<th class="px-6 py-4 text-right">Acción</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr>
+<td class="px-6 py-4 font-medium">Producción Mensual_Enero_2024.xlsx</td>
+<td class="px-6 py-4 text-slate-500">22 May, 2024 • 14:30</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded text-xs font-bold uppercase">Excel</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary hover:text-primary/70 transition-colors">
+<span class="material-symbols-outlined">download</span>
+</button>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium">Audit_Ambiental_Q1.zip</td>
+<td class="px-6 py-4 text-slate-500">18 May, 2024 • 09:15</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded text-xs font-bold uppercase">ZIP</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary hover:text-primary/70 transition-colors">
+<span class="material-symbols-outlined">download</span>
+</button>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium">Mantenimiento_S3_B001.pdf</td>
+<td class="px-6 py-4 text-slate-500">15 May, 2024 • 16:45</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded text-xs font-bold uppercase">PDF</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary hover:text-primary/70 transition-colors">
+<span class="material-symbols-outlined">download</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

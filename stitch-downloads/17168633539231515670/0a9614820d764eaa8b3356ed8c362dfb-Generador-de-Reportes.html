@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EcoEngine Reports - Generación de Reportes</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#153559",
+                        "primary-dark": "#0f2640",
+                        "primary-light": "#eef2f6",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#13191f",
+                    },
+                    fontFamily: {
+                        "display": ["Epilogue", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Epilogue', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-display">
+<header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-3 sticky top-0 z-50 shadow-sm">
+<div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="bg-primary p-1.5 rounded-lg text-white">
+<span class="material-symbols-outlined text-2xl block">eco</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-primary dark:text-slate-100">EcoEngine Reports</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold text-xs">
+                    JD
+                </div>
+</div>
+</div>
+</header>
+<main class="flex-1 w-full bg-background-light dark:bg-background-dark p-6">
+<div class="max-w-5xl mx-auto space-y-6">
+<section class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 mb-8">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="flex-1">
+<h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-1">Filtros Globales</h2>
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Define el rango de fechas para todos los reportes generados.</p>
+<div class="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
+<div class="w-full sm:w-auto">
+<label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Fecha Inicio</label>
+<div class="relative">
+<input class="w-full sm:w-40 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-300 focus:ring-primary focus:border-primary px-3 py-2" type="date" value="2023-10-01"/>
+</div>
+</div>
+<div class="w-full sm:w-auto">
+<label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Fecha Fin</label>
+<div class="relative">
+<input class="w-full sm:w-40 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-300 focus:ring-primary focus:border-primary px-3 py-2" type="date" value="2023-10-31"/>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-end">
+<div class="inline-flex rounded-lg shadow-sm">
+<button class="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 text-sm font-bold rounded-l-lg transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span>
+                                Agregar reporte
+                            </button>
+<div class="relative group">
+<button class="bg-primary hover:bg-primary/90 text-white px-2 py-2.5 text-sm font-bold rounded-r-lg border-l border-white/20 transition-colors h-full flex items-center">
+<span class="material-symbols-outlined text-sm block">keyboard_arrow_down</span>
+</button>
+<div class="absolute right-0 top-full mt-1 w-56 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl py-1 hidden group-hover:block z-50">
+<div class="px-4 py-2 text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700">Presets</div>
+<a class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700" href="#">Reporte Mensual Estándar</a>
+<a class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700" href="#">Auditoría Trimestral</a>
+<a class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700" href="#">Monitoreo de Emergencia</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden group hover:shadow-md transition-shadow">
+<div class="bg-slate-50 dark:bg-slate-800/50 px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-4">
+<div class="flex items-center gap-3 flex-1 min-w-0">
+<div class="p-2 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-lg flex-shrink-0">
+<span class="material-symbols-outlined block">water_drop</span>
+</div>
+<div class="flex-1 relative group/edit">
+<label class="sr-only" for="filename-1">Nombre del archivo</label>
+<input class="bg-transparent border-none focus:ring-0 text-lg font-bold text-slate-800 dark:text-slate-100 p-0 w-full placeholder:text-slate-400 truncate focus:bg-white dark:focus:bg-slate-800 focus:rounded px-1 -ml-1 transition-all" id="filename-1" placeholder="Nombre del archivo" type="text" value="Reporte_Calidad_Agua_Oct23"/>
+<span class="material-symbols-outlined absolute right-0 top-1/2 -translate-y-1/2 text-slate-400 text-sm opacity-0 group-hover/edit:opacity-100 pointer-events-none">edit</span>
+</div>
+</div>
+<button class="text-slate-400 hover:text-red-500 transition-colors p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<div class="p-6">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+<div class="md:col-span-4 space-y-2">
+<label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">1. Tipo de Reporte</label>
+<div class="relative">
+<select class="w-full appearance-none bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg pl-3 pr-10 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none text-slate-700 dark:text-slate-300 font-medium shadow-sm">
+<option selected="" value="water">Calidad de Agua</option>
+<option value="emissions">Emisiones Atmosféricas</option>
+<option value="soil">Muestreo de Suelos</option>
+<option value="noise">Niveles de Ruido</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+<span class="material-symbols-outlined text-base">expand_more</span>
+</div>
+</div>
+<p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Selecciona la categoría principal para cargar filtros.</p>
+</div>
+<div class="md:col-span-8 space-y-2">
+<label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">2. Filtros Específicos</label>
+<div class="relative">
+<div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2 flex flex-wrap gap-2 focus-within:ring-1 focus-within:ring-primary focus-within:border-primary transition-all shadow-sm min-h-[48px]">
+<div class="inline-flex items-center gap-1 bg-primary/10 text-primary dark:text-blue-300 px-2.5 py-1 rounded-md text-xs font-semibold border border-primary/10">
+                                        Pozo A-12
+                                        <button class="hover:text-primary-dark dark:hover:text-blue-200 flex items-center"><span class="material-symbols-outlined text-sm">close</span></button>
+</div>
+<div class="inline-flex items-center gap-1 bg-primary/10 text-primary dark:text-blue-300 px-2.5 py-1 rounded-md text-xs font-semibold border border-primary/10">
+                                        Pozo B-05
+                                        <button class="hover:text-primary-dark dark:hover:text-blue-200 flex items-center"><span class="material-symbols-outlined text-sm">close</span></button>
+</div>
+<input class="flex-1 min-w-[140px] bg-transparent border-none text-sm p-1 focus:ring-0 text-slate-700 dark:text-slate-300 placeholder:text-slate-400" placeholder="Buscar pozos o puntos..." type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-3">
+<div>
+<label class="block text-xs text-slate-400 dark:text-slate-500 mb-1">Parámetros</label>
+<select class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md text-xs py-1.5 px-2 text-slate-600 dark:text-slate-400">
+<option>Todos los parámetros</option>
+<option>Solo metales pesados</option>
+<option>Solo pH y Conductividad</option>
+</select>
+</div>
+<div>
+<label class="block text-xs text-slate-400 dark:text-slate-500 mb-1">Formato</label>
+<select class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md text-xs py-1.5 px-2 text-slate-600 dark:text-slate-400">
+<option>PDF Detallado</option>
+<option>Excel Raw Data</option>
+<option>CSV</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden group hover:shadow-md transition-shadow">
+<div class="bg-slate-50 dark:bg-slate-800/50 px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-4">
+<div class="flex items-center gap-3 flex-1 min-w-0">
+<div class="p-2 bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 rounded-lg flex-shrink-0">
+<span class="material-symbols-outlined block">cloud</span>
+</div>
+<div class="flex-1 relative group/edit">
+<label class="sr-only" for="filename-2">Nombre del archivo</label>
+<input class="bg-transparent border-none focus:ring-0 text-lg font-bold text-slate-800 dark:text-slate-100 p-0 w-full placeholder:text-slate-400 truncate focus:bg-white dark:focus:bg-slate-800 focus:rounded px-1 -ml-1 transition-all" id="filename-2" placeholder="Nombre del archivo" type="text" value="Analisis_Emisiones_Refineria_P1"/>
+<span class="material-symbols-outlined absolute right-0 top-1/2 -translate-y-1/2 text-slate-400 text-sm opacity-0 group-hover/edit:opacity-100 pointer-events-none">edit</span>
+</div>
+</div>
+<button class="text-slate-400 hover:text-red-500 transition-colors p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<div class="p-6">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+<div class="md:col-span-4 space-y-2">
+<label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">1. Tipo de Reporte</label>
+<div class="relative">
+<select class="w-full appearance-none bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg pl-3 pr-10 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none text-slate-700 dark:text-slate-300 font-medium shadow-sm">
+<option value="water">Calidad de Agua</option>
+<option selected="" value="emissions">Emisiones Atmosféricas</option>
+<option value="soil">Muestreo de Suelos</option>
+<option value="noise">Niveles de Ruido</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+<span class="material-symbols-outlined text-base">expand_more</span>
+</div>
+</div>
+<p class="text-xs text-slate-400 dark:text-slate-500 mt-1">Selecciona la categoría principal para cargar filtros.</p>
+</div>
+<div class="md:col-span-8 space-y-2">
+<label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">2. Filtros Específicos</label>
+<div class="relative">
+<div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-2 flex flex-wrap gap-2 focus-within:ring-1 focus-within:ring-primary focus-within:border-primary transition-all shadow-sm min-h-[48px]">
+<div class="inline-flex items-center gap-1 bg-primary/10 text-primary dark:text-blue-300 px-2.5 py-1 rounded-md text-xs font-semibold border border-primary/10">
+                                        Chimenea-01
+                                        <button class="hover:text-primary-dark dark:hover:text-blue-200 flex items-center"><span class="material-symbols-outlined text-sm">close</span></button>
+</div>
+<div class="inline-flex items-center gap-1 bg-primary/10 text-primary dark:text-blue-300 px-2.5 py-1 rounded-md text-xs font-semibold border border-primary/10">
+                                        Filtro-X3
+                                        <button class="hover:text-primary-dark dark:hover:text-blue-200 flex items-center"><span class="material-symbols-outlined text-sm">close</span></button>
+</div>
+<input class="flex-1 min-w-[140px] bg-transparent border-none text-sm p-1 focus:ring-0 text-slate-700 dark:text-slate-300 placeholder:text-slate-400" placeholder="Buscar chimeneas..." type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-3">
+<div>
+<label class="block text-xs text-slate-400 dark:text-slate-500 mb-1">Gases</label>
+<select class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md text-xs py-1.5 px-2 text-slate-600 dark:text-slate-400">
+<option>NOx, SOx, CO</option>
+<option>Solo Partículas (PM10, PM2.5)</option>
+</select>
+</div>
+<div>
+<label class="block text-xs text-slate-400 dark:text-slate-500 mb-1">Formato</label>
+<select class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md text-xs py-1.5 px-2 text-slate-600 dark:text-slate-400">
+<option>PDF Ejecutivo</option>
+<option>JSON</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="border-2 border-dashed border-slate-300 dark:border-slate-800 rounded-xl p-8 flex flex-col items-center justify-center text-center space-y-3 bg-slate-50/50 dark:bg-slate-900/30 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-2xl">post_add</span>
+</div>
+<div class="space-y-1">
+<p class="text-sm font-bold text-slate-600 dark:text-slate-300 group-hover:text-primary transition-colors">¿Necesitas otro reporte?</p>
+<p class="text-xs text-slate-400 dark:text-slate-500">Haz clic aquí o usa el botón superior para agregar una nueva salida de datos.</p>
+</div>
+</div>
+</div>
+</main>
+<footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-6 py-4 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] sticky bottom-0 z-50">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start">
+<div class="hidden sm:flex flex-col">
+<span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Resumen</span>
+<span class="text-lg font-bold text-primary dark:text-slate-200 leading-none">2 Archivos listos</span>
+</div>
+<div class="h-8 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block"></div>
+<button class="text-sm font-semibold text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-slate-200 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">save</span>
+                    Guardar Borrador
+                </button>
+</div>
+<div class="flex flex-1 items-center justify-end gap-3 w-full md:w-auto">
+<button class="px-4 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 whitespace-nowrap">
+                    Cancelar
+                </button>
+<div class="flex-1 md:flex-none flex items-center justify-end gap-3">
+<div class="relative flex-1 md:w-64">
+<label class="sr-only" for="zip-filename">Nombre del archivo .zip</label>
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-slate-400 text-sm">folder_zip</span>
+</div>
+<input class="block w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-700 dark:text-slate-300 placeholder:text-slate-400 focus:ring-primary focus:border-primary" id="zip-filename" name="zip-filename" placeholder="Ej: Reportes_Mensuales_Octubre" type="text"/>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 text-sm font-bold rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-2 transform hover:-translate-y-0.5 whitespace-nowrap">
+                        Generar Todo
+                        <span class="material-symbols-outlined text-sm">rocket_launch</span>
+</button>
+</div>
+</div>
+</div>
+</footer>
+
+</body></html>

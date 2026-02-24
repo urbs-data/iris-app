@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Byontek - Presets de Reportes</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#506ab9",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#15171d",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="flex min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col">
+<div class="p-6">
+<h1 class="text-xl font-bold text-primary">Byontek</h1>
+<p class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-1">Gestión de Pozos</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-sm font-medium">Operaciones</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary text-white rounded-lg shadow-sm" href="#">
+<span class="material-symbols-outlined active-fill">description</span>
+<span class="text-sm font-medium">Reportería</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">database</span>
+<span class="text-sm font-medium">Activos</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Configuración</span>
+</a>
+</nav>
+<div class="p-4 mt-auto border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">JD</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold">Juan Delgado</span>
+<span class="text-xs text-slate-500">Ingeniero de Campo</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto">
+<!-- Header & Tabs -->
+<header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10">
+<div class="px-8 pt-8 pb-0">
+<h2 class="text-2xl font-bold text-slate-900 dark:text-slate-50 mb-6">Reportería</h2>
+<div class="flex gap-8">
+<button class="pb-4 text-sm font-bold text-slate-500 border-b-2 border-transparent hover:text-slate-700 transition-colors">
+                        Reportes Individuales
+                    </button>
+<button class="pb-4 text-sm font-bold text-primary border-b-2 border-primary">
+                        Presets de Reportes
+                    </button>
+</div>
+</div>
+</header>
+<div class="p-8 max-w-5xl mx-auto space-y-8">
+<!-- Configuration Section -->
+<section class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+<h3 class="text-lg font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">tune</span>
+                        Configuración de Preset
+                    </h3>
+</div>
+<div class="p-6 space-y-6">
+<!-- Preset Selection -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Tipo de Preset</label>
+<select class="w-full h-12 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+<option selected="" value="form_6_ba">Formulario 6 de Buenos Aires</option>
+<option value="daily_ops">Operaciones Diarias (Standard)</option>
+<option value="env_impact">Impacto Ambiental Trimestral</option>
+<option value="prod_forecast">Proyección de Producción Anual</option>
+</select>
+</div>
+</div>
+<!-- Date Selection -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Fecha Inicio</label>
+<div class="relative">
+<input class="w-full h-12 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" type="date" value="2023-10-01"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Fecha Fin</label>
+<div class="relative">
+<input class="w-full h-12 px-4 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" type="date" value="2023-10-31"/>
+</div>
+</div>
+</div>
+<!-- Well Selection (Multi-select style) -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Selección de Pozos</label>
+<div class="min-h-[3rem] p-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 flex flex-wrap gap-2 items-center">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full border border-primary/20">
+                                POZO-01-A
+                                <button class="material-symbols-outlined text-[16px] hover:text-red-500">close</button>
+</span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full border border-primary/20">
+                                POZO-05-C
+                                <button class="material-symbols-outlined text-[16px] hover:text-red-500">close</button>
+</span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full border border-primary/20">
+                                POZO-09-X
+                                <button class="material-symbols-outlined text-[16px] hover:text-red-500">close</button>
+</span>
+<input class="flex-1 min-w-[150px] border-none bg-transparent focus:ring-0 text-sm py-1" placeholder="Agregar pozo..." type="text"/>
+</div>
+<p class="text-xs text-slate-500 italic mt-1">Los presets descargarán reportes individuales para cada pozo seleccionado en un archivo comprimido.</p>
+</div>
+<!-- Action Button -->
+<div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+<button class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-lg font-bold flex items-center gap-3 shadow-md shadow-primary/20 transition-all active:scale-95">
+<span class="material-symbols-outlined">download_for_offline</span>
+                            Descargar Conjunto de Reportes
+                        </button>
+</div>
+</div>
+</section>
+<!-- Recent Activity Table -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="text-lg font-bold text-slate-900 dark:text-slate-50">Reportes Generados Recientemente</h3>
+<button class="text-sm font-semibold text-primary hover:underline">Ver historial completo</button>
+</div>
+<div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Nombre del Preset</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Fecha de Generación</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Rango</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Estado</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-right">Acción</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined text-[20px]">folder_zip</span>
+</div>
+<span class="text-sm font-semibold">Formulario 6 de Buenos Aires</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Hoy, 09:45 AM</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">01/10/23 - 31/10/23</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">Listo</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary hover:text-primary/70 material-symbols-outlined">download</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined text-[20px]">folder_zip</span>
+</div>
+<span class="text-sm font-semibold">Operaciones Diarias (Standard)</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Ayer, 14:20 PM</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">15/09/23 - 30/09/23</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">Listo</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary hover:text-primary/70 material-symbols-outlined">download</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600">
+<span class="material-symbols-outlined text-[20px]">folder_zip</span>
+</div>
+<span class="text-sm font-semibold">Impacto Ambiental Trimestral</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">02 Oct, 11:00 AM</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Q3 2023</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Expirado</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 cursor-not-allowed material-symbols-outlined">refresh</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>
