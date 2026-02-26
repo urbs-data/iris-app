@@ -130,7 +130,9 @@ export function ReportCard({
               ))
             ) : (
               <p className='text-muted-foreground py-2 text-sm'>
-                {t('generator.selectTypeFirst')}
+                {report.reportType
+                  ? t('generator.noSpecificFilters')
+                  : t('generator.selectTypeFirst')}
               </p>
             )}
           </div>

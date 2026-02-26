@@ -8,6 +8,7 @@ const baseConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '100mb'
     },
+    proxyClientMaxBodySize: '100mb',
     serverSourceMaps: true,
     turbopackSourceMaps: true
   },

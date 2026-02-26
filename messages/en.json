@@ -537,6 +537,9 @@
         "types": {
             "well_depth": "Well depth",
             "sampling_params": "Sampling params",
+            "sampling_params_cig": "Sampling params for CIG",
+            "volatile_concentrations_cig": "Volatile concentrations for CIG",
+            "inorganic_concentrations_cig": "Inorganic concentrations for CIG",
             "concentrations": "Concentrations",
             "analysis_performed": "Progress of Remediation Tasks"
         },
@@ -576,6 +579,7 @@
             "reportTypeHint": "Select the main category to load filters.",
             "specificFiltersLabel": "Specific Filters",
             "selectTypeFirst": "Select a report type to see available filters.",
+            "noSpecificFilters": "This report type has no specific filters.",
             "addMoreTitle": "Need another report?",
             "addMoreDesc": "Click here or use the button above to add a new data output.",
             "summary": "Summary",

@@ -1,0 +1,2 @@
+ALTER TYPE "public"."tipo_reporte" ADD VALUE 'volatile_concentrations_cig' BEFORE 'concentrations';--> statement-breakpoint
+ALTER TYPE "public"."tipo_reporte" ADD VALUE 'inorganic_concentrations_cig' BEFORE 'concentrations';

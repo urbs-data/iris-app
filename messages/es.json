@@ -539,6 +539,9 @@
         "types": {
             "well_depth": "Profundidad de pozo",
             "sampling_params": "Parámetros de muestreo",
+            "sampling_params_cig": "Parámetros de muestreo para CIG",
+            "volatile_concentrations_cig": "Concentraciones volátiles para CIG",
+            "inorganic_concentrations_cig": "Concentraciones inorgánicas para CIG",
             "concentrations": "Concentraciones",
             "analysis_performed": "Avance Tareas de Remediación"
         },
@@ -578,6 +581,7 @@
             "reportTypeHint": "Selecciona la categoría principal para cargar filtros.",
             "specificFiltersLabel": "Filtros Específicos",
             "selectTypeFirst": "Selecciona un tipo de reporte para ver los filtros disponibles.",
+            "noSpecificFilters": "Este tipo de reporte no tiene filtros específicos.",
             "addMoreTitle": "¿Necesitas otro reporte?",
             "addMoreDesc": "Haz clic aquí o usa el botón superior para agregar una nueva salida de datos.",
             "summary": "Resumen",

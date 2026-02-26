@@ -62,6 +62,9 @@ export const substancesTable = pgTable('sustancias', {
 export const reportTypeEnum = pgEnum('tipo_reporte', [
   'well_depth',
   'sampling_params',
+  'sampling_params_cig',
+  'volatile_concentrations_cig',
+  'inorganic_concentrations_cig',
   'concentrations',
   'analysis_performed'
 ]);

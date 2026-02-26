@@ -24,6 +24,21 @@ export const REPORT_TYPE_CONFIG: Record<ReportType, ReportTypeConfig> = {
     titlePrefix: 'ParametrosMuestreo',
     filters: [{ key: 'pozos', type: 'wells' }]
   },
+  sampling_params_cig: {
+    icon: FlaskConical,
+    titlePrefix: 'ParametrosMuestreoCIG',
+    filters: []
+  },
+  volatile_concentrations_cig: {
+    icon: Droplets,
+    titlePrefix: 'ConcentracionesVolatilesCIG',
+    filters: []
+  },
+  inorganic_concentrations_cig: {
+    icon: Droplets,
+    titlePrefix: 'ConcentracionesInorgánicasCIG',
+    filters: []
+  },
   concentrations: {
     icon: Droplets,
     titlePrefix: 'Concentraciones',
