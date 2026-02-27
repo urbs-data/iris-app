@@ -17,7 +17,7 @@ export const PRESET_OPTIONS = [
   },
   {
     value: 'datos_formulario_6_provincia_ba_cig',
-    label: 'Datos formulario 6 para CIG'
+    label: 'Reportes para CIG'
   }
 ] as const;
 

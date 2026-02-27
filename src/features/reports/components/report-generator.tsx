@@ -6,6 +6,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { useUser } from '@clerk/nextjs';
 import {
   Plus,
   ChevronDown,
@@ -86,9 +87,23 @@ interface GlobalFiltersValues {
   fechaHasta: Date;
 }
 
+const PRESET_ZIP_PREFIX: Record<PresetValue, string> = {
+  formulario_6_provincia_ba: 'Formulario6ProvinciaBA',
+  datos_formulario_6_provincia_ba_cig: 'ReportesCIG'
+};
+
+function canUseFormulario6Preset(
+  publicMetadata: UserPublicMetadata | undefined
+): boolean {
+  return (
+    publicMetadata?.['reports.preset.formulario_6_provincia_ba'] === 'true'
+  );
+}
+
 export function ReportGenerator() {
   const t = useTranslations('reports');
   const router = useRouter();
+  const { user } = useUser();
 
   const form = useForm<GlobalFiltersValues>({
     defaultValues: {
@@ -113,6 +128,13 @@ export function ReportGenerator() {
     label: t(`types.${value}`)
   }));
 
+  const canSeeFormulario6Preset = canUseFormulario6Preset(user?.publicMetadata);
+
+  const visiblePresetOptions = PRESET_OPTIONS.filter(
+    (option) =>
+      option.value !== 'formulario_6_provincia_ba' || canSeeFormulario6Preset
+  );
+
   const wellOptions = wellsData.map((w) => ({
     value: w.value,
     label: w.label
@@ -125,6 +147,13 @@ export function ReportGenerator() {
     return `BER_${prefix}_${desde}_${hasta}`;
   }
 
+  function buildDefaultZipFileName(presetValue: PresetValue) {
+    const prefix = PRESET_ZIP_PREFIX[presetValue];
+    const desde = fechaDesde ? formatDateValue(fechaDesde) : '';
+    const hasta = fechaHasta ? formatDateValue(fechaHasta) : '';
+    return `BER_${prefix}_${desde}_${hasta}`;
+  }
+
   function addReport() {
     setReports((prev) => [
       ...prev,
@@ -132,8 +161,8 @@ export function ReportGenerator() {
     ]);
   }
 
-  function applyPreset(presetValue: string) {
-    const reportTypes = PRESET_REPORT_MAP[presetValue as PresetValue] ?? [];
+  function applyPreset(presetValue: PresetValue) {
+    const reportTypes = PRESET_REPORT_MAP[presetValue] ?? [];
     const newEntries: ReportEntry[] = reportTypes.map((reportType) => {
       const config = REPORT_TYPE_CONFIG[reportType];
       const filters: Record<string, string[]> = {};
@@ -148,6 +177,7 @@ export function ReportGenerator() {
       };
     });
     setReports((prev) => [...prev, ...newEntries]);
+    setZipFileName((prev) => prev || buildDefaultZipFileName(presetValue));
   }
 
   function removeReport(id: string) {
@@ -247,7 +277,7 @@ export function ReportGenerator() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align='end'>
                     <DropdownMenuLabel>Presets</DropdownMenuLabel>
-                    {PRESET_OPTIONS.map((option) => (
+                    {visiblePresetOptions.map((option) => (
                       <DropdownMenuItem
                         key={option.value}
                         onClick={() => applyPreset(option.value)}

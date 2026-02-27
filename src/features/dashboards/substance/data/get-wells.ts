@@ -1,6 +1,6 @@
 'use server';
 
-import { eq, and, inArray } from 'drizzle-orm';
+import { eq, and, inArray, not } from 'drizzle-orm';
 import { pozosTable } from '@/db/schema';
 import type { Well } from '../types';
 import { authOrganizationActionClient } from '@/lib/actions/safe-action';
@@ -12,7 +12,11 @@ export const getWells = authOrganizationActionClient
   .action(async ({ ctx, parsedInput }): Promise<Well[]> => {
     const { area } = parsedInput;
 
-    const conditions = [inArray(pozosTable.tipo, ['WELL', 'PUMP'])];
+    const conditions = [
+      inArray(pozosTable.tipo, ['WELL']),
+      not(eq(pozosTable.id_pozo, 'TB')),
+      not(eq(pozosTable.id_pozo, 'EB'))
+    ];
 
     if (area && area !== 'all') {
       conditions.push(eq(pozosTable.area, area));
