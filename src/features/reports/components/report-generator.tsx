@@ -347,7 +347,7 @@ export function ReportGenerator() {
             {t('generator.cancel')}
           </Button>
 
-          <div className='relative ml-auto flex-1 sm:max-w-64'>
+          <div className='relative ml-auto flex-1 sm:max-w-96'>
             <FolderArchive className='text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2' />
             <Input
               value={zipFileName}

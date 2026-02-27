@@ -452,3 +452,167 @@ export const substanceInfoContentEn: InfobarContent = {
     }
   ]
 };
+
+export const reportsListInfoContentEs: InfobarContent = {
+  title: 'Historial de Reportes',
+  sections: [
+    {
+      title: 'Descripción General',
+      description:
+        'Esta página muestra el historial completo de reportes generados. Aquí puedes consultar todos los reportes creados por los distintos usuarios del workspace, junto con su nombre, fecha de generación, rango de fechas utilizado y el usuario que lo generó.',
+      links: []
+    },
+    {
+      title: 'Columnas de la Tabla',
+      description:
+        'La tabla incluye las siguientes columnas: Nombre (identificador del reporte o ZIP), Generado (fecha relativa de creación), Rango (período de fechas que cubre el reporte), Usuario (quién lo generó) y Acción (enlace de descarga directa del archivo).',
+      links: []
+    },
+    {
+      title: 'Descarga de Reportes',
+      description:
+        'Puedes descargar cualquier reporte previamente generado haciendo clic en el enlace de la columna Acción. Esto es útil para recuperar reportes sin necesidad de regenerarlos.',
+      links: []
+    },
+    {
+      title: 'Generar un Nuevo Reporte',
+      description:
+        'Para crear un nuevo reporte, haz clic en el botón "Nuevo reporte" en la parte superior o usa el enlace a continuación.',
+      links: [
+        {
+          title: 'Ir a Generar Reporte',
+          url: '/dashboard/reports/new'
+        }
+      ]
+    }
+  ]
+};
+
+export const reportsListInfoContentEn: InfobarContent = {
+  title: 'Report History',
+  sections: [
+    {
+      title: 'Overview',
+      description:
+        'This page displays the full history of generated reports. Here you can review all reports created by the different users in the workspace, including the report name, generation date, date range used, and the user who generated it.',
+      links: []
+    },
+    {
+      title: 'Table Columns',
+      description:
+        'The table includes the following columns: Name (report or ZIP identifier), Generated (relative creation date), Range (date period covered by the report), User (who generated it) and Action (direct download link for the file).',
+      links: []
+    },
+    {
+      title: 'Downloading Reports',
+      description:
+        'You can download any previously generated report by clicking the link in the Action column. This is useful for retrieving reports without needing to regenerate them.',
+      links: []
+    },
+    {
+      title: 'Generate a New Report',
+      description:
+        'To create a new report, click the "New report" button at the top or use the link below.',
+      links: [
+        {
+          title: 'Go to Report Generator',
+          url: '/dashboard/reports/new'
+        }
+      ]
+    }
+  ]
+};
+
+export const reportsGeneratorInfoContentEs: InfobarContent = {
+  title: 'Generador de Reportes',
+  sections: [
+    {
+      title: 'Descripción General',
+      description:
+        'El Generador de Reportes permite crear uno o más reportes de datos ambientales en una sola operación. Define un rango de fechas global, agrega los reportes que necesites y genera todo con un clic. Si seleccionas más de un reporte, el sistema descarga un archivo ZIP con todos los archivos incluidos.',
+      links: []
+    },
+    {
+      title: 'Filtros Globales',
+      description:
+        'En la parte superior se configuran la fecha desde y la fecha hasta. Estas fechas aplican a todos los reportes que agregues. Asegúrate de definirlas antes de agregar reportes.',
+      links: []
+    },
+    {
+      title: 'Tarjetas de Reporte',
+      description:
+        'Cada reporte se representa como una tarjeta individual. En cada tarjeta puedes: elegir el tipo de reporte (profundidad de pozo, parámetros de muestreo, concentraciones, etc.), editar el nombre del reporte (se genera automáticamente pero es editable), y configurar filtros específicos como la selección de pozos, según el tipo elegido.',
+      links: []
+    },
+    {
+      title: 'Presets',
+      description:
+        'Un preset es una plantilla prearmada que agrega múltiples tipos de reporte de una sola vez con configuración inicial. En lugar de agregar reportes uno por uno, puedes seleccionar un preset desde el menú desplegable junto al botón "Agregar reporte". Los presets disponibles actualmente son: "Formulario 6 Provincia BA" (incluye profundidad de pozo, parámetros de muestreo, concentraciones y avance tareas de remediación) y "Reportes para CIG" (incluye parámetros de muestreo CIG, concentraciones volátiles CIG y concentraciones inorgánicas CIG). Después de aplicar un preset, puedes seguir editando cada tarjeta individualmente.',
+      links: []
+    },
+    {
+      title: 'Nombre del Archivo y Descarga',
+      description:
+        'En la barra inferior puedes editar el nombre del archivo final. Si generas un solo reporte, se descarga ese archivo directamente. Si generas dos o más, el sistema empaqueta todos en un único archivo ZIP con el nombre que hayas definido. Haz clic en "Generar Todo" para iniciar la descarga.',
+      links: []
+    },
+    {
+      title: 'Volver al Listado',
+      description:
+        'Una vez generados los reportes, puedes volver al historial para verlos registrados.',
+      links: [
+        {
+          title: 'Ir al Historial de Reportes',
+          url: '/dashboard/reports'
+        }
+      ]
+    }
+  ]
+};
+
+export const reportsGeneratorInfoContentEn: InfobarContent = {
+  title: 'Report Generator',
+  sections: [
+    {
+      title: 'Overview',
+      description:
+        'The Report Generator allows you to create one or more environmental data reports in a single operation. Define a global date range, add the reports you need, and generate everything with one click. If you select more than one report, the system downloads a ZIP file containing all included files.',
+      links: []
+    },
+    {
+      title: 'Global Filters',
+      description:
+        'At the top, set the date from and date to. These dates apply to all reports you add. Make sure to define them before adding reports.',
+      links: []
+    },
+    {
+      title: 'Report Cards',
+      description:
+        'Each report is represented as an individual card. On each card you can: choose the report type (well depth, sampling parameters, concentrations, etc.), edit the report name (auto-generated but editable), and configure specific filters such as well selection, depending on the chosen type.',
+      links: []
+    },
+    {
+      title: 'Presets',
+      description:
+        'A preset is a pre-built template that adds multiple report types at once with initial configuration. Instead of adding reports one by one, you can select a preset from the dropdown menu next to the "Add report" button. Currently available presets are: "Formulario 6 Provincia BA" (includes well depth, sampling parameters, concentrations, and remediation task progress) and "Reportes para CIG" (includes CIG sampling parameters, CIG volatile concentrations, and CIG inorganic concentrations). After applying a preset, you can continue editing each card individually.',
+      links: []
+    },
+    {
+      title: 'File Name and Download',
+      description:
+        'In the bottom bar you can edit the final file name. If you generate a single report, that file is downloaded directly. If you generate two or more, the system packages them all into a single ZIP file with the name you defined. Click "Generate All" to start the download.',
+      links: []
+    },
+    {
+      title: 'Back to History',
+      description:
+        'Once reports are generated, you can return to the history to see them recorded.',
+      links: [
+        {
+          title: 'Go to Report History',
+          url: '/dashboard/reports'
+        }
+      ]
+    }
+  ]
+};
