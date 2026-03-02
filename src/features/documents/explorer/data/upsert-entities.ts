@@ -25,8 +25,6 @@ export async function upsertEstudios(
 ): Promise<number> {
   if (estudios.length === 0) return 0;
 
-  console.log('upsertEstudios', estudios);
-
   const result = await db
     .insert(estudiosTable)
     .values(estudios)

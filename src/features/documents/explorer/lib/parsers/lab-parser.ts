@@ -31,6 +31,7 @@ export interface ParsedRow {
   concentracion: number | null;
   unidad: string;
   limite_deteccion: string;
+  calificacion_laboratorio: string | null;
   tipo: string;
   protocolo: string;
   documento_origen: string;
@@ -103,6 +104,8 @@ export function parseLabExcel(buffer: Buffer, fileName: string): ParseResult {
         concentracion: parseNumber(raw['LAB_RESULT']),
         unidad: String(raw['LAB_UNITS'] ?? '').trim(),
         limite_deteccion: String(raw['LAB_DETECTION_LIMIT'] ?? '').trim(),
+        calificacion_laboratorio:
+          String(raw['LAB_QUALIFIER'] ?? '').trim() || null,
         tipo: String(raw['LAB_MATRIX'] ?? '').trim(),
         protocolo: String(raw['LAB_SAMPLE_ID'] ?? '').trim(),
         documento_origen: fileName,

@@ -286,6 +286,7 @@ export function extractEntities(
         unidad: row.unidad,
         limite_deteccion: row.limite_deteccion,
         limite_cuantificacion: null,
+        calificacion_laboratorio: row.calificacion_laboratorio,
         concentracion: row.concentracion,
         documento_origen: row.documento_origen
       });

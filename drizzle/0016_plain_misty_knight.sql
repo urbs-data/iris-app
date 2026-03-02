@@ -1,0 +1,1 @@
+ALTER TABLE "concentraciones" ADD COLUMN "calificacion_laboratorio" varchar(5);

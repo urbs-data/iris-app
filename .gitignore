@@ -50,3 +50,5 @@ next-env.d.ts
 
 old/
 queries/
+stitch-downloads/
+data/

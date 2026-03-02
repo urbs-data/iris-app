@@ -5,7 +5,6 @@ import { getBlobContainer, getQueueClient } from '@/lib/azure-blob';
 import { uploadDocumentsSchema } from './upload-documents-schema';
 import { resolveETLProcessor } from '../lib/etl/registry';
 import type { FileMetadata } from '../lib/types';
-import { logger } from '@/lib/logger';
 import { ValidationError } from '@/lib/errors';
 
 const MONTH_NAMES_ES = [

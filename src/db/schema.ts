@@ -19,21 +19,6 @@ const orgIsolationPolicy = (tableName: string) =>
     withCheck: sql`organization_id = current_setting('app.current_org', true)`
   });
 
-export const countryTable = pgTable('country', {
-  id: integer('id').primaryKey(),
-  name_en: varchar('name_en', { length: 255 }).notNull(),
-  name_es: varchar('name_es', { length: 255 }).notNull(),
-  code: varchar('code', { length: 10 }),
-  zone: varchar('zone', { length: 50 })
-});
-
-export const destinationTable = pgTable('destination', {
-  id: integer('id').primaryKey(),
-  name_en: varchar('name_en', { length: 255 }).notNull(),
-  name_es: varchar('name_es', { length: 255 }).notNull(),
-  country_id: integer('country_id').references(() => countryTable.id)
-});
-
 export const productsTable = pgTable('products', {
   id: serial('id').primaryKey(),
   user_id: varchar('user_id', { length: 255 }).notNull(),
@@ -214,6 +199,9 @@ export const concentracionesTable = pgTable(
     unidad: varchar('unidad', { length: 100 }),
     limite_deteccion: varchar('limite_deteccion', { length: 100 }),
     limite_cuantificacion: varchar('limite_cuantificacion', { length: 100 }),
+    calificacion_laboratorio: varchar('calificacion_laboratorio', {
+      length: 5
+    }),
     concentracion: real('concentracion'),
     documento_origen: varchar('documento_origen', { length: 200 })
   },
