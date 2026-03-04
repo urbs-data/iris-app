@@ -48,7 +48,4 @@ next-env.d.ts
 .env.sentry-build-plugin
 
 
-old/
-queries/
-stitch-downloads/
-data/
+custom_data/

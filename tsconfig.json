@@ -42,8 +42,8 @@
   ],
   "exclude": [
     "node_modules",
-    "old",
-    "old/**"
+    "custom_data/old",
+    "custom_data/old/**"
   ],
   "moduleResolution": [
     "node_modules",

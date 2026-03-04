@@ -50,6 +50,17 @@ export const navItems: NavItem[] = [
     group: 'group.main'
   },
   {
+    title: 'dashboard-physico-chemical',
+    url: '/dashboard/physico-chemical',
+    icon: 'analyze',
+    shortcut: ['a', 'p'],
+    items: [],
+    access: {
+      publicMetadataKey: 'nav.dashboard.physico-chemical'
+    },
+    group: 'group.main'
+  },
+  {
     title: 'search',
     url: '/dashboard/search',
     icon: 'dashboard',

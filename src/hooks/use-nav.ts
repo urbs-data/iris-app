@@ -58,7 +58,7 @@ export function useFilteredNavItems(items: NavItem[]) {
           return false;
         }
 
-        // Check permission
+        // Check permission (organization-based)
         if (item.access.permission) {
           if (!accessContext.hasOrg) {
             return false;
@@ -68,12 +68,25 @@ export function useFilteredNavItems(items: NavItem[]) {
           }
         }
 
-        // Check role
+        // Check role (organization-based)
         if (item.access.role) {
           if (!accessContext.hasOrg) {
             return false;
           }
           if (accessContext.role !== item.access.role) {
+            return false;
+          }
+        }
+
+        // Check per-user public metadata flag
+        if (item.access.publicMetadataKey) {
+          const key = item.access.publicMetadataKey;
+          const flagValue =
+            accessContext.user?.publicMetadata?.[
+              key as keyof typeof accessContext.user.publicMetadata
+            ];
+
+          if (flagValue !== 'true') {
             return false;
           }
         }
@@ -111,7 +124,7 @@ export function useFilteredNavItems(items: NavItem[]) {
               return false;
             }
 
-            // Check permission
+            // Check permission (organization-based)
             if (childItem.access.permission) {
               if (!accessContext.hasOrg) {
                 return false;
@@ -123,12 +136,25 @@ export function useFilteredNavItems(items: NavItem[]) {
               }
             }
 
-            // Check role
+            // Check role (organization-based)
             if (childItem.access.role) {
               if (!accessContext.hasOrg) {
                 return false;
               }
               if (accessContext.role !== childItem.access.role) {
+                return false;
+              }
+            }
+
+            // Check per-user public metadata flag
+            if (childItem.access.publicMetadataKey) {
+              const key = childItem.access.publicMetadataKey;
+              const flagValue =
+                accessContext.user?.publicMetadata?.[
+                  key as keyof typeof accessContext.user.publicMetadata
+                ];
+
+              if (flagValue !== 'true') {
                 return false;
               }
             }

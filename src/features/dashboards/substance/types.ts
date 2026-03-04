@@ -58,7 +58,7 @@ export interface GeneralMetrics {
   unit: string;
 }
 
-export interface MonthlyConcentration {
+export interface Concentration {
   date: Date;
   value: number;
 }

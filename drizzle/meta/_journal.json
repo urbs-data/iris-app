@@ -127,6 +127,13 @@
       "when": 1772227531314,
       "tag": "0017_curious_mathemanic",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1772647275348,
+      "tag": "0018_narrow_puma",
+      "breakpoints": true
     }
   ]
 }

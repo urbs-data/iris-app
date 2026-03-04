@@ -453,6 +453,78 @@ export const substanceInfoContentEn: InfobarContent = {
   ]
 };
 
+export const physicoChemicalInfoContentEs: InfobarContent = {
+  title: 'Análisis de Parámetros y Compuestos',
+  sections: [
+    {
+      title: 'Descripción General',
+      description:
+        'Este dashboard combina el análisis de parámetros físico-químicos (pH, conductividad, temperatura, etc.) con las concentraciones de compuestos químicos. Permite visualizar ambas variables de forma simultánea para identificar correlaciones y tendencias.',
+      links: []
+    },
+    {
+      title: 'Filtros',
+      description:
+        'En la parte superior encontrarás filtros para: rango de fechas, pozos, sustancia (compuesto químico) y parámetro físico-químico. Los filtros se aplican a todas las secciones del dashboard.',
+      links: []
+    },
+    {
+      title: 'KPIs',
+      description:
+        'Se muestran dos tarjetas de indicadores: una para el parámetro físico-químico seleccionado (último valor medido, promedio, mínimo, máximo) y otra para la sustancia seleccionada (último valor, promedio, mínimo, máximo, nivel guía).',
+      links: []
+    },
+    {
+      title: 'Gráfico de Evolución Temporal Combinada',
+      description:
+        'Este gráfico de doble eje muestra la evolución temporal del parámetro físico-químico (eje izquierdo) y la concentración de la sustancia (eje derecho). Permite visualizar ambas variables en la misma escala temporal.',
+      links: []
+    },
+    {
+      title: 'Mapa',
+      description:
+        'El mapa muestra la distribución espacial de las mediciones del parámetro físico-químico seleccionado. El tamaño de los marcadores es proporcional al valor promedio.',
+      links: []
+    }
+  ]
+};
+
+export const physicoChemicalInfoContentEn: InfobarContent = {
+  title: 'Parameters and Compounds Analysis',
+  sections: [
+    {
+      title: 'Overview',
+      description:
+        'This dashboard combines the analysis of physico-chemical parameters (pH, conductivity, temperature, etc.) with chemical compound concentrations. It allows viewing both variables simultaneously to identify correlations and trends.',
+      links: []
+    },
+    {
+      title: 'Filters',
+      description:
+        'At the top you will find filters for: date range, wells, substance (chemical compound) and physico-chemical parameter. Filters apply to all dashboard sections.',
+      links: []
+    },
+    {
+      title: 'KPIs',
+      description:
+        'Two indicator cards are displayed: one for the selected physico-chemical parameter (last measured value, average, minimum, maximum) and another for the selected substance (last value, average, minimum, maximum, guideline level).',
+      links: []
+    },
+    {
+      title: 'Combined Temporal Evolution Chart',
+      description:
+        'This dual-axis chart shows the temporal evolution of the physico-chemical parameter (left axis) and the substance concentration (right axis). It allows viewing both variables on the same time scale.',
+      links: []
+    },
+    {
+      title: 'Map',
+      description:
+        'The map shows the spatial distribution of measurements for the selected physico-chemical parameter. Marker size is proportional to the average value.',
+      links: []
+    }
+  ]
+};
+
 export const reportsListInfoContentEs: InfobarContent = {
   title: 'Historial de Reportes',
   sections: [

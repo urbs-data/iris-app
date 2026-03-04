@@ -57,6 +57,7 @@
         "analyze": "Analyze",
         "dashboard-general": "General Analysis",
         "dashboard-substance": "Concentration Analysis",
+        "dashboard-physico-chemical": "Combined Analysis",
         "search": "Search",
         "explorer": "Explorer",
         "validation": "Validation",
@@ -178,6 +179,12 @@
         "substance": {
             "title": "Concentration Analysis"
         },
+        "physicoChemical": {
+            "title": "Parameters and Compounds Analysis",
+            "fqParameter": "Physico-Chemical Parameter",
+            "substanceCompound": "Chemical Compound",
+            "combinedEvolution": "Combined Temporal Evolution"
+        },
         "noData": {
             "title": "No data available",
             "description": "There is no data matching the selected filters. Try adjusting the date range or filters to see results.",
@@ -267,6 +274,7 @@
     "errors": {
         "somethingWentWrong": "Something went wrong",
         "substanceDashboardError": "Error loading substance dashboard.",
+        "physicoChemicalDashboardError": "Error loading combined analysis dashboard.",
         "tryAgain": "Try again",
         "retry": "Retry",
         "kpisError": "Error loading KPIs. Please try again.",
@@ -301,6 +309,7 @@
             "dashboard": "Home",
             "dashboard-general": "General Analysis",
             "dashboard-substance": "Concentration Analysis",
+            "dashboard-physico-chemical": "Combined Analysis",
             "search": "Search",
             "explorer": "Explorer",
             "validate": "Validation",
@@ -536,6 +545,7 @@
         },
         "types": {
             "well_depth": "Well depth",
+            "well_depth_cig": "Well depth for CIG",
             "sampling_params": "Sampling params",
             "sampling_params_cig": "Sampling params for CIG",
             "volatile_concentrations_cig": "Volatile concentrations for CIG",
@@ -609,7 +619,10 @@
         "sampleType": "Sample Type",
         "searchSampleType": "Search sample type...",
         "noSampleTypeFound": "Sample type not found",
-        "search": "Search"
+        "search": "Search",
+        "fqParameter": "Physico-Chemical Parameter",
+        "searchFqParameter": "Search parameter...",
+        "noFqParameterFound": "Parameter not found"
     },
     "auth": {
         "termsAndPrivacy": "By clicking continue, you agree to our <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>.",

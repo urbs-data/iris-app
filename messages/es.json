@@ -57,6 +57,7 @@
         "analyze": "Analizar",
         "dashboard-general": "Análisis General",
         "dashboard-substance": "Análisis de Concentraciones",
+        "dashboard-physico-chemical": "Análisis Combinado",
         "search": "Buscador",
         "explorer": "Explorador",
         "validation": "Validación",
@@ -180,6 +181,12 @@
         "substance": {
             "title": "Análisis de Concentraciones"
         },
+        "physicoChemical": {
+            "title": "Análisis de Parámetros y Compuestos",
+            "fqParameter": "Parámetro Físico-Químico",
+            "substanceCompound": "Compuesto Químico",
+            "combinedEvolution": "Evolución Temporal Combinada"
+        },
         "noData": {
             "title": "No hay datos disponibles",
             "description": "No hay datos que coincidan con los filtros seleccionados. Intente ajustar el rango de fechas o los filtros para ver resultados.",
@@ -269,6 +276,7 @@
     "errors": {
         "somethingWentWrong": "Algo salió mal",
         "substanceDashboardError": "Error al cargar el tablero de sustancias.",
+        "physicoChemicalDashboardError": "Error al cargar el tablero de análisis combinado.",
         "tryAgain": "Intentar de nuevo",
         "retry": "Reintentar",
         "kpisError": "Error al cargar los KPIs. Intente nuevamente.",
@@ -303,6 +311,7 @@
             "dashboard": "Inicio",
             "dashboard-general": "Análisis General",
             "dashboard-substance": "Análisis de Concentraciones",
+            "dashboard-physico-chemical": "Análisis Combinado",
             "search": "Buscador",
             "explorer": "Explorador",
             "validate": "Validación",
@@ -538,6 +547,7 @@
         },
         "types": {
             "well_depth": "Profundidad de pozo",
+            "well_depth_cig": "Profundidad de pozo para CIG",
             "sampling_params": "Parámetros de muestreo",
             "sampling_params_cig": "Parámetros de muestreo para CIG",
             "volatile_concentrations_cig": "Concentraciones volátiles para CIG",
@@ -611,7 +621,10 @@
         "sampleType": "Tipo de Muestra",
         "searchSampleType": "Buscar tipo de muestra...",
         "noSampleTypeFound": "No se encontró el tipo de muestra",
-        "search": "Buscar"
+        "search": "Buscar",
+        "fqParameter": "Parámetro Físico-Químico",
+        "searchFqParameter": "Buscar parámetro...",
+        "noFqParameterFound": "No se encontró el parámetro"
     },
     "auth": {
         "termsAndPrivacy": "Al hacer clic en continuar, aceptas nuestros <terms>Términos de Servicio</terms> y <privacy>Política de Privacidad</privacy>.",

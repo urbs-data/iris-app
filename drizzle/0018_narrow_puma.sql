@@ -1,0 +1,1 @@
+ALTER TYPE "public"."tipo_reporte" ADD VALUE 'well_depth_cig' BEFORE 'sampling_params';

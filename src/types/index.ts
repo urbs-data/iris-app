@@ -6,6 +6,7 @@ export interface PermissionCheck {
   feature?: string;
   role?: string;
   requireOrg?: boolean;
+  publicMetadataKey?: string;
 }
 
 export interface NavItem {

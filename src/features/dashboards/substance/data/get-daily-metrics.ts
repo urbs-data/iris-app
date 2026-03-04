@@ -1,12 +1,13 @@
 'use server';
 
 import { authOrganizationActionClient } from '@/lib/actions/safe-action';
-import { getMonthlyMetricsSchema } from './get-monthly-metrics-schema';
+import { getDailyMetricsSchema } from './get-daily-metrics-schema';
 import type { Concentration } from '../types';
 import { sql } from 'drizzle-orm';
 import { parseISO } from 'date-fns';
+import { logger } from '@/lib/logger';
 
-interface MonthlyMetricsResult {
+interface DailyMetricsResult {
   data: Concentration[];
   guideLevel: number;
   unit: string;
@@ -26,10 +27,10 @@ interface QueryRow extends Record<string, unknown> {
   proporcion_nivel_guia: number | null;
 }
 
-export const getMonthlyMetrics = authOrganizationActionClient
-  .metadata({ actionName: 'getMonthlyMetrics' })
-  .inputSchema(getMonthlyMetricsSchema)
-  .action(async ({ parsedInput, ctx }): Promise<MonthlyMetricsResult> => {
+export const getDailyMetrics = authOrganizationActionClient
+  .metadata({ actionName: 'getDailyMetrics' })
+  .inputSchema(getDailyMetricsSchema)
+  .action(async ({ parsedInput, ctx }): Promise<DailyMetricsResult> => {
     const tipoPozo = parsedInput.wellType ?? null;
     const tipoMuestra = parsedInput.sampleType;
     const wells =
@@ -68,7 +69,7 @@ export const getMonthlyMetrics = authOrganizationActionClient
         FROM sustancias
       ),
       promedios_periodo AS (
-        SELECT TO_CHAR(coalesce(pm.fecha_muestra::date, m.fecha), 'YYYY-MM') AS periodo,
+        SELECT coalesce(pm.fecha_muestra::date, m.fecha) AS periodo,
           c.unidad,
           AVG(
             COALESCE(
@@ -85,11 +86,11 @@ export const getMonthlyMetrics = authOrganizationActionClient
           INNER JOIN raw_estudios_pozos e ON m.id_estudio_pozo = e.id_estudio_pozo
           INNER JOIN raw_pozos p ON LOWER(e.id_pozo) = LOWER(p.id_pozo)
           left join parametros_muestras pm on m.muestra = pm.muestra
-        GROUP BY TO_CHAR(coalesce(pm.fecha_muestra::date, m.fecha), 'YYYY-MM'), c.unidad
+        GROUP BY coalesce(pm.fecha_muestra::date, m.fecha), c.unidad
       ),
       datos_calculados AS (
         SELECT 
-          TO_CHAR(coalesce(pm.fecha_muestra::date, m.fecha), 'YYYY-MM') AS periodo,
+          coalesce(pm.fecha_muestra::date, m.fecha) AS periodo,
           c.unidad,
           MAX(
             CASE 
@@ -154,7 +155,7 @@ export const getMonthlyMetrics = authOrganizationActionClient
           INNER JOIN raw_pozos p ON LOWER(e.id_pozo) = LOWER(p.id_pozo)
           INNER JOIN raw_sustancias s ON c.id_sustancia = s.id_sustancia
           left join parametros_muestras pm on m.muestra = pm.muestra
-        GROUP BY TO_CHAR(coalesce(pm.fecha_muestra::date, m.fecha), 'YYYY-MM'), c.unidad
+        GROUP BY coalesce(pm.fecha_muestra::date, m.fecha), c.unidad
       ),
       datos_con_proporciones AS (
         SELECT 
@@ -194,10 +195,12 @@ export const getMonthlyMetrics = authOrganizationActionClient
       results.rows.length > 0 ? (results.rows[0].unidad ?? 'µg/l') : 'µg/l';
 
     const data: Concentration[] = results.rows.map((row) => ({
-      date: parseISO(row.periodo + '-01'),
+      date: parseISO(row.periodo),
       value: row.promedio_concentracion,
       unit
     }));
+
+    logger('data', data);
 
     return {
       data,

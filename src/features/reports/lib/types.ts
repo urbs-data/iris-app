@@ -5,7 +5,8 @@ export const REPORT_TYPES = [
   'volatile_concentrations_cig',
   'inorganic_concentrations_cig',
   'concentrations',
-  'analysis_performed'
+  'analysis_performed',
+  'well_depth_cig'
 ] as const;
 
 export type ReportType = (typeof REPORT_TYPES)[number];
@@ -33,7 +34,8 @@ export const PRESET_REPORT_MAP: Record<PresetValue, ReportType[]> = {
   datos_formulario_6_provincia_ba_cig: [
     'sampling_params_cig',
     'volatile_concentrations_cig',
-    'inorganic_concentrations_cig'
+    'inorganic_concentrations_cig',
+    'well_depth_cig'
   ]
 };
 

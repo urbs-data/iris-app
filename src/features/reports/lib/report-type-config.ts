@@ -48,5 +48,10 @@ export const REPORT_TYPE_CONFIG: Record<ReportType, ReportTypeConfig> = {
     icon: ClipboardCheck,
     titlePrefix: 'AvanceTareasRemediación',
     filters: [{ key: 'pozos', type: 'wells' }]
+  },
+  well_depth_cig: {
+    icon: Layers,
+    titlePrefix: 'ProfundidadPozosCIG',
+    filters: []
   }
 };
