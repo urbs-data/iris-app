@@ -244,6 +244,7 @@
         },
         "kpi": {
             "sampleCount": "Sample count",
+            "lastValue": "Last value",
             "guidelineLevel": "Guideline level",
             "average": "Average",
             "minimum": "Minimum",

@@ -191,7 +191,6 @@ function cargarDatos(carpeta: string) {
 // ─────────────────────────────────────────────
 // LLAMADA A LA API
 // ─────────────────────────────────────────────
-
 async function generarInforme(
   datos: ReturnType<typeof cargarDatos>
 ): Promise<Informe> {
