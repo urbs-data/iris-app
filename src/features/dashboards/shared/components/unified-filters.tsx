@@ -6,10 +6,9 @@ import { useQueryState, parseAsString, parseAsStringEnum } from 'nuqs';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { DateRangePicker } from '@/components/ui/date-range-picker';
+import { DatePicker } from '@/components/ui/date-picker';
 import { Combobox } from '@/components/ui/combobox';
 import { MultiSelect } from '@/components/ui/multi-select';
-import type { DateRange } from 'react-day-picker';
 import { X, Search } from 'lucide-react';
 import { getWells } from '@/features/dashboards/substance/data/get-wells';
 import { getAreas } from '@/features/dashboards/substance/data/get-areas';
@@ -24,7 +23,8 @@ import { parseISO } from 'date-fns';
 import { useTransitionContext } from '@/hooks/use-transition-context';
 
 interface LocalFilters {
-  dateRange: DateRange | undefined;
+  dateFrom: Date | undefined;
+  dateTo: Date | undefined;
   substance?: string | null;
   wellType: WellType | null;
   area: string | null;
@@ -100,16 +100,9 @@ export function UnifiedFilters({
     })
   );
 
-  const initialDateRange: DateRange | undefined =
-    dateFrom || dateTo
-      ? {
-          from: dateFrom ? parseISO(dateFrom) : undefined,
-          to: dateTo ? parseISO(dateTo) : undefined
-        }
-      : undefined;
-
   const [localFilters, setLocalFilters] = useState<LocalFilters>({
-    dateRange: initialDateRange,
+    dateFrom: dateFrom ? parseISO(dateFrom) : undefined,
+    dateTo: dateTo ? parseISO(dateTo) : undefined,
     ...(showSubstanceFilter && { substance }),
     wellType: wellType ?? null,
     area,
@@ -136,8 +129,8 @@ export function UnifiedFilters({
 
   async function handleSearch() {
     const updates = [
-      setDateFrom(localFilters.dateRange?.from?.toISOString() || null),
-      setDateTo(localFilters.dateRange?.to?.toISOString() || null),
+      setDateFrom(localFilters.dateFrom?.toISOString() || null),
+      setDateTo(localFilters.dateTo?.toISOString() || null),
       setWellType(localFilters.wellType || null),
       setArea(localFilters.area),
       setWells(
@@ -154,13 +147,9 @@ export function UnifiedFilters({
   }
 
   const handleResetFilters = (): void => {
-    const defaultDateRange: DateRange = {
-      from: parseISO(SUBSTANCE_DEFAULTS.dateFrom),
-      to: new Date()
-    };
-
     setLocalFilters({
-      dateRange: defaultDateRange,
+      dateFrom: parseISO(SUBSTANCE_DEFAULTS.dateFrom),
+      dateTo: new Date(),
       ...(showSubstanceFilter && { substance: null }),
       wellType: null,
       area: null,
@@ -191,14 +180,26 @@ export function UnifiedFilters({
   return (
     <div className='space-y-4'>
       <div className='space-y-2'>
-        <Label className='text-sm font-medium'>{t('dateRange')}</Label>
-        <DateRangePicker
+        <Label className='text-sm font-medium'>{t('dateFrom')}</Label>
+        <DatePicker
           minDate={new Date(2024, 6, 1)}
-          value={localFilters.dateRange}
-          onChange={(range) =>
-            setLocalFilters((prev) => ({ ...prev, dateRange: range }))
+          value={localFilters.dateFrom}
+          onChange={(date) =>
+            setLocalFilters((prev) => ({ ...prev, dateFrom: date }))
           }
-          placeholder={t('dateRange')}
+          placeholder={t('dateFrom')}
+          className='h-9'
+        />
+      </div>
+      <div className='space-y-2'>
+        <Label className='text-sm font-medium'>{t('dateTo')}</Label>
+        <DatePicker
+          minDate={new Date(2024, 6, 1)}
+          value={localFilters.dateTo}
+          onChange={(date) =>
+            setLocalFilters((prev) => ({ ...prev, dateTo: date }))
+          }
+          placeholder={t('dateTo')}
           className='h-9'
         />
       </div>

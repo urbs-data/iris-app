@@ -61,6 +61,14 @@ export const navItems: NavItem[] = [
     group: 'group.main'
   },
   {
+    title: 'dashboard-correlations',
+    url: '/dashboard/correlations',
+    icon: 'analyze',
+    shortcut: ['a', 'r'],
+    items: [],
+    group: 'group.main'
+  },
+  {
     title: 'search',
     url: '/dashboard/search',
     icon: 'dashboard',

@@ -33,15 +33,13 @@ export default async function SubstanceLayout({
       scrollable={false}
       pageTitle={t('title')}
       infoContent={infoContent}
+      pageHeaderAction={
+        <Suspense fallback={<Skeleton className='h-10 w-full' />}>
+          <UnifiedFiltersButton showSubstanceFilter={true} />
+        </Suspense>
+      }
     >
       <div className='flex flex-1 flex-col gap-2 overflow-hidden lg:max-h-[calc(100dvh-52px-80px)]'>
-        {/* Filters Row */}
-        <div className='shrink-0'>
-          <Suspense fallback={<Skeleton className='h-10 w-full' />}>
-            <UnifiedFiltersButton showSubstanceFilter={true} />
-          </Suspense>
-        </div>
-
         {/* KPIs Row */}
         <div className='shrink-0'>{kpis}</div>
 

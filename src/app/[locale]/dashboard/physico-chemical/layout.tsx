@@ -35,14 +35,13 @@ export default async function PhysicoChemicalLayout({
       scrollable={false}
       pageTitle={t('title')}
       infoContent={infoContent}
+      pageHeaderAction={
+        <Suspense fallback={<Skeleton className='h-10 w-full' />}>
+          <PhysicoChemicalFiltersButton />
+        </Suspense>
+      }
     >
       <div className='flex flex-1 flex-col gap-2 overflow-hidden lg:max-h-[calc(100dvh-52px-80px)]'>
-        <div className='shrink-0'>
-          <Suspense fallback={<Skeleton className='h-10 w-full' />}>
-            <PhysicoChemicalFiltersButton />
-          </Suspense>
-        </div>
-
         <div className='grid shrink-0 grid-cols-1 gap-2 md:grid-cols-2'>
           {fq_kpis}
           {substance_kpis}

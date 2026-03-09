@@ -28,4 +28,10 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE
   public.parametros_muestras
 TO app_user;
 
+GRANT select on  
+  public.fact_cruce_concentraciones_parametros, 
+  public.fact_concentraciones_agua, 
+  public.fact_parametros_fq 
+to app_user;
+
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO app_user;

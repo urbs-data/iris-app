@@ -12,8 +12,6 @@ import { MultiSelect } from '@/components/ui/multi-select';
 import { X, Search } from 'lucide-react';
 import { getWells } from '@/features/dashboards/substance/data/get-wells';
 import { getSubstances } from '@/features/dashboards/substance/data/get-substances';
-import { getFqParameters } from '@/features/dashboards/physico-chemical/data/get-fq-parameters';
-import { FQ_DEFAULTS } from '@/features/dashboards/physico-chemical/types';
 import { resolveActionResult } from '@/lib/actions/client';
 import { parseISO } from 'date-fns';
 import { useTransitionContext } from '@/hooks/use-transition-context';
@@ -22,12 +20,11 @@ interface LocalFilters {
   dateFrom: Date | undefined;
   dateTo: Date | undefined;
   substance: string | null;
-  parametro: string | null;
   wells: string[];
 }
 
-export function PhysicoChemicalFilters() {
-  const t = useTranslations('substance');
+export function CorrelationsFilters() {
+  const t = useTranslations('dashboard.correlations');
   const { startTransition, isLoading } = useTransitionContext();
 
   const [dateFrom, setDateFrom] = useQueryState(
@@ -42,10 +39,6 @@ export function PhysicoChemicalFilters() {
     'substance',
     parseAsString.withOptions({ shallow: false, startTransition })
   );
-  const [parametro, setParametro] = useQueryState(
-    'parametro',
-    parseAsString.withOptions({ shallow: false, startTransition })
-  );
   const [wells, setWells] = useQueryState(
     'wells',
     parseAsString.withOptions({ shallow: false, startTransition })
@@ -54,14 +47,13 @@ export function PhysicoChemicalFilters() {
   const [localFilters, setLocalFilters] = useState<LocalFilters>({
     dateFrom: dateFrom ? parseISO(dateFrom) : undefined,
     dateTo: dateTo ? parseISO(dateTo) : undefined,
-    substance: substance ?? null,
-    parametro: parametro ?? null,
+    substance,
     wells: wells ? wells.split(',') : []
   });
 
   const { data: wellsData = [], isLoading: isLoadingWells } = useQuery({
     queryKey: ['wells'],
-    queryFn: () => resolveActionResult(getWells({}))
+    queryFn: () => resolveActionResult(getWells({ area: undefined }))
   });
 
   const { data: substances = [], isLoading: isLoadingSubstances } = useQuery({
@@ -69,86 +61,59 @@ export function PhysicoChemicalFilters() {
     queryFn: () => resolveActionResult(getSubstances())
   });
 
-  const { data: fqParameters = [], isLoading: isLoadingParameters } = useQuery({
-    queryKey: ['fqParameters'],
-    queryFn: () => resolveActionResult(getFqParameters({}))
-  });
-
   async function handleSearch() {
     await Promise.all([
       setDateFrom(localFilters.dateFrom?.toISOString() || null),
       setDateTo(localFilters.dateTo?.toISOString() || null),
-      setSubstance(localFilters.substance || null),
-      setParametro(localFilters.parametro || null),
+      setSubstance(localFilters.substance),
       setWells(
         localFilters.wells.length > 0 ? localFilters.wells.join(',') : null
       )
     ]);
   }
 
-  function handleResetFilters() {
+  function handleReset() {
     setLocalFilters({
-      dateFrom: parseISO(FQ_DEFAULTS.dateFrom),
-      dateTo: new Date(),
+      dateFrom: undefined,
+      dateTo: undefined,
       substance: null,
-      parametro: null,
       wells: []
     });
-
     setDateFrom(null);
     setDateTo(null);
     setSubstance(null);
-    setParametro(null);
     setWells(null);
   }
 
-  const hasActiveFilters =
-    dateFrom || dateTo || substance || parametro || wells;
+  const hasActiveFilters = dateFrom || dateTo || substance || wells;
 
   return (
-    <div className='space-y-4'>
-      <div className='space-y-2'>
-        <Label className='text-sm font-medium'>{t('dateFrom')}</Label>
+    <div className='flex flex-col gap-4'>
+      <div className='flex flex-col gap-2'>
+        <Label className='text-sm font-medium'>{t('filterDateFrom')}</Label>
         <DatePicker
-          minDate={new Date(2019, 0, 1)}
           value={localFilters.dateFrom}
           onChange={(date) =>
             setLocalFilters((prev) => ({ ...prev, dateFrom: date }))
           }
-          placeholder={t('dateFrom')}
+          placeholder={t('filterDateFrom')}
           className='h-9'
         />
       </div>
-      <div className='space-y-2'>
-        <Label className='text-sm font-medium'>{t('dateTo')}</Label>
+      <div className='flex flex-col gap-2'>
+        <Label className='text-sm font-medium'>{t('filterDateTo')}</Label>
         <DatePicker
-          minDate={new Date(2019, 0, 1)}
           value={localFilters.dateTo}
           onChange={(date) =>
             setLocalFilters((prev) => ({ ...prev, dateTo: date }))
           }
-          placeholder={t('dateTo')}
+          placeholder={t('filterDateTo')}
           className='h-9'
         />
       </div>
 
-      <div className='space-y-2'>
-        <Label className='text-sm font-medium'>{t('wells')}</Label>
-        <MultiSelect
-          values={localFilters.wells}
-          onValuesChange={(values) =>
-            setLocalFilters((prev) => ({ ...prev, wells: values }))
-          }
-          options={wellsData.map((w) => ({ value: w.value, label: w.label }))}
-          placeholder={t('wells')}
-          searchPlaceholder={t('searchWell')}
-          isLoading={isLoadingWells}
-          className='h-9'
-        />
-      </div>
-
-      <div className='space-y-2'>
-        <Label className='text-sm font-medium'>{t('substance')}</Label>
+      <div className='flex flex-col gap-2'>
+        <Label className='text-sm font-medium'>{t('filterSubstance')}</Label>
         <Combobox
           value={localFilters.substance}
           onValueChange={(value) =>
@@ -156,25 +121,24 @@ export function PhysicoChemicalFilters() {
           }
           options={substances}
           isLoading={isLoadingSubstances}
-          placeholder={t('substance')}
-          searchPlaceholder={t('searchSubstance')}
-          emptyMessage={t('noSubstanceFound')}
+          placeholder={t('filterSubstancePlaceholder')}
+          searchPlaceholder={t('search')}
+          emptyMessage={t('noDataLabel')}
           className='h-9'
         />
       </div>
 
-      <div className='space-y-2'>
-        <Label className='text-sm font-medium'>{t('fqParameter')}</Label>
-        <Combobox
-          value={localFilters.parametro}
-          onValueChange={(value) =>
-            setLocalFilters((prev) => ({ ...prev, parametro: value }))
+      <div className='flex flex-col gap-2'>
+        <Label className='text-sm font-medium'>{t('filterWells')}</Label>
+        <MultiSelect
+          values={localFilters.wells}
+          onValuesChange={(values) =>
+            setLocalFilters((prev) => ({ ...prev, wells: values }))
           }
-          options={fqParameters}
-          isLoading={isLoadingParameters}
-          placeholder={t('fqParameter')}
-          searchPlaceholder={t('searchFqParameter')}
-          emptyMessage={t('noFqParameterFound')}
+          options={wellsData.map((w) => ({ value: w.value, label: w.label }))}
+          placeholder={t('filterWellsPlaceholder')}
+          searchPlaceholder={t('search')}
+          isLoading={isLoadingWells}
           className='h-9'
         />
       </div>
@@ -184,20 +148,16 @@ export function PhysicoChemicalFilters() {
         disabled={isLoading}
         className='h-9 w-full'
       >
-        <Search className='mr-2 h-4 w-4' />
+        <Search data-icon='inline-start' />
         {t('search')}
       </Button>
 
-      {hasActiveFilters && (
-        <Button
-          variant='outline'
-          onClick={handleResetFilters}
-          className='h-9 w-full'
-        >
-          <X className='mr-2 h-4 w-4' />
+      {hasActiveFilters ? (
+        <Button variant='outline' onClick={handleReset} className='h-9 w-full'>
+          <X data-icon='inline-start' />
           {t('clearFilters')}
         </Button>
-      )}
+      ) : null}
     </div>
   );
 }

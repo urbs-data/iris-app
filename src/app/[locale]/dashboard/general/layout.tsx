@@ -33,14 +33,13 @@ export default async function GeneralLayout({
       scrollable={false}
       pageTitle={t('title')}
       infoContent={infoContent}
+      pageHeaderAction={
+        <Suspense fallback={<Skeleton className='h-10 w-full' />}>
+          <UnifiedFiltersButton showSubstanceFilter={false} />
+        </Suspense>
+      }
     >
       <div className='flex flex-1 flex-col gap-2 overflow-hidden lg:max-h-[calc(100dvh-52px-80px)]'>
-        <div className='shrink-0'>
-          <Suspense fallback={<Skeleton className='h-10 w-full' />}>
-            <UnifiedFiltersButton showSubstanceFilter={false} />
-          </Suspense>
-        </div>
-
         <div className='grid flex-1 auto-rows-auto grid-cols-1 gap-2 lg:min-h-0 lg:auto-rows-auto lg:grid-cols-2 lg:grid-rows-2'>
           <div className='lg:min-h-0'>{tetracloruro_line}</div>
           <div className='lg:min-h-0'>{tetracloruro_kpis}</div>
