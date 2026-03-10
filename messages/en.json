@@ -585,8 +585,8 @@
             "empty": "No results"
         },
         "types": {
-            "well_depth": "Well depth",
-            "well_depth_cig": "Well depth for CIG",
+            "well_depth": "Water depth",
+            "well_depth_cig": "Water depth for CIG",
             "sampling_params": "Sampling params",
             "sampling_params_cig": "Sampling params for CIG",
             "volatile_concentrations_cig": "Volatile concentrations for CIG",

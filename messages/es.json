@@ -587,8 +587,8 @@
             "empty": "Sin resultados"
         },
         "types": {
-            "well_depth": "Profundidad de pozo",
-            "well_depth_cig": "Profundidad de pozo para CIG",
+            "well_depth": "Profundidad al agua",
+            "well_depth_cig": "Profundidad al agua para CIG",
             "sampling_params": "Parámetros de muestreo",
             "sampling_params_cig": "Parámetros de muestreo para CIG",
             "volatile_concentrations_cig": "Concentraciones volátiles para CIG",

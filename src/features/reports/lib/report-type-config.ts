@@ -16,7 +16,7 @@ export interface ReportTypeConfig {
 export const REPORT_TYPE_CONFIG: Record<ReportType, ReportTypeConfig> = {
   well_depth: {
     icon: Layers,
-    titlePrefix: 'ProfundidadPozos',
+    titlePrefix: 'ProfundidadAlAgua',
     filters: [{ key: 'pozos', type: 'wells' }]
   },
   sampling_params: {
@@ -51,7 +51,7 @@ export const REPORT_TYPE_CONFIG: Record<ReportType, ReportTypeConfig> = {
   },
   well_depth_cig: {
     icon: Layers,
-    titlePrefix: 'ProfundidadPozosCIG',
+    titlePrefix: 'ProfundidadAlAguaCIG',
     filters: []
   }
 };

@@ -66,6 +66,9 @@ export const navItems: NavItem[] = [
     icon: 'analyze',
     shortcut: ['a', 'r'],
     items: [],
+    access: {
+      publicMetadataKey: 'nav.dashboard.correlations'
+    },
     group: 'group.main'
   },
   {
