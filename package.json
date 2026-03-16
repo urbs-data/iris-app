@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && sentry-cli sourcemaps inject .next && sentry-cli sourcemaps upload .next",
+    "build:no-sourcemaps": "next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "eslint src --fix && bun format",
