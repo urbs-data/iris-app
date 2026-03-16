@@ -24,6 +24,17 @@ export function useBreadcrumbs() {
       { title: t('dashboard'), link: '/dashboard' },
       { title: t('dashboard-substance'), link: '/dashboard/substance' }
     ],
+    '/dashboard/physico-chemical': [
+      { title: t('dashboard'), link: '/dashboard' },
+      {
+        title: t('dashboard-physico-chemical'),
+        link: '/dashboard/physico-chemical'
+      }
+    ],
+    '/dashboard/correlations': [
+      { title: t('dashboard'), link: '/dashboard' },
+      { title: t('dashboard-correlations'), link: '/dashboard/correlations' }
+    ],
     '/dashboard/search': [
       { title: t('dashboard'), link: '/dashboard' },
       { title: t('search'), link: '/dashboard/search' }

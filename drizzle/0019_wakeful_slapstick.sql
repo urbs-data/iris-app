@@ -1,0 +1,1 @@
+ALTER TYPE "public"."tipo_reporte" ADD VALUE 'injection_params_cig' BEFORE 'volatile_concentrations_cig';

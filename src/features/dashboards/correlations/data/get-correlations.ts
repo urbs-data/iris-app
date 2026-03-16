@@ -10,16 +10,24 @@ import type {
   ParameterName,
   SpearmanMatrix
 } from '../types';
-import * as jStat from 'jstat';
-import * as ss from 'simple-statistics';
 import { evaluateLOE, type ZVIPayload } from './evaluate-loe';
 import { getLocale } from 'next-intl/server';
+import {
+  percentBelow,
+  safeMedian,
+  spearman,
+  meanOfValues
+} from '@/lib/statistics';
 
 interface QueryRow extends Record<string, unknown> {
   pozo: string;
   fecha_muestra: Date;
+  campana: string;
   id_sustancia: string;
   sustancia: string;
+  limite_deteccion: number | null;
+  limite_cuantificacion: number | null;
+  nivel_guia: number | null;
   medicion_sustancia: number;
   unidad_sustancia: string;
   fecha_parametro: Date;
@@ -28,36 +36,24 @@ interface QueryRow extends Record<string, unknown> {
   unidad_parametro: string;
 }
 
-function rankArray(arr: number[]): number[] {
-  const sorted = [...arr].map((v, i) => ({ v, i })).sort((a, b) => a.v - b.v);
-  const ranks = new Array<number>(arr.length);
-  sorted.forEach(({ i }, rank) => {
-    ranks[i] = rank + 1;
-  });
-  return ranks;
-}
-
-function spearman(
-  x: number[],
-  y: number[]
-): { rho: number; p_valor: number; n: number } {
-  const n = x.length;
-  if (n < 6) return { rho: NaN, p_valor: NaN, n };
-
-  const rho = ss.sampleCorrelation(rankArray(x), rankArray(y));
-  const df = n - 2;
-  const t = rho * Math.sqrt(df / (1 - rho ** 2));
-  const p_valor = 2 * (1 - jStat.studentt.cdf(Math.abs(t), df));
-
-  return { rho, p_valor, n };
+function campanaOrden(nombre: string): number {
+  const upper = nombre.trim().toUpperCase();
+  if (upper === 'LB') return 0;
+  const match = upper.match(/^T(\d+)$/);
+  if (match) return parseInt(match[1], 10);
+  return 999;
 }
 
 function normalizeRow(row: QueryRow): CorrelationRow {
   return {
     pozo: row.pozo,
     sampleDate: new Date(row.fecha_muestra),
+    campana: row.campana,
     substanceValue: row.medicion_sustancia,
     substanceUnit: row.unidad_sustancia,
+    limiteDeteccion: row.limite_deteccion ?? null,
+    limiteCuantificacion: row.limite_cuantificacion ?? null,
+    nivelGuia: row.nivel_guia ?? null,
     parameterDate: new Date(row.fecha_parametro),
     parameterName: row.parametro,
     parameterValue: row.medicion_parametro,
@@ -83,7 +79,6 @@ function buildCorrelationParameter(
   const xs = rows.map((r) => r.substanceValue);
   const ys = rows.map((r) => r.parameterValue);
   const { rho, p_valor, n } = spearman(xs, ys);
-
   return {
     name,
     unit: rows[0]?.parameterUnit ?? '',
@@ -159,6 +154,97 @@ function buildMatrix(
   ) as SpearmanMatrix;
 }
 
+// ─── Campañas ─────────────────────────────────────────────────────────────────
+
+interface CampanaEntry {
+  nombre: string;
+  orden: number;
+  pozos: Map<string, { valor: number; nivelGuia: number | null }>;
+}
+
+function buildCampaignMap(rows: CorrelationRow[]): Map<string, CampanaEntry> {
+  const campaigns = new Map<string, CampanaEntry>();
+  for (const row of rows) {
+    if (!campaigns.has(row.campana)) {
+      campaigns.set(row.campana, {
+        nombre: row.campana,
+        orden: campanaOrden(row.campana),
+        pozos: new Map()
+      });
+    }
+    campaigns.get(row.campana)!.pozos.set(row.pozo, {
+      valor: row.substanceValue,
+      nivelGuia: row.nivelGuia
+    });
+  }
+  return campaigns;
+}
+
+interface CampaignStats {
+  n_eventos: number;
+  tendencia_lb: ZVIPayload['tendencia_lb'];
+  cumplimiento_ultimo_evento: ZVIPayload['cumplimiento_ultimo_evento'];
+}
+
+function buildCumplimiento(
+  pozos: Map<string, { valor: number; nivelGuia: number | null }> | undefined
+): ZVIPayload['cumplimiento_ultimo_evento'] {
+  if (!pozos) return null;
+  const entries = Array.from(pozos.values());
+  const ng = entries[0]?.nivelGuia ?? null;
+  if (ng === null) return null;
+  const valor_ug_L =
+    Math.round(meanOfValues(entries.map((e) => e.valor)) * 100) / 100;
+  const excede_ng = valor_ug_L >= ng;
+  return {
+    valor_ug_L,
+    ng_ug_L: ng,
+    excede_ng,
+    estado_global: excede_ng ? 'EXCEDE' : 'CUMPLE'
+  };
+}
+
+function calcCampaignStats(
+  campaigns: Map<string, CampanaEntry>
+): CampaignStats {
+  const sorted = Array.from(campaigns.values()).sort(
+    (a, b) => a.orden - b.orden
+  );
+  const n_eventos = sorted.length;
+
+  if (n_eventos < 2) {
+    return {
+      n_eventos,
+      tendencia_lb: { pct_cambio: null, flag: null },
+      cumplimiento_ultimo_evento: buildCumplimiento(sorted[0]?.pozos)
+    };
+  }
+
+  const lb = sorted[0];
+  const last = sorted[n_eventos - 1];
+
+  const lbMean = meanOfValues(
+    Array.from(lb.pozos.values()).map((e) => e.valor)
+  );
+  const lastMean = meanOfValues(
+    Array.from(last.pozos.values()).map((e) => e.valor)
+  );
+
+  const pct_cambio =
+    lbMean > 0
+      ? Math.round(((lastMean - lbMean) / lbMean) * 10000) / 100
+      : null;
+
+  const flag: ZVIPayload['tendencia_lb']['flag'] =
+    pct_cambio !== null ? (lastMean === 0 ? 'REDUCCION_A_ND' : 'NORMAL') : null;
+
+  return {
+    n_eventos,
+    tendencia_lb: { pct_cambio, flag },
+    cumplimiento_ultimo_evento: buildCumplimiento(last.pozos)
+  };
+}
+
 const NEGATIVE_SIGN_PARAMS = new Set(['ORP', 'OD']);
 
 const PARAM_NAME_TO_ZVI: Record<
@@ -173,17 +259,9 @@ const PARAM_NAME_TO_ZVI: Record<
   Temp: 'Temperatura'
 };
 
-function safeMedian(values: number[]): number {
-  return values.length > 0 ? ss.median(values) : 0;
-}
-
-function percentBelow(values: number[], threshold: number): number {
-  if (values.length === 0) return 0;
-  return (values.filter((v) => v < threshold).length / values.length) * 100;
-}
-
 function buildZVIPayload(
-  substance: string,
+  sustanciaId: string,
+  sustanciaName: string,
   allRows: CorrelationRow[],
   grouped: Map<string, CorrelationRow[]>,
   correlations: CorrelationParameter[],
@@ -193,9 +271,11 @@ function buildZVIPayload(
 ): ZVIPayload {
   const ORPValues = grouped.get('ORP')?.map((r) => r.parameterValue) ?? [];
   const ODValues = grouped.get('OD')?.map((r) => r.parameterValue) ?? [];
-  const uniquePozos = new Set(allRows.map((r) => r.pozo));
+  const pHValues = grouped.get('pH')?.map((r) => r.parameterValue) ?? [];
 
+  const uniquePozos = new Set(allRows.map((r) => r.pozo));
   const sampleTimestamps = allRows.map((r) => r.sampleDate.getTime());
+
   const resolvedDateFrom =
     dateFrom ??
     new Date(Math.min(...sampleTimestamps)).toISOString().slice(0, 10);
@@ -215,19 +295,30 @@ function buildZVIPayload(
         : true
     }));
 
+  const campaigns = buildCampaignMap(allRows);
+  const { n_eventos, tendencia_lb, cumplimiento_ultimo_evento } =
+    calcCampaignStats(campaigns);
+
   return {
-    compuesto: substance,
+    compuesto: sustanciaName || sustanciaId,
     fecha_desde: resolvedDateFrom,
     fecha_hasta: resolvedDateTo,
     n_pozos: uniquePozos.size,
     n_pares_validos: allRows.length,
+    n_eventos,
     correlaciones,
     geoquimica_barrera: {
       ORP_mediana_mv: safeMedian(ORPValues),
       OD_mediana_mgl: safeMedian(ODValues),
+      pH_mediana: safeMedian(pHValues),
       pct_ORP_bajo_menos100: percentBelow(ORPValues, -100),
-      pct_OD_anoxic: percentBelow(ODValues, 1)
+      pct_ORP_bajo_menos200: percentBelow(ORPValues, -200),
+      pct_OD_anoxic: percentBelow(ODValues, 0.5),
+      pct_OD_subanoxico:
+        percentBelow(ODValues, 1.0) - percentBelow(ODValues, 0.5)
     },
+    tendencia_lb,
+    cumplimiento_ultimo_evento,
     idioma_usuario: locale
   };
 }
@@ -263,6 +354,7 @@ export const getCorrelations = authOrganizationActionClient
       };
     }
 
+    const sustanciaName = results.rows[0]?.sustancia ?? parsedInput.substance;
     const rows = results.rows.map(normalizeRow);
     const grouped = groupByParameter(rows);
 
@@ -276,6 +368,7 @@ export const getCorrelations = authOrganizationActionClient
 
     const payload = buildZVIPayload(
       parsedInput.substance,
+      sustanciaName,
       rows,
       grouped,
       correlationData,
@@ -283,6 +376,8 @@ export const getCorrelations = authOrganizationActionClient
       parsedInput.dateTo,
       locale
     );
+
+    console.log({ payload });
 
     const loe = await evaluateLOE(payload);
 
@@ -293,7 +388,8 @@ export const getCorrelations = authOrganizationActionClient
       loeAnalyses: [
         { status: loe.loe1.status, text: loe.loe1.texto },
         { status: loe.loe2.status, text: loe.loe2.texto },
-        { status: loe.loe3.status, text: loe.loe3.texto }
+        { status: loe.loe3.status, text: loe.loe3.texto },
+        { status: loe.loe4.status, text: loe.loe4.texto }
       ]
     };
   });

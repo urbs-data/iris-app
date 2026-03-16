@@ -1,38 +1,25 @@
-import { anthropic } from '@ai-sdk/anthropic';
-import { generateText, Output } from 'ai';
-import { z } from 'zod';
-import * as XLSX from 'xlsx';
 import * as fs from 'fs';
-import * as path from 'path';
+import path from 'path';
 import PDFDocument from 'pdfkit';
-import { join } from 'path';
-import 'dotenv/config';
+import { z } from 'zod';
 
 const BloqueSchema = z.object({
   tipo: z.enum(['parrafo', 'lista', 'tabla', 'caja']),
-
-  // parrafo
-  texto: z.string().optional(),
-
-  // lista
-  items: z.array(z.string()).optional(),
-
-  // tabla
-  columnas: z.array(z.string()).optional(),
+  texto: z.string().nullable(),
+  items: z.array(z.string()).nullable(),
+  columnas: z.array(z.string()).nullable(),
   filas: z
     .array(
       z.object({
         valores: z.array(z.string()),
-        alerta: z.enum(['alta', 'media', 'baja', 'ok']).nullable().optional()
+        alerta: z.enum(['alta', 'media', 'baja', 'ok']).nullable()
       })
     )
-    .optional(),
-
-  // caja
+    .nullable(),
   nivel_alerta: z
     .enum(['critico', 'advertencia', 'info', 'positivo'])
-    .optional(),
-  titulo_caja: z.string().optional()
+    .nullable(),
+  titulo_caja: z.string().nullable()
 });
 
 const SeccionSchema = z.object({
@@ -42,7 +29,7 @@ const SeccionSchema = z.object({
   contenido: z.array(BloqueSchema)
 });
 
-const InformeSchema = z.object({
+export const InformeSchema = z.object({
   titulo: z.string(),
   subtitulo: z.string(),
   periodo: z.string(),
@@ -51,9 +38,14 @@ const InformeSchema = z.object({
 
 export type Informe = z.infer<typeof InformeSchema>;
 
-// ─────────────────────────────────────────────
-// COLORES
-// ─────────────────────────────────────────────
+const PAGE_W = 595.28; // A4 en puntos
+const PAGE_H = 841.89;
+const MARGIN = 40;
+const CONTENT_W = PAGE_W - MARGIN * 2;
+const APP_FONT_PATH = path.join(
+  process.cwd(),
+  'public/assets/fonts/NotoSans-Variable.ttf'
+);
 
 const COLORES = {
   azulOscuro: '#1F4E79',
@@ -105,136 +97,6 @@ const ALERTA_FILA: Record<string, string> = {
   baja: COLORES.amarilloCl,
   ok: COLORES.verdeCl
 };
-
-// ─────────────────────────────────────────────
-// LECTURA DE EXCELS
-// ─────────────────────────────────────────────
-
-function leerExcel(filePath: string): unknown[][] {
-  const wb = XLSX.readFile(filePath);
-  const ws = wb.Sheets[wb.SheetNames[0]];
-  return XLSX.utils.sheet_to_json(ws, { header: 1, defval: null });
-}
-
-function preprocesarConcentraciones(rows: unknown[][]): object {
-  // Filas 0-3: metadata (fechas, pozos, CCC, PI)
-  // Fila 4+: parámetros
-  const fechas = (rows[0] as any[]).slice(4).filter(Boolean);
-  const pozos = (rows[1] as any[]).slice(4).filter(Boolean);
-
-  const detecciones: Record<string, any[]> = {};
-  const noDetectados: { parametro: string; unidad: string; lc: any }[] = [];
-  const pozosMediaidos = new Set<string>();
-
-  for (const pozo of pozos) pozosMediaidos.add(String(pozo));
-
-  for (let i = 4; i < rows.length; i++) {
-    const row = rows[i] as any[];
-    const parametro = row[0];
-    const unidad = row[1];
-    const lc = row[2];
-    const ng = row[3];
-    if (!parametro) continue;
-
-    const vals: any[] = [];
-    for (let c = 4; c < row.length; c++) {
-      const val = row[c];
-      if (val === null || val === undefined) continue;
-      if (String(val).trim() === 'ND' || String(val).trim() === '') continue;
-      vals.push({
-        pozo: pozos[c - 4],
-        fecha: fechas[c - 4] ?? null,
-        valor: val,
-        ng
-      });
-    }
-
-    if (vals.length === 0) {
-      noDetectados.push({ parametro, unidad, lc });
-    } else {
-      detecciones[parametro] = vals;
-    }
-  }
-
-  return {
-    nota: 'Solo se incluyen compuestos con al menos una detección. Los compuestos listados en "no_detectados" fueron analizados en todos los pozos y resultaron ND en la totalidad de las muestras.',
-    pozos_muestreados: Array.from(pozosMediaidos),
-    total_compuestos_analizados:
-      noDetectados.length + Object.keys(detecciones).length,
-    no_detectados: noDetectados, // lista con nombre, unidad y LC — sin filas de datos
-    detecciones // solo los compuestos con valores reales
-  };
-}
-
-function cargarDatos(carpeta: string) {
-  const concRaw = leerExcel(
-    `${carpeta}/BER_Concentraciones_2025-10-01_2026-03-03.xlsx`
-  );
-
-  return {
-    avance_remediacion: leerExcel(
-      `${carpeta}/BER_AvanceTareasRemediacion_2025-10-01_2026-03-03.xlsx`
-    ),
-    concentraciones: preprocesarConcentraciones(concRaw),
-    parametros_muestreo: leerExcel(
-      `${carpeta}/BER_ParametrosMuestreo_2025-10-01_2026-03-03.xlsx`
-    ),
-    profundidad_pozos: leerExcel(
-      `${carpeta}/BER_ProfundidadPozos_2025-10-01_2026-03-03.xlsx`
-    )
-  };
-}
-
-// ─────────────────────────────────────────────
-// LLAMADA A LA API
-// ─────────────────────────────────────────────
-async function generarInforme(
-  datos: ReturnType<typeof cargarDatos>
-): Promise<Informe> {
-  const { output } = await generateText({
-    model: anthropic('claude-sonnet-4-6'),
-    output: Output.object({ schema: InformeSchema }),
-    system: `Sos un analista ambiental especializado en remediación de sitios contaminados.
-Analizá los datos de monitoreo de agua subterránea que te pasan y generá un informe estructurado.
-
-Reglas de contenido:
-- No inventes datos. Solo usá la información presente en el JSON de entrada.
-- Todos los números deben citarse con sus unidades y nivel guía correspondiente.
-- Para alertas de filas en tablas: "alta" si supera 10x el nivel guía, "media" entre 1x y 10x, "baja" si está cerca (0.5x–1x), "ok" si está por debajo.
-- Para cajas: "critico" en concentraciones extremas o anomalías graves, "advertencia" en tendencias preocupantes, "info" en observaciones sin urgencia, "positivo" en aspectos favorables.
-- Los datos de concentraciones fueron preprocesados: solo se enviaron compuestos con al menos una detección. 
-El campo "no_detectados" lista todos los compuestos analizados que resultaron ND en la totalidad de los pozos — mencioná su cantidad total en el informe pero no los enumeres individualmente.
-
-Secciones a incluir (en este orden):
-1. Resumen ejecutivo (nivel 1)
-2. Concentraciones de contaminantes (nivel 1)
-   - Superaciones de nivel guía (nivel 2)
-   - Compuestos detectados sin superación (nivel 2)
-   - Distribución espacial (nivel 2)
-3. Parámetros de campo (nivel 1)
-4. Profundidad del nivel freático (nivel 1)
-5. Hallazgos destacados (nivel 1) — cada hallazgo como una caja
-6. Cuestiones a revisar por el analista (nivel 1) — separadas por subcategorías
-7. Conclusiones (nivel 1)`,
-    prompt: `Sitio: BER
-Período: 01/10/2025 – 03/03/2026
-
-DATOS:
-${JSON.stringify(datos, null, 0)}`
-  });
-
-  return output;
-}
-
-// ─────────────────────────────────────────────
-// GENERACIÓN DE PDF
-// ─────────────────────────────────────────────
-
-const PAGE_W = 595.28; // A4 en puntos
-const PAGE_H = 841.89;
-const MARGIN = 40;
-const CONTENT_W = PAGE_W - MARGIN * 2;
-
 // Helper: hex a RGB para pdfkit
 function hexToRgb(hex: string): [number, number, number] {
   const n = parseInt(hex.replace('#', ''), 16);
@@ -283,7 +145,7 @@ function textoWrapped(
   } = {}
 ): number {
   const fontSize = opts.fontSize ?? 9;
-  const font = opts.font ?? 'Helvetica';
+  const font = opts.font ?? APP_FONT_PATH;
   const color = opts.color ?? COLORES.negro;
   const lineGap = opts.lineGap ?? 4;
 
@@ -306,18 +168,18 @@ function checkPageBreak(doc: PDFKit.PDFDocument, needed: number) {
 function dibujarPortada(doc: PDFKit.PDFDocument, informe: Informe) {
   rect(doc, 0, 0, PAGE_W, 120, COLORES.azulOscuro);
 
-  doc.font('Helvetica-Bold').fontSize(20);
+  doc.font(APP_FONT_PATH).fontSize(20);
   colorFill(doc, COLORES.blanco);
   doc.text(informe.titulo, MARGIN, 35, { width: CONTENT_W, align: 'center' });
 
-  doc.font('Helvetica').fontSize(12);
+  doc.font(APP_FONT_PATH).fontSize(12);
   doc.text(informe.subtitulo, MARGIN, 72, {
     width: CONTENT_W,
     align: 'center'
   });
 
   doc.moveDown(0.5);
-  doc.font('Helvetica-Oblique').fontSize(10);
+  doc.font(APP_FONT_PATH).fontSize(10);
   colorFill(doc, COLORES.azulClaro);
   doc.text(informe.periodo, MARGIN, 100, { width: CONTENT_W, align: 'center' });
 
@@ -329,7 +191,7 @@ function dibujarH1(doc: PDFKit.PDFDocument, texto: string) {
   checkPageBreak(doc, 30);
   const y = doc.y + 10;
 
-  doc.font('Helvetica-Bold').fontSize(13);
+  doc.font(APP_FONT_PATH).fontSize(13);
   colorFill(doc, COLORES.azulOscuro);
   doc.text(texto, MARGIN, y, { width: CONTENT_W });
 
@@ -349,7 +211,7 @@ function dibujarH1(doc: PDFKit.PDFDocument, texto: string) {
 function dibujarH2(doc: PDFKit.PDFDocument, texto: string) {
   checkPageBreak(doc, 20);
   doc.y += 6;
-  doc.font('Helvetica-Bold').fontSize(11);
+  doc.font(APP_FONT_PATH).fontSize(11);
   colorFill(doc, COLORES.azulMedio);
   doc.text(texto, MARGIN, doc.y, { width: CONTENT_W });
   doc.y += 4;
@@ -366,7 +228,7 @@ function dibujarParrafo(doc: PDFKit.PDFDocument, texto: string) {
 function dibujarLista(doc: PDFKit.PDFDocument, items: string[]) {
   for (const item of items) {
     checkPageBreak(doc, 14);
-    doc.font('Helvetica').fontSize(9);
+    doc.font(APP_FONT_PATH).fontSize(9);
     colorFill(doc, COLORES.azulMedio);
     doc.text('•', MARGIN + 4, doc.y, { width: 10, continued: false });
     const bulletY = doc.y - doc.currentLineHeight();
@@ -403,7 +265,7 @@ function dibujarTabla(
   // Header
   rect(doc, MARGIN, y, CONTENT_W, headerH, COLORES.azulOscuro);
   columnas.forEach((col, i) => {
-    doc.font('Helvetica-Bold').fontSize(fontSize);
+    doc.font(APP_FONT_PATH).fontSize(fontSize);
     colorFill(doc, COLORES.blanco);
     doc.text(col, MARGIN + i * colW + padX, y + padY, {
       width: colW - padX * 2,
@@ -423,7 +285,7 @@ function dibujarTabla(
       // Redibujar header
       rect(doc, MARGIN, y, CONTENT_W, headerH, COLORES.azulOscuro);
       columnas.forEach((col, i) => {
-        doc.font('Helvetica-Bold').fontSize(fontSize);
+        doc.font(APP_FONT_PATH).fontSize(fontSize);
         colorFill(doc, COLORES.blanco);
         doc.text(col, MARGIN + i * colW + padX, y + padY, {
           width: colW - padX * 2,
@@ -455,7 +317,7 @@ function dibujarTabla(
 
     // Celdas
     fila.valores.forEach((val, i) => {
-      doc.font('Helvetica').fontSize(fontSize);
+      doc.font(APP_FONT_PATH).fontSize(fontSize);
       colorFill(doc, COLORES.negro);
       doc.text(String(val ?? ''), MARGIN + i * colW + padX, y + padY, {
         width: colW - padX * 2,
@@ -511,7 +373,7 @@ function dibujarCaja(
 
   // Título de la caja
   if (titulo) {
-    doc.font('Helvetica-Bold').fontSize(9);
+    doc.font(APP_FONT_PATH).fontSize(9);
     colorFill(doc, estilo.titulo);
     doc.text(titulo, x + padX + bordeIzq, ty, {
       width: CONTENT_W - padX * 2 - bordeIzq
@@ -521,7 +383,7 @@ function dibujarCaja(
 
   // Items
   for (const item of items) {
-    doc.font('Helvetica').fontSize(8.5);
+    doc.font(APP_FONT_PATH).fontSize(8.5);
     colorFill(doc, COLORES.negro);
     doc.text(`→  ${item}`, x + padX + bordeIzq, ty, {
       width: CONTENT_W - padX * 2 - bordeIzq,
@@ -551,7 +413,7 @@ function agregarPiePagina(doc: PDFKit.PDFDocument) {
     .lineWidth(0.5)
     .stroke();
   doc.y += 4;
-  doc.font('Helvetica-Oblique').fontSize(7.5);
+  doc.font(APP_FONT_PATH).fontSize(7.5);
   colorFill(doc, COLORES.gris);
   doc.text(
     `Informe generado a partir de archivos de monitoreo BER. Fecha de generación: ${fecha}.`,
@@ -567,6 +429,7 @@ function construirPDF(informe: Informe, outputPath: string): Promise<void> {
     const doc = new PDFDocument({
       size: 'A4',
       margins: { top: MARGIN, bottom: MARGIN, left: MARGIN, right: MARGIN },
+      font: APP_FONT_PATH,
       info: { Title: informe.titulo, Author: 'Sistema de Monitoreo BER' }
     });
 
@@ -604,7 +467,7 @@ function construirPDF(informe: Informe, outputPath: string): Promise<void> {
             if (bloque.nivel_alerta)
               dibujarCaja(
                 doc,
-                bloque.titulo_caja,
+                bloque.titulo_caja ?? undefined,
                 bloque.items ?? [],
                 bloque.nivel_alerta
               );
@@ -621,39 +484,57 @@ function construirPDF(informe: Informe, outputPath: string): Promise<void> {
   });
 }
 
-// ─────────────────────────────────────────────
-// MAIN
-// ─────────────────────────────────────────────
-const DATA_FOLDER = join(process.cwd(), 'report_data');
-const OUTPUT_FOLDER = join(process.cwd(), 'output');
+export function buildPdfBuffer(informe: Informe): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    const doc = new PDFDocument({
+      size: 'A4',
+      margins: { top: MARGIN, bottom: MARGIN, left: MARGIN, right: MARGIN },
+      font: APP_FONT_PATH,
+      info: { Title: informe.titulo, Author: 'Sistema de Monitoreo BER' }
+    });
+    const chunks: Buffer[] = [];
+    doc.on('data', (chunk) =>
+      chunks.push(chunk instanceof Buffer ? chunk : Buffer.from(chunk))
+    );
+    doc.on('error', reject);
+    doc.on('end', () => resolve(Buffer.concat(chunks)));
 
-async function main() {
-  const carpetaExcels = DATA_FOLDER;
-  const carpetaSalida = OUTPUT_FOLDER;
-
-  // Crear carpeta de salida si no existe
-  if (!fs.existsSync(carpetaSalida)) {
-    fs.mkdirSync(carpetaSalida, { recursive: true });
-  }
-
-  console.log(`Leyendo archivos Excel desde ${carpetaExcels}`);
-
-  console.log('Leyendo archivos Excel...');
-  const datos = cargarDatos(carpetaExcels);
-
-  console.log('Llamando a la API...');
-  const informe = await generarInforme(datos);
-
-  // Guardar JSON intermedio
-  const jsonPath = path.join(carpetaSalida, 'informe_respuesta.json');
-  fs.writeFileSync(jsonPath, JSON.stringify(informe, null, 2), 'utf-8');
-  console.log(`JSON guardado en ${jsonPath}`);
-
-  // Generar PDF
-  const pdfPath = path.join(carpetaSalida, 'Informe_BER.pdf');
-  console.log('Generando PDF...');
-  await construirPDF(informe, pdfPath);
-  console.log(`PDF generado en ${pdfPath}`);
+    dibujarPortada(doc, informe);
+    for (const seccion of informe.secciones) {
+      if (seccion.nivel === 1) {
+        dibujarH1(doc, seccion.heading);
+      } else {
+        dibujarH2(doc, seccion.heading);
+      }
+      for (const bloque of seccion.contenido) {
+        switch (bloque.tipo) {
+          case 'parrafo':
+            if (bloque.texto) dibujarParrafo(doc, bloque.texto);
+            break;
+          case 'lista':
+            if (bloque.items) dibujarLista(doc, bloque.items);
+            break;
+          case 'tabla':
+            if (bloque.columnas && bloque.filas)
+              dibujarTabla(
+                doc,
+                bloque.columnas,
+                bloque.filas as { valores: string[]; alerta: string | null }[]
+              );
+            break;
+          case 'caja':
+            if (bloque.nivel_alerta)
+              dibujarCaja(
+                doc,
+                bloque.titulo_caja ?? undefined,
+                bloque.items ?? [],
+                bloque.nivel_alerta
+              );
+            break;
+        }
+      }
+    }
+    agregarPiePagina(doc);
+    doc.end();
+  });
 }
-
-main().catch(console.error);

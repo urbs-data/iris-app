@@ -29,6 +29,11 @@ export const REPORT_TYPE_CONFIG: Record<ReportType, ReportTypeConfig> = {
     titlePrefix: 'ParametrosMuestreoCIG',
     filters: []
   },
+  injection_params_cig: {
+    icon: FlaskConical,
+    titlePrefix: 'ParametrosInyeccionCIG',
+    filters: []
+  },
   volatile_concentrations_cig: {
     icon: Droplets,
     titlePrefix: 'ConcentracionesVolatilesCIG',

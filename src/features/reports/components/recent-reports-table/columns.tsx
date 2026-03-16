@@ -3,6 +3,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import type { RecentExport } from '../../lib/types';
 import { DownloadButton } from '@/features/shared/components/download-button';
+import { GenerateAiPdfButton } from './generate-ai-pdf-button';
 
 interface ColumnsOptions {
   translations: {
@@ -11,6 +12,15 @@ interface ColumnsOptions {
     range: string;
     user: string;
     action: string;
+    aiPdf: {
+      buttonLabel: string;
+      progressStart: string;
+      progressRunning: string;
+      progressOpening: string;
+      success: string;
+      successReused: string;
+      error: string;
+    };
   };
 }
 
@@ -44,11 +54,15 @@ export function createRecentReportsColumns(
       size: 10
     },
     {
-      id: 'download',
+      id: 'actions',
       header: '',
       cell: ({ row }) => {
         return (
-          <div className='flex justify-center'>
+          <div className='flex justify-center gap-2'>
+            <GenerateAiPdfButton
+              reportId={row.original.id}
+              translations={translations.aiPdf}
+            />
             <DownloadButton blobPath={row.original.urlReport} />
           </div>
         );

@@ -7,7 +7,9 @@ import {
   serial,
   json,
   pgPolicy,
-  pgEnum
+  pgEnum,
+  boolean,
+  date
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
@@ -49,6 +51,7 @@ export const reportTypeEnum = pgEnum('tipo_reporte', [
   'well_depth_cig',
   'sampling_params',
   'sampling_params_cig',
+  'injection_params_cig',
   'volatile_concentrations_cig',
   'inorganic_concentrations_cig',
   'concentrations',
@@ -239,6 +242,15 @@ export const parametrosFisicoQuimicosTable = pgTable(
   },
   (t) => [orgIsolationPolicy('parametros_fisico_quimicos')]
 ).enableRLS();
+
+export const campanasTable = pgTable('campanas', {
+  id: serial('id').primaryKey(),
+  nombre: varchar('nombre', { length: 100 }).notNull(),
+  fecha_inicio: date('fecha_inicio').notNull(),
+  fecha_fin: date('fecha_fin').notNull(),
+  orden: integer('orden').notNull(),
+  es_linea_base: boolean('es_linea_base').notNull().default(false)
+});
 
 export type Product = typeof productsTable.$inferSelect;
 export type NewProduct = typeof productsTable.$inferInsert;

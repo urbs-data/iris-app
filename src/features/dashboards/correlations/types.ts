@@ -1,8 +1,12 @@
 export interface CorrelationRow extends Record<string, unknown> {
   pozo: string;
   sampleDate: Date;
+  campana: string;
   substanceValue: number;
   substanceUnit: string;
+  limiteDeteccion: number | null;
+  limiteCuantificacion: number | null;
+  nivelGuia: number | null;
   parameterDate: Date;
   parameterName: string;
   parameterValue: number;

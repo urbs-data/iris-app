@@ -44,30 +44,30 @@ export const navItems: NavItem[] = [
   {
     title: 'dashboard-substance',
     url: '/dashboard/substance',
-    icon: 'analyze',
+    icon: 'chartLine',
     shortcut: ['a', 'c'],
     items: [],
     group: 'group.main'
   },
   {
-    title: 'dashboard-physico-chemical',
-    url: '/dashboard/physico-chemical',
-    icon: 'analyze',
-    shortcut: ['a', 'p'],
-    items: [],
-    access: {
-      publicMetadataKey: 'nav.dashboard.physico-chemical'
-    },
-    group: 'group.main'
-  },
-  {
     title: 'dashboard-correlations',
     url: '/dashboard/correlations',
-    icon: 'analyze',
+    icon: 'chartCorrelations',
     shortcut: ['a', 'r'],
     items: [],
     access: {
       publicMetadataKey: 'nav.dashboard.correlations'
+    },
+    group: 'group.main'
+  },
+  {
+    title: 'dashboard-physico-chemical',
+    url: '/dashboard/physico-chemical',
+    icon: 'chartCombined',
+    shortcut: ['a', 'p'],
+    items: [],
+    access: {
+      publicMetadataKey: 'nav.dashboard.physico-chemical'
     },
     group: 'group.main'
   },

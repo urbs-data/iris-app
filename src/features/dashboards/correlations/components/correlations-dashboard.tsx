@@ -5,11 +5,19 @@ import { CorrelationCard } from './correlation-card';
 import { CorrelationMatrix } from './correlation-matrix';
 import { LoeCard } from './loe-card';
 
-const LOE_TITLE_KEYS = ['loe1Title', 'loe2Title', 'loe3Title'] as const;
+const LOE_TITLE_KEYS = [
+  'loe1Title',
+  'loe2Title',
+  'loe3Title',
+  'loe4Title'
+] as const;
 const STATUS_LABEL_KEYS: Record<string, string> = {
   cumplido: 'statusCumplido',
   parcial: 'statusParcial',
-  no_cumplido: 'statusNoCumplido'
+  no_cumplido: 'statusNoCumplido',
+  no_evaluable: 'statusNoEval',
+  cumple: 'statusCumple',
+  excede: 'statusExcede'
 };
 
 interface CorrelationsDashboardProps {
@@ -87,10 +95,8 @@ export async function CorrelationsDashboard({
               key={i}
               loeNumber={i + 1}
               analysis={analysis}
-              title={t(LOE_TITLE_KEYS[i] ?? 'loe3Title')}
-              statusLabel={t(
-                STATUS_LABEL_KEYS[analysis.status] ?? 'statusNoEval'
-              )}
+              title={t(LOE_TITLE_KEYS[i])}
+              statusLabel={t(STATUS_LABEL_KEYS[analysis.status])}
             />
           ))}
         </div>

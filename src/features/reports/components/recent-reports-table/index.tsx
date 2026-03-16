@@ -25,7 +25,16 @@ export function RecentReportsTable({
       generatedAt: t('columns.generatedAt'),
       range: t('columns.range'),
       user: t('columns.user'),
-      action: t('columns.action')
+      action: t('columns.action'),
+      aiPdf: {
+        buttonLabel: t('aiPdf.buttonLabel'),
+        progressStart: t('aiPdf.progressStart'),
+        progressRunning: t('aiPdf.progressRunning'),
+        progressOpening: t('aiPdf.progressOpening'),
+        success: t('aiPdf.success'),
+        successReused: t('aiPdf.successReused'),
+        error: t('aiPdf.error')
+      }
     }
   });
 

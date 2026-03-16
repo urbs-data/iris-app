@@ -85,8 +85,7 @@ export function useFilteredNavItems(items: NavItem[]) {
             accessContext.user?.publicMetadata?.[
               key as keyof typeof accessContext.user.publicMetadata
             ];
-
-          if (flagValue !== 'true') {
+          if (flagValue !== 'true' && flagValue !== true) {
             return false;
           }
         }
@@ -154,7 +153,7 @@ export function useFilteredNavItems(items: NavItem[]) {
                   key as keyof typeof accessContext.user.publicMetadata
                 ];
 
-              if (flagValue !== 'true') {
+              if (flagValue !== 'true' && flagValue !== true) {
                 return false;
               }
             }

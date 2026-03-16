@@ -134,6 +134,27 @@
       "when": 1772647275348,
       "tag": "0018_narrow_puma",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1773251501830,
+      "tag": "0019_wakeful_slapstick",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1773684487244,
+      "tag": "0020_real_paladin",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1773684567857,
+      "tag": "0021_dazzling_ironclad",
+      "breakpoints": true
     }
   ]
 }

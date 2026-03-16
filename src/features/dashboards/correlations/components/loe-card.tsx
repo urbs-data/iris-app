@@ -36,6 +36,8 @@ function resolveVariant(status: string): StatusVariant {
   if (status === 'cumplido') return 'cumplido';
   if (status === 'parcial') return 'parcial';
   if (status === 'no_cumplido') return 'no_cumplido';
+  if (status === 'cumple') return 'cumplido';
+  if (status === 'excede') return 'no_cumplido';
   return 'no_evaluable';
 }
 

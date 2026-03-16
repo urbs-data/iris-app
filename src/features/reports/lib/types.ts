@@ -2,6 +2,7 @@ export const REPORT_TYPES = [
   'well_depth',
   'sampling_params',
   'sampling_params_cig',
+  'injection_params_cig',
   'volatile_concentrations_cig',
   'inorganic_concentrations_cig',
   'concentrations',
@@ -33,6 +34,7 @@ export const PRESET_REPORT_MAP: Record<PresetValue, ReportType[]> = {
   ],
   datos_formulario_6_provincia_ba_cig: [
     'sampling_params_cig',
+    'injection_params_cig',
     'volatile_concentrations_cig',
     'inorganic_concentrations_cig',
     'well_depth_cig'
