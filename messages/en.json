@@ -255,7 +255,7 @@
             "well": "Well",
             "firstSample": "First sample",
             "lastSample": "Last sample",
-            "maximumLastSample": "Worst last sample",
+            "lastSampleConcentration": "Last sample concentration",
             "percentageToGuideline": "% vs Guideline",
             "percentageToMaximum": "% vs Maximum",
             "percentageToGuidelineTooltip": "Percentage variation of the last average value compared to the guideline level. A negative value indicates that it is below the guideline level.",

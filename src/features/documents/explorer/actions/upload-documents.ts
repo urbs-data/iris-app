@@ -6,6 +6,7 @@ import { uploadDocumentsSchema } from './upload-documents-schema';
 import { resolveETLProcessor } from '../lib/etl/registry';
 import type { FileMetadata } from '../lib/types';
 import { ValidationError } from '@/lib/errors';
+import { logger } from '@/lib/logger';
 
 const MONTH_NAMES_ES = [
   'Enero',
@@ -91,6 +92,8 @@ export const uploadDocuments = authOrganizationActionClient
         tipo: parsedInput.tipo
       });
 
+      logger('Processor ->', processor);
+
       if (processor) {
         const etlResult = await processor.process({
           db: ctx.db,
@@ -101,6 +104,7 @@ export const uploadDocuments = authOrganizationActionClient
           organizationId: ctx.organization.id,
           tipo: parsedInput.tipo
         });
+        logger('ETL Result ->', etlResult);
 
         if (!etlResult.success) {
           throw new ValidationError(etlResult.errors.join(', '));

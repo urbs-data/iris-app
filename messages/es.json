@@ -257,7 +257,7 @@
             "well": "Pozo",
             "firstSample": "Primer muestra",
             "lastSample": "Última muestra",
-            "maximumLastSample": "Peor última muestra",
+            "lastSampleConcentration": "Concentracion últ. muestra",
             "percentageToGuideline": "% vs Guía",
             "percentageToMaximum": "% vs Máx",
             "percentageToGuidelineTooltip": "Variación porcentual del último valor medio respecto al nivel guía. Un valor negativo indica que está por debajo del nivel guía.",

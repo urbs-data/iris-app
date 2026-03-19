@@ -99,7 +99,7 @@ export function SubstanceKpis({
                   {t('kpi.lastSample')}
                 </th>
                 <th className='px-2 py-1.5 text-right font-medium'>
-                  {t('kpi.maximumLastSample')}
+                  {t('kpi.lastSampleConcentration')}
                 </th>
               </tr>
             </thead>

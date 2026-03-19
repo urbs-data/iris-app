@@ -246,12 +246,14 @@ export function ReportGenerator() {
                 <FormDatePicker
                   control={form.control}
                   name='fechaDesde'
+                  required
                   label={t('fields.from')}
                   config={{ placeholder: t('fields.from') }}
                 />
                 <FormDatePicker
                   control={form.control}
                   name='fechaHasta'
+                  required
                   label={t('fields.to')}
                   config={{ placeholder: t('fields.to') }}
                 />

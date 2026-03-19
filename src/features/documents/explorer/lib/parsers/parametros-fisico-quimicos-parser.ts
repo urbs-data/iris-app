@@ -9,6 +9,15 @@ import { parse, isValid, set } from 'date-fns';
 
 const REQUIRED_COLUMNS = ['LOCATION_ID', 'FIELD_PARAMETER'] as const;
 
+/** Evita años tipo 0026 cuando date-fns interpreta mal yy con patrones yyyy. */
+function normalizeAmbiguousCentury(date: Date): Date {
+  const y = date.getFullYear();
+  if (y >= 0 && y < 100) {
+    return set(date, { year: y + 2000 });
+  }
+  return date;
+}
+
 export interface ParsedParametroFisicoQuimicoRow {
   id_pozo: string | null;
   programa_muestreo: string | null;
@@ -41,23 +50,32 @@ function parseDate(value: unknown): Date | null {
 
   // Si ya es una Date
   if (value instanceof Date) {
-    return value;
+    return normalizeAmbiguousCentury(value);
   }
 
   const str = String(value).trim();
 
-  // Intentar varios formatos comunes
-  const formats = ['dd/MM/yyyy', 'dd/MM/yy', 'MM/dd/yyyy', 'yyyy-MM-dd'];
+  // yy antes que yyyy: "3/3/26" + dd/MM/yyyy en date-fns puede dar año 26 d.C.
+  const formats = [
+    'd/M/yy',
+    'M/d/yy',
+    'dd/MM/yy',
+    'MM/dd/yy',
+    'dd/MM/yyyy',
+    'MM/dd/yyyy',
+    'yyyy-MM-dd'
+  ];
+  const referenceDate = new Date();
 
   for (const format of formats) {
-    const parsed = parse(str, format, new Date());
+    const parsed = parse(str, format, referenceDate);
     if (isValid(parsed)) {
-      return parsed;
+      return normalizeAmbiguousCentury(parsed);
     }
   }
 
-  // Fallback a parseExcelDate
-  return parseExcelDate(value);
+  const fallback = parseExcelDate(value);
+  return fallback ? normalizeAmbiguousCentury(fallback) : null;
 }
 
 function parseTime(
