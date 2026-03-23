@@ -24,7 +24,7 @@ export function spearman(
   y: number[]
 ): { rho: number; p_valor: number; n: number } {
   const n = x.length;
-  if (n < 6) return { rho: NaN, p_valor: NaN, n };
+  if (n < 4) return { rho: NaN, p_valor: NaN, n };
 
   const rho = ss.sampleCorrelation(rankArray(x), rankArray(y));
   const df = n - 2;

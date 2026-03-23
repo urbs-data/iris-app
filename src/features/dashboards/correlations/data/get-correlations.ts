@@ -20,11 +20,11 @@ import {
 } from '@/lib/statistics';
 
 interface QueryRow extends Record<string, unknown> {
-  pozo: string;
+  id_pozo: string;
   fecha_muestra: Date;
   campana: string;
   id_sustancia: string;
-  sustancia: string;
+  nombre_sustancia: string;
   limite_deteccion: number | null;
   limite_cuantificacion: number | null;
   nivel_guia: number | null;
@@ -46,7 +46,7 @@ function campanaOrden(nombre: string): number {
 
 function normalizeRow(row: QueryRow): CorrelationRow {
   return {
-    pozo: row.pozo,
+    pozo: row.id_pozo,
     sampleDate: new Date(row.fecha_muestra),
     campana: row.campana,
     substanceValue: row.medicion_sustancia,
@@ -334,13 +334,30 @@ export const getCorrelations = authOrganizationActionClient
         : null;
 
     const query = sql`
-      select *
-      from fact_cruce_concentraciones_parametros
-      where id_sustancia = ${parsedInput.substance}
-        AND parametro != 'Profundidad al agua'
-        ${wells ? sql`AND LOWER(pozo) IN ${sql.raw(`(${wells.map((w) => `'${w}'`).join(',')})`)}` : sql``}
-        ${parsedInput.dateFrom ? sql`AND fecha_muestra >= ${parsedInput.dateFrom}::timestamp` : sql``}
-        ${parsedInput.dateTo ? sql`AND fecha_muestra <= ${parsedInput.dateTo}::timestamp` : sql``}
+      SELECT
+        f.id_pozo,
+        f.fecha_muestra,
+        f.campana,
+        f.id_sustancia,
+        ds.nombre AS nombre_sustancia,
+        f.limite_deteccion,
+        f.limite_cuantificacion,
+        f.nivel_guia,
+        f.medicion_sustancia,
+        f.unidad_sustancia,
+        f.fecha_parametro,
+        f.parametro,
+        f.medicion_parametro,
+        f.unidad_parametro
+      FROM dwh.fact_cruce_concentraciones_pfq f
+        INNER JOIN dwh.dim_muestras dm ON f.muestra = dm.muestra
+        INNER JOIN dwh.dim_sustancias ds ON f.id_sustancia = ds.id_sustancia
+      WHERE dm.tipo = 'Muestreo'
+        AND f.id_sustancia = ${parsedInput.substance}
+        AND f.parametro != 'Profundidad al agua'
+        ${wells ? sql`AND LOWER(f.id_pozo) IN ${sql.raw(`(${wells.map((w) => `'${w}'`).join(',')})`)}` : sql``}
+        ${parsedInput.dateFrom ? sql`AND f.fecha_muestra >= ${parsedInput.dateFrom}::timestamp` : sql``}
+        ${parsedInput.dateTo ? sql`AND f.fecha_muestra <= ${parsedInput.dateTo}::timestamp` : sql``}
     `;
 
     const results = await ctx.db.execute<QueryRow>(query);
@@ -354,7 +371,8 @@ export const getCorrelations = authOrganizationActionClient
       };
     }
 
-    const sustanciaName = results.rows[0]?.sustancia ?? parsedInput.substance;
+    const sustanciaName =
+      results.rows[0]?.nombre_sustancia ?? parsedInput.substance;
     const rows = results.rows.map(normalizeRow);
     const grouped = groupByParameter(rows);
 

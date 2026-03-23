@@ -3,7 +3,9 @@
 import { authOrganizationActionClient } from '@/lib/actions/safe-action';
 import { getGeneralMetricsSchema } from './get-general-metrics-schema';
 import type { GeneralMetrics } from '../types';
+import { mapWellType } from '../lib/map-well-type';
 import { sql } from 'drizzle-orm';
+import { logger } from '@/lib/logger';
 
 interface QueryRow extends Record<string, unknown> {
   cantidad_registros: number;
@@ -23,7 +25,9 @@ export const getGeneralMetrics = authOrganizationActionClient
   .metadata({ actionName: 'getGeneralMetrics' })
   .inputSchema(getGeneralMetricsSchema)
   .action(async ({ parsedInput, ctx }): Promise<GeneralMetrics> => {
-    const tipoPozo = parsedInput.wellType ?? null;
+    const tipoPozo = parsedInput.wellType
+      ? mapWellType(parsedInput.wellType)
+      : null;
     const tipoMuestra = parsedInput.sampleType;
     const wells =
       parsedInput.wells && parsedInput.wells.length > 0
@@ -31,133 +35,59 @@ export const getGeneralMetrics = authOrganizationActionClient
         : null;
 
     const query = sql`
-      WITH raw_muestras AS (
-        SELECT *
-        FROM muestras
-        WHERE tipo = ${tipoMuestra}
-          AND fecha >= '2024-07-01'
-          ${parsedInput.dateFrom ? sql`AND fecha >= ${parsedInput.dateFrom}::timestamp` : sql``}
-          ${parsedInput.dateTo ? sql`AND fecha <= ${parsedInput.dateTo}::timestamp` : sql``}
+      WITH base AS (
+        SELECT
+          f.id_sustancia,
+          f.unidad,
+          f.fecha,
+          f.concentracion,
+          f.nivel_guia
+        FROM dwh.fact_concentraciones_agua f
+          INNER JOIN dwh.dim_muestras dm ON f.muestra = dm.muestra
+          INNER JOIN dwh.dim_pozos dp ON LOWER(f.id_pozo) = LOWER(dp.id_pozo)
+        WHERE dm.tipo = 'Muestreo'
+          AND dm.matriz = ${tipoMuestra}
+          AND dp.tipo_pozo IN ('Pozo monitoreo', 'Pozo bombeo')
+          ${parsedInput.substance ? sql`AND f.id_sustancia = ${parsedInput.substance}` : sql``}
+          ${parsedInput.dateFrom ? sql`AND f.fecha >= ${parsedInput.dateFrom}::timestamp` : sql``}
+          ${parsedInput.dateTo ? sql`AND f.fecha <= ${parsedInput.dateTo}::timestamp` : sql``}
+          ${parsedInput.area ? sql`AND dp.area = ${parsedInput.area}` : sql``}
+          ${tipoPozo ? sql`AND dp.tipo_pozo = ${tipoPozo}` : sql``}
+          ${wells ? sql`AND LOWER(f.id_pozo) IN ${sql.raw(`(${wells.map((w) => `'${w}'`).join(',')})`)}` : sql``}
       ),
-      raw_concentraciones AS (
-        SELECT *
-        FROM concentraciones
-        ${parsedInput.substance ? sql`WHERE id_sustancia = ${parsedInput.substance}` : sql``}
-      ),
-      raw_pozos AS (
-        SELECT *
-        FROM pozos
-        WHERE tipo IN ('WELL', 'PUMP')
-          ${parsedInput.area ? sql`AND area = ${parsedInput.area}` : sql``}
-          ${tipoPozo ? sql`AND tipo = ${tipoPozo}` : sql``}
-          ${wells ? sql`AND LOWER(id_pozo) IN ${sql.raw(`(${wells.map((w) => `'${w}'`).join(',')})`)}` : sql``}
-      ),
-      raw_estudios_pozos AS (
-        SELECT *
-        FROM estudios_pozos
-      ),
-      raw_sustancias AS (
-        SELECT *
-        FROM sustancias
-      ),
-      datos_calculados_por_sustancia AS (
-        SELECT 
-          c.id_sustancia,
-          c.unidad,
+      datos_por_sustancia AS (
+        SELECT
+          id_sustancia,
+          unidad,
           COUNT(*) AS cantidad_registros,
-          AVG(
-            COALESCE(
-              c.concentracion,
-              CASE 
-                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
-                THEN CAST(c.limite_deteccion AS real)
-                ELSE NULL
-              END
-            )
-          ) AS promedio_concentracion,
-          STDDEV_SAMP(
-            COALESCE(
-              c.concentracion,
-              CASE 
-                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
-                THEN CAST(c.limite_deteccion AS real)
-                ELSE NULL
-              END
-            )
-          ) AS desvio_concentracion,
-          MIN(
-            COALESCE(
-              c.concentracion,
-              CASE 
-                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
-                THEN CAST(c.limite_deteccion AS real)
-                ELSE NULL
-              END
-            )
-          ) AS minimo_concentracion,
-          MAX(
-            COALESCE(
-              c.concentracion,
-              CASE 
-                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
-                THEN CAST(c.limite_deteccion AS real)
-                ELSE NULL
-              END
-            )
-          ) AS maximo_concentracion,
-          PERCENTILE_CONT(0.5) WITHIN GROUP (
-            ORDER BY COALESCE(
-              c.concentracion,
-              CASE 
-                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
-                THEN CAST(c.limite_deteccion AS real)
-                ELSE NULL
-              END
-            )
-          ) AS mediana_concentracion
-        FROM raw_concentraciones c
-          INNER JOIN raw_muestras m ON c.id_muestra = m.id_muestra
-          INNER JOIN raw_estudios_pozos e ON m.id_estudio_pozo = e.id_estudio_pozo
-          INNER JOIN raw_pozos p ON LOWER(e.id_pozo) = LOWER(p.id_pozo)
-        GROUP BY c.id_sustancia, c.unidad
+          AVG(concentracion) AS promedio_concentracion,
+          STDDEV_SAMP(concentracion) AS desvio_concentracion,
+          MIN(concentracion) AS minimo_concentracion,
+          MAX(concentracion) AS maximo_concentracion,
+          PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY concentracion) AS mediana_concentracion,
+          MAX(nivel_guia) AS nivel_guia
+        FROM base
+        GROUP BY id_sustancia, unidad
       ),
       datos_agregados AS (
-        SELECT 
-          MAX(dc.unidad) AS unidad,
-          SUM(dc.cantidad_registros) AS cantidad_registros,
-          AVG(dc.promedio_concentracion) AS promedio_concentracion,
-          SQRT(AVG(dc.desvio_concentracion * dc.desvio_concentracion)) AS desvio_concentracion,
-          MIN(dc.minimo_concentracion) AS minimo_concentracion,
-          MAX(dc.maximo_concentracion) AS maximo_concentracion,
-          PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY dc.mediana_concentracion) AS mediana_concentracion,
-          MAX(
-            CASE 
-              WHEN ${tipoMuestra} = 'Suelo' THEN s.nivel_guia_suelo
-              ELSE s.nivel_guia
-            END
-          ) AS nivel_guia,
-          MAX(dc.promedio_concentracion) AS max_promedio
-        FROM datos_calculados_por_sustancia dc
-          INNER JOIN raw_sustancias s ON dc.id_sustancia = s.id_sustancia
+        SELECT
+          MAX(unidad) AS unidad,
+          SUM(cantidad_registros) AS cantidad_registros,
+          AVG(promedio_concentracion) AS promedio_concentracion,
+          SQRT(AVG(desvio_concentracion * desvio_concentracion)) AS desvio_concentracion,
+          MIN(minimo_concentracion) AS minimo_concentracion,
+          MAX(maximo_concentracion) AS maximo_concentracion,
+          PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY mediana_concentracion) AS mediana_concentracion,
+          MAX(nivel_guia) AS nivel_guia,
+          MAX(promedio_concentracion) AS max_promedio
+        FROM datos_por_sustancia
       ),
       promedios_mensuales AS (
-        SELECT 
-          TO_CHAR(m.fecha, 'YYYY-MM') AS periodo,
-          AVG(
-            COALESCE(
-              c.concentracion,
-              CASE 
-                WHEN c.limite_deteccion ~ '^[0-9]+\.?[0-9]*$' 
-                THEN CAST(c.limite_deteccion AS real)
-                ELSE NULL
-              END
-            )
-          ) AS promedio_concentracion
-        FROM raw_concentraciones c
-          INNER JOIN raw_muestras m ON c.id_muestra = m.id_muestra
-          INNER JOIN raw_estudios_pozos e ON m.id_estudio_pozo = e.id_estudio_pozo
-          INNER JOIN raw_pozos p ON LOWER(e.id_pozo) = LOWER(p.id_pozo)
-        GROUP BY TO_CHAR(m.fecha, 'YYYY-MM')
+        SELECT
+          TO_CHAR(fecha, 'YYYY-MM') AS periodo,
+          AVG(concentracion) AS promedio_concentracion
+        FROM base
+        GROUP BY TO_CHAR(fecha, 'YYYY-MM')
       ),
       ultimo_promedio AS (
         SELECT promedio_concentracion
@@ -169,7 +99,7 @@ export const getGeneralMetrics = authOrganizationActionClient
         SELECT MAX(promedio_concentracion) AS max_promedio_mensual
         FROM promedios_mensuales
       )
-      SELECT 
+      SELECT
         da.unidad,
         da.cantidad_registros,
         ROUND(da.promedio_concentracion::numeric, 2)::real AS promedio_concentracion,
@@ -215,7 +145,6 @@ export const getGeneralMetrics = authOrganizationActionClient
     const maxPromedioMensual = row.max_promedio_mensual ?? average;
     const unit = row.unidad ?? 'µg/l';
 
-    // Calcular porcentajes usando el último promedio mensual
     const vsGuidePercent =
       guideLevel > 0 ? (ultimoPromedioMensual / guideLevel) * 100 : 0;
     const vsMaxPercent =

@@ -9,6 +9,8 @@ CREATE ROLE app_user
 
 -- Schema
 GRANT USAGE ON SCHEMA public TO app_user;
+GRANT USAGE ON SCHEMA dwh TO app_user;
+
 
 -- Tablas
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE
@@ -29,9 +31,12 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE
 TO app_user;
 
 GRANT select on  
-  public.fact_cruce_concentraciones_parametros, 
-  public.fact_concentraciones_agua, 
-  public.fact_parametros_fq 
+  dwh.fact_cruce_concentraciones_pfq, 
+  dwh.fact_concentraciones_agua, 
+  dwh.fact_parametros_fq,
+  dwh.dim_muestras,
+  dwh.dim_pozos,
+  dwh.dim_sustancias
 to app_user;
 
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO app_user;

@@ -102,7 +102,7 @@ export function Combobox({
   }, [options, debouncedSearch, mode, selectedOption]);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} modal>
       <PopoverTrigger asChild>
         <Button
           variant='outline'

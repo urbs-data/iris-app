@@ -51,3 +51,4 @@ next-env.d.ts
 custom_data/
 .venv/
 logs/
+queries/

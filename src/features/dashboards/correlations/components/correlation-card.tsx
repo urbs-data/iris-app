@@ -70,12 +70,6 @@ export function CorrelationCard({ parameter }: CorrelationCardProps) {
     [data]
   );
 
-  const yMid = useMemo(() => {
-    if (data.length === 0) return 0;
-    const sum = data.reduce((acc, r) => acc + r.parameterValue, 0);
-    return sum / data.length;
-  }, [data]);
-
   return (
     <div className='bg-card flex flex-col gap-2 rounded-xl border p-4'>
       <div className='flex items-start justify-between gap-2'>
@@ -101,13 +95,34 @@ export function CorrelationCard({ parameter }: CorrelationCardProps) {
         {scatterData.length > 0 ? (
           <ResponsiveContainer width='100%' height='100%' debounce={2000}>
             <ScatterChart margin={{ top: 4, right: 4, bottom: 4, left: 4 }}>
-              <XAxis dataKey='x' type='number' hide />
-              <YAxis dataKey='y' type='number' hide />
+              <XAxis
+                dataKey='x'
+                type='number'
+                axisLine={false}
+                tickLine={false}
+                tick={false}
+              />
+              <YAxis
+                dataKey='y'
+                type='number'
+                axisLine={false}
+                tickLine={false}
+                tick={false}
+                width={0}
+              />
               <ReferenceLine
-                y={yMid}
-                stroke='hsl(var(--border))'
+                x={0}
+                stroke='var(--border)'
                 strokeDasharray='4 4'
                 strokeWidth={1}
+                ifOverflow='extendDomain'
+              />
+              <ReferenceLine
+                y={0}
+                stroke='var(--border)'
+                strokeDasharray='4 4'
+                strokeWidth={1}
+                ifOverflow='extendDomain'
               />
               <Tooltip
                 content={({ payload }) => {
