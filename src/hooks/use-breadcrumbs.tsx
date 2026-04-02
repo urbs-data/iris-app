@@ -35,6 +35,10 @@ export function useBreadcrumbs() {
       { title: t('dashboard'), link: '/dashboard' },
       { title: t('dashboard-correlations'), link: '/dashboard/correlations' }
     ],
+    '/dashboard/quarterly': [
+      { title: t('dashboard'), link: '/dashboard' },
+      { title: t('dashboard-quarterly'), link: '/dashboard/quarterly' }
+    ],
     '/dashboard/search': [
       { title: t('dashboard'), link: '/dashboard' },
       { title: t('search'), link: '/dashboard/search' }

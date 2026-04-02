@@ -72,6 +72,13 @@ export const navItems: NavItem[] = [
     group: 'group.main'
   },
   {
+    title: 'dashboard-quarterly',
+    url: '/dashboard/quarterly',
+    icon: 'chartBar',
+    items: [],
+    group: 'group.main'
+  },
+  {
     title: 'search',
     url: '/dashboard/search',
     icon: 'dashboard',

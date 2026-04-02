@@ -39,7 +39,8 @@ import {
   IconChartLine,
   IconChartScatter,
   IconChartHistogram,
-  IconChartDots
+  IconChartDots,
+  IconChartBar
 } from '@tabler/icons-react';
 
 export type Icon = React.ComponentType<IconProps>;
@@ -86,5 +87,6 @@ export const Icons = {
   analyze: IconChartLine,
   chartCorrelations: IconChartScatter,
   chartCombined: IconChartHistogram,
-  chartLine: IconChartDots
+  chartLine: IconChartDots,
+  chartBar: IconChartBar
 };

@@ -3,7 +3,7 @@
 import { authOrganizationActionClient } from '@/lib/actions/safe-action';
 import { getRecentExportsSchema } from './get-recent-exports-schema';
 import { reportsTable } from '@/db/schema';
-import { desc, count } from 'drizzle-orm';
+import { desc, count, eq } from 'drizzle-orm';
 import { format, formatRelative } from 'date-fns';
 import { enUS, es } from 'date-fns/locale';
 import { getLocale } from 'next-intl/server';
@@ -26,13 +26,15 @@ export const getRecentExports = authOrganizationActionClient
       const rows = await tx
         .select()
         .from(reportsTable)
+        .where(eq(reportsTable.id_usuario, ctx.session.user.id))
         .orderBy(desc(reportsTable.created_at))
         .limit(limit)
         .offset(offset);
 
       const totalResult = await tx
         .select({ count: count() })
-        .from(reportsTable);
+        .from(reportsTable)
+        .where(eq(reportsTable.id_usuario, ctx.session.user.id));
 
       return { rows, totalCount: Number(totalResult[0]?.count ?? 0) };
     });
