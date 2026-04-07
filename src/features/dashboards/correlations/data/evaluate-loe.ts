@@ -191,7 +191,12 @@ function classifyLOE2(
     status = 'no_cumplido';
   }
 
-  return { status, spearman_aplicable, rho_orp: rho, p_orp: p_valor };
+  return {
+    status,
+    spearman_aplicable,
+    rho_orp: Number(rho.toFixed(3)),
+    p_orp: Number(p_valor.toFixed(3))
+  };
 }
 
 interface LOE3Result {
@@ -231,8 +236,8 @@ function classifyLOE3(correlaciones: Correlation[]): LOE3Result {
   return {
     status,
     trazador_usado,
-    rho_trazador: trazador.rho,
-    p_trazador: p_valor
+    rho_trazador: Number(trazador.rho.toFixed(3)),
+    p_trazador: Number(p_valor.toFixed(3))
   };
 }
 
@@ -391,8 +396,6 @@ function buildLOEPayload(input: LOERawInput): LOEPayload {
 // ─── LLM: text generation only ──────────────────────────────────────────────
 
 const LOESchema = z.object({
-  compuesto_relevante: z.boolean(),
-  motivo_irrelevante: z.string().nullable(),
   loe1_texto: z.string(),
   loe2_texto: z.string(),
   loe3_texto: z.string(),
@@ -430,11 +433,7 @@ LOE 3 — Degradación vs dilución:
 LOE 4 — Cumplimiento regulatorio:
 - Citar valor vs nivel guía en µg/L.
 - Si hay pct_cambio_desde_lb, mencionar tendencia desde línea base.
-- Si status = no_evaluable: indicar que no hay nivel guía definido.
-
-Verificar relevancia: si "compuesto_abreviado" no es un solvente clorado relevante para ZVI
-(CT, CF, PCE, TCE, DCE, VC, DCM, CFC11, CFC12), setear compuesto_relevante=false
-con motivo_irrelevante y textos vacíos.`;
+- Si status = no_evaluable: indicar que no hay nivel guía definido.`;
 
 export interface LOEResult {
   compuesto_relevante: boolean;
@@ -459,6 +458,7 @@ export async function evaluateLOE(input: LOERawInput): Promise<LOEResult> {
   }
 
   const payload = buildLOEPayload(input);
+  console.log({ payload });
 
   const { output } = await generateText({
     model,
@@ -466,10 +466,22 @@ export async function evaluateLOE(input: LOERawInput): Promise<LOEResult> {
     system: SYSTEM_PROMPT,
     prompt: JSON.stringify(payload, null, 2)
   });
+  console.log({ output });
+  if (!output) {
+    console.error('evaluateLOE: LLM returned no structured output');
+    return {
+      compuesto_relevante: true,
+      motivo_irrelevante: null,
+      loe1: { status: payload.loe1.status, texto: '' },
+      loe2: { status: payload.loe2.status, texto: '' },
+      loe3: { status: payload.loe3.status, texto: '' },
+      loe4: { status: payload.loe4.status, texto: '' }
+    };
+  }
 
   return {
-    compuesto_relevante: output.compuesto_relevante,
-    motivo_irrelevante: output.motivo_irrelevante,
+    compuesto_relevante: true,
+    motivo_irrelevante: null,
     loe1: { status: payload.loe1.status, texto: output.loe1_texto },
     loe2: { status: payload.loe2.status, texto: output.loe2_texto },
     loe3: { status: payload.loe3.status, texto: output.loe3_texto },
