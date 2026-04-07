@@ -18,11 +18,14 @@ function CorrelationsDashboardSkeleton() {
   return (
     <div className='flex flex-1 gap-4'>
       <div className='flex min-w-0 flex-1 flex-col gap-4'>
+        <Skeleton className='h-6 w-40 rounded' />
         <Skeleton className='h-64 w-full rounded-xl' />
+        <Skeleton className='h-6 w-40 rounded' />
         <Skeleton className='h-48 w-full rounded-xl' />
       </div>
       <div className='flex w-72 shrink-0 flex-col gap-3'>
         <Skeleton className='h-6 w-40 rounded' />
+        <Skeleton className='h-24 w-full rounded-xl' />
         <Skeleton className='h-24 w-full rounded-xl' />
         <Skeleton className='h-24 w-full rounded-xl' />
         <Skeleton className='h-24 w-full rounded-xl' />

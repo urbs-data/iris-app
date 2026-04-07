@@ -1,268 +1,478 @@
 import { generateText, Output } from 'ai';
-import { anthropic } from '@ai-sdk/anthropic';
 import { z } from 'zod';
 import { model } from '@/lib/ai';
 
-export type ZVIPayload = {
+// ─── Compound relevance ──────────────────────────────────────────────────────
+
+const ZVI_COMPOUNDS = new Set([
+  'CT',
+  'CCL4',
+  'TC',
+  'TETRACLORURO DE CARBONO',
+  'CARBON TETRACHLORIDE',
+  'CF',
+  'CHCL3',
+  'CLOROFORMO',
+  'CHLOROFORM',
+  'PCE',
+  'TETRACLOROETILENO',
+  'PERCLOROETILENO',
+  'PERC',
+  'TCE',
+  'TRICLOROETILENO',
+  'CIS-DCE',
+  'TRANS-DCE',
+  '1,1-DCE',
+  'DCE',
+  '1,1-DICLOROETILENO',
+  'VC',
+  'DCM',
+  'CFC11',
+  'CFC-11',
+  'FREON-11',
+  'R-11',
+  'CFC12',
+  'CFC-12',
+  'FREON-12',
+  'R-12'
+]);
+
+const COMPOUND_ABBREVIATIONS: Record<string, string> = {
+  CT: 'CT',
+  CCL4: 'CT',
+  TC: 'CT',
+  'TETRACLORURO DE CARBONO': 'CT',
+  'CARBON TETRACHLORIDE': 'CT',
+  CF: 'CF',
+  CHCL3: 'CF',
+  CLOROFORMO: 'CF',
+  CHLOROFORM: 'CF',
+  PCE: 'PCE',
+  TETRACLOROETILENO: 'PCE',
+  PERCLOROETILENO: 'PCE',
+  PERC: 'PCE',
+  TCE: 'TCE',
+  TRICLOROETILENO: 'TCE',
+  'CIS-DCE': 'cis-DCE',
+  'TRANS-DCE': 'trans-DCE',
+  '1,1-DCE': 'DCE',
+  DCE: 'DCE',
+  '1,1-DICLOROETILENO': 'DCE',
+  VC: 'VC',
+  DCM: 'DCM',
+  CFC11: 'CFC11',
+  'CFC-11': 'CFC11',
+  'FREON-11': 'CFC11',
+  'R-11': 'CFC11',
+  CFC12: 'CFC12',
+  'CFC-12': 'CFC12',
+  'FREON-12': 'CFC12',
+  'R-12': 'CFC12'
+};
+
+function isZVICompound(name: string): boolean {
+  return ZVI_COMPOUNDS.has(name.toUpperCase());
+}
+
+function compoundAbbreviation(name: string): string {
+  return COMPOUND_ABBREVIATIONS[name.toUpperCase()] ?? name;
+}
+
+// ─── Deterministic LOE classification ────────────────────────────────────────
+
+type LOEStatus = 'cumplido' | 'parcial' | 'no_cumplido';
+type LOE4Status = 'cumple' | 'excede' | 'no_evaluable';
+type LOE3Status = LOEStatus | 'no_evaluable';
+
+type ORPClasificacion =
+  | 'FUERTEMENTE_REDUCTOR'
+  | 'REDUCTOR'
+  | 'LEVEMENTE_REDUCTOR'
+  | 'OXIDANTE';
+
+type EvaluacionIntegrada =
+  | 'OPTIMA'
+  | 'FAVORABLE'
+  | 'SUBOPTIMA'
+  | 'DESFAVORABLE';
+
+interface Correlation {
+  parametro: 'ORP' | 'OD' | 'pH' | 'CE' | 'STD' | 'Temperatura';
+  rho: number;
+  p_valor: number;
+  n: number;
+}
+
+function classifyORP(mediana: number): ORPClasificacion {
+  if (mediana < -200) return 'FUERTEMENTE_REDUCTOR';
+  if (mediana < -100) return 'REDUCTOR';
+  if (mediana < 0) return 'LEVEMENTE_REDUCTOR';
+  return 'OXIDANTE';
+}
+
+function calcIntegratedScore(
+  orpMediana: number,
+  odMediana: number,
+  phMediana: number
+): EvaluacionIntegrada {
+  let score = 0;
+  if (orpMediana < -100) score += 3;
+  else if (orpMediana < 0) score += 2;
+  else if (orpMediana < 100) score += 1;
+
+  if (odMediana < 1.0) score += 2;
+  else if (odMediana < 2.0) score += 1;
+
+  if (phMediana >= 6.5 && phMediana <= 8.5) score += 1;
+
+  if (score >= 5) return 'OPTIMA';
+  if (score >= 3) return 'FAVORABLE';
+  if (score >= 1) return 'SUBOPTIMA';
+  return 'DESFAVORABLE';
+}
+
+interface LOE1Result {
+  status: LOEStatus;
+  clasificacion_orp: ORPClasificacion;
+  evaluacion_integrada: EvaluacionIntegrada;
+}
+
+function classifyLOE1(
+  orpMediana: number,
+  odMediana: number,
+  phMediana: number
+): LOE1Result {
+  const orpOk = orpMediana < -100;
+  const odOk = odMediana < 1.0;
+
+  let status: LOEStatus;
+  if (orpOk && odOk) status = 'cumplido';
+  else if (orpOk || odOk) status = 'parcial';
+  else status = 'no_cumplido';
+
+  return {
+    status,
+    clasificacion_orp: classifyORP(orpMediana),
+    evaluacion_integrada: calcIntegratedScore(orpMediana, odMediana, phMediana)
+  };
+}
+
+interface LOE2Result {
+  status: LOEStatus;
+  spearman_aplicable: boolean;
+  rho_orp: number | null;
+  p_orp: number | null;
+}
+
+function classifyLOE2(
+  correlaciones: Correlation[],
+  nEventos: number
+): LOE2Result {
+  const orp = correlaciones.find((c) => c.parametro === 'ORP');
+  const spearman_aplicable = nEventos >= 4;
+
+  if (!orp) {
+    return {
+      status: 'no_cumplido',
+      spearman_aplicable,
+      rho_orp: null,
+      p_orp: null
+    };
+  }
+
+  const { rho, p_valor } = orp;
+  let status: LOEStatus;
+
+  if (rho < 0 && p_valor < 0.05 && Math.abs(rho) > 0.5) {
+    status = 'cumplido';
+  } else if (rho < 0 && (Math.abs(rho) >= 0.3 || p_valor <= 0.1)) {
+    status = 'parcial';
+  } else {
+    status = 'no_cumplido';
+  }
+
+  return { status, spearman_aplicable, rho_orp: rho, p_orp: p_valor };
+}
+
+interface LOE3Result {
+  status: LOE3Status;
+  trazador_usado: 'CE' | 'STD' | 'NINGUNO';
+  rho_trazador: number | null;
+  p_trazador: number | null;
+}
+
+function classifyLOE3(correlaciones: Correlation[]): LOE3Result {
+  const ce = correlaciones.find((c) => c.parametro === 'CE');
+  const std = correlaciones.find((c) => c.parametro === 'STD');
+  const trazador = ce ?? std;
+
+  if (!trazador) {
+    return {
+      status: 'no_evaluable',
+      trazador_usado: 'NINGUNO',
+      rho_trazador: null,
+      p_trazador: null
+    };
+  }
+
+  const trazador_usado = ce ? ('CE' as const) : ('STD' as const);
+  const absRho = Math.abs(trazador.rho);
+  const { p_valor } = trazador;
+
+  let status: LOE3Status;
+  if (absRho < 0.3) {
+    status = 'cumplido';
+  } else if (absRho > 0.7 && p_valor < 0.05) {
+    status = 'no_cumplido';
+  } else {
+    status = 'parcial';
+  }
+
+  return {
+    status,
+    trazador_usado,
+    rho_trazador: trazador.rho,
+    p_trazador: p_valor
+  };
+}
+
+interface LOE4Input {
+  valor_ug_L: number;
+  ng_ug_L: number;
+  excede_ng: boolean;
+}
+
+interface LOE4Result {
+  status: LOE4Status;
+}
+
+function classifyLOE4(input: LOE4Input | null): LOE4Result {
+  if (!input) return { status: 'no_evaluable' };
+  return { status: input.excede_ng ? 'excede' : 'cumple' };
+}
+
+// ─── Payload for the LLM (pre-computed, minimal) ─────────────────────────────
+
+export interface LOEPayload {
   compuesto: string;
-  fecha_desde: string;
-  fecha_hasta: string;
-  n_pozos: number;
-  n_pares_validos: number;
-  /** Número de campañas (LB + T1 + T2 + …). Spearman válido solo si >= 4. */
+  compuesto_abreviado: string;
+  idioma: string;
+  loe1: {
+    status: LOEStatus;
+    clasificacion_orp: string;
+    evaluacion_integrada: string;
+    orp_mediana_mv: number;
+    od_mediana_mgl: number;
+    ph_mediana: number;
+  };
+  loe2: {
+    status: LOEStatus;
+    spearman_aplicable: boolean;
+    n_eventos: number;
+    rho_orp: number | null;
+    p_orp: number | null;
+  };
+  loe3: {
+    status: LOE3Status;
+    trazador_usado: 'CE' | 'STD' | 'NINGUNO';
+    rho_trazador: number | null;
+    p_trazador: number | null;
+  };
+  loe4: {
+    status: LOE4Status;
+    valor_ug_L: number | null;
+    ng_ug_L: number | null;
+    pct_cambio_desde_lb: number | null;
+  };
+}
+
+// ─── i18n labels for LLM payload ─────────────────────────────────────────────
+
+const ORP_LABELS: Record<string, Record<ORPClasificacion, string>> = {
+  es: {
+    FUERTEMENTE_REDUCTOR: 'fuertemente reductor',
+    REDUCTOR: 'reductor',
+    LEVEMENTE_REDUCTOR: 'levemente reductor',
+    OXIDANTE: 'oxidante'
+  },
+  en: {
+    FUERTEMENTE_REDUCTOR: 'strongly reducing',
+    REDUCTOR: 'reducing',
+    LEVEMENTE_REDUCTOR: 'mildly reducing',
+    OXIDANTE: 'oxidizing'
+  }
+};
+
+const INTEGRADA_LABELS: Record<string, Record<EvaluacionIntegrada, string>> = {
+  es: {
+    OPTIMA: 'óptima',
+    FAVORABLE: 'favorable',
+    SUBOPTIMA: 'subóptima',
+    DESFAVORABLE: 'desfavorable'
+  },
+  en: {
+    OPTIMA: 'optimal',
+    FAVORABLE: 'favorable',
+    SUBOPTIMA: 'suboptimal',
+    DESFAVORABLE: 'unfavorable'
+  }
+};
+
+function labelORP(clasificacion: ORPClasificacion, idioma: string): string {
+  const lang = idioma.startsWith('en') ? 'en' : 'es';
+  return ORP_LABELS[lang][clasificacion];
+}
+
+function labelIntegrada(
+  evaluacion: EvaluacionIntegrada,
+  idioma: string
+): string {
+  const lang = idioma.startsWith('en') ? 'en' : 'es';
+  return INTEGRADA_LABELS[lang][evaluacion];
+}
+
+// ─── Build the payload from raw data ─────────────────────────────────────────
+
+export interface LOERawInput {
+  compuesto: string;
+  idioma: string;
+  correlaciones: Correlation[];
   n_eventos: number;
-  correlaciones: {
-    parametro: 'ORP' | 'OD' | 'pH' | 'CE' | 'STD' | 'Temperatura';
-    rho: number;
-    p_valor: number;
-    n: number;
-    signo_correcto: boolean;
-  }[];
-  geoquimica_barrera: {
-    ORP_mediana_mv: number;
-    OD_mediana_mgl: number;
-    /** Tercer criterio de la matriz integrada OPTIMA/FAVORABLE/etc. */
-    pH_mediana: number;
-    pct_ORP_bajo_menos100: number;
-    /** % pozos en zona de metanogénesis (óptimo según ESTCP ER-201427). */
-    pct_ORP_bajo_menos200: number;
-    /** % mediciones OD < 0.5 mg/L (anóxico estricto). */
-    pct_OD_anoxic: number;
-    /** % mediciones OD 0.5–1.0 mg/L (subanoxico favorable). */
-    pct_OD_subanoxico: number;
-  };
-  /** Tendencia desde línea base. null si solo hay un evento o LB no disponible. */
-  tendencia_lb: {
-    pct_cambio: number | null;
-    flag: 'NORMAL' | 'REDUCCION_A_ND' | null;
-  };
-  /** null si el compuesto no tiene NG definido en D.831/93. */
-  cumplimiento_ultimo_evento: {
+  orp_mediana: number;
+  od_mediana: number;
+  ph_mediana: number;
+  cumplimiento: {
     valor_ug_L: number;
     ng_ug_L: number;
     excede_ng: boolean;
-    estado_global: 'CUMPLE' | 'EXCEDE';
   } | null;
-  idioma_usuario: string;
-};
+  pct_cambio_desde_lb: number | null;
+}
+
+function buildLOEPayload(input: LOERawInput): LOEPayload {
+  const loe1 = classifyLOE1(
+    input.orp_mediana,
+    input.od_mediana,
+    input.ph_mediana
+  );
+  const loe2 = classifyLOE2(input.correlaciones, input.n_eventos);
+  const loe3 = classifyLOE3(input.correlaciones);
+  const loe4 = classifyLOE4(input.cumplimiento);
+
+  return {
+    compuesto: input.compuesto,
+    compuesto_abreviado: compoundAbbreviation(input.compuesto),
+    idioma: input.idioma,
+    loe1: {
+      status: loe1.status,
+      clasificacion_orp: labelORP(loe1.clasificacion_orp, input.idioma),
+      evaluacion_integrada: labelIntegrada(
+        loe1.evaluacion_integrada,
+        input.idioma
+      ),
+      orp_mediana_mv: input.orp_mediana,
+      od_mediana_mgl: input.od_mediana,
+      ph_mediana: input.ph_mediana
+    },
+    loe2: {
+      ...loe2,
+      n_eventos: input.n_eventos
+    },
+    loe3,
+    loe4: {
+      status: loe4.status,
+      valor_ug_L: input.cumplimiento?.valor_ug_L ?? null,
+      ng_ug_L: input.cumplimiento?.ng_ug_L ?? null,
+      pct_cambio_desde_lb: input.pct_cambio_desde_lb
+    }
+  };
+}
+
+// ─── LLM: text generation only ──────────────────────────────────────────────
 
 const LOESchema = z.object({
-  compuesto_relevante: z
-    .boolean()
-    .describe(
-      'false si el compuesto no tiene relación con contaminación por solventes clorados en un sistema ZVI'
-    ),
-  motivo_irrelevante: z
-    .string()
-    .nullable()
-    .describe(
-      'Si compuesto_relevante es false, explicá brevemente por qué. Si es true, null.'
-    ),
-
-  loe1: z.object({
-    status: z.enum(['cumplido', 'parcial', 'no_cumplido']),
-    /**
-     * Clasificación granular del ORP mediano según escala del PO v3.
-     * Independiente del status binario cumplido/parcial/no_cumplido.
-     */
-    clasificacion_orp: z.enum([
-      'FUERTEMENTE_REDUCTOR',
-      'REDUCTOR',
-      'LEVEMENTE_REDUCTOR',
-      'OXIDANTE'
-    ]),
-    /**
-     * Evaluación integrada ORP + OD + pH con puntaje según PO v3 Sección 7.5.
-     * ORP peso 3 · OD peso 2 · pH peso 1. Score >= 5 → OPTIMA, >= 3 → FAVORABLE, etc.
-     */
-    evaluacion_integrada: z.enum([
-      'OPTIMA',
-      'FAVORABLE',
-      'SUBOPTIMA',
-      'DESFAVORABLE'
-    ]),
-    texto: z.string()
-  }),
-
-  loe2: z.object({
-    status: z.enum(['cumplido', 'parcial', 'no_cumplido']),
-    /** false si n_eventos < 4: el test de Spearman no tiene potencia estadística suficiente. */
-    spearman_aplicable: z.boolean(),
-    texto: z.string()
-  }),
-
-  loe3: z.object({
-    status: z.enum(['cumplido', 'parcial', 'no_cumplido', 'no_evaluable']),
-    /** Trazador de dilución efectivamente usado para la clasificación. */
-    trazador_usado: z.enum(['CE', 'STD', 'NINGUNO']),
-    texto: z.string()
-  }),
-
-  /** Cumplimiento regulatorio Decreto 831/93 Tabla 1. */
-  loe4: z.object({
-    status: z.enum(['cumple', 'excede', 'no_evaluable']),
-    texto: z.string()
-  })
+  compuesto_relevante: z.boolean(),
+  motivo_irrelevante: z.string().nullable(),
+  loe1_texto: z.string(),
+  loe2_texto: z.string(),
+  loe3_texto: z.string(),
+  loe4_texto: z.string()
 });
 
-export type LOEResult = z.infer<typeof LOESchema>;
+const SYSTEM_PROMPT = `Sos un especialista en remediación de acuíferos con ZVI (hierro cerovalente).
+Recibís un JSON con los status y datos de 4 líneas de evidencia (LOE) ya clasificados.
+Tu única tarea es redactar un texto breve para cada LOE.
 
-const SYSTEM_PROMPT = `Sos un especialista en remediación de acuíferos con hierro cerovalente (ZVI).
-Evaluás si datos de monitoreo son consistentes con el funcionamiento de una barrera ZVI
-para degradación reductiva de solventes clorados.
+Reglas de redacción:
+- Exactamente 2 oraciones por LOE. Primera: datos clave. Segunda: implicancia operativa.
+- Máximo 20 palabras por oración.
+- Referite al compuesto con su abreviación (campo "compuesto_abreviado").
+- Usá nombres legibles: "mediana de ORP", "mediana de OD", no nombres de campos JSON.
+- No repitas números en la segunda oración.
+- No agregues recomendaciones ni conclusiones globales.
+- Idioma: el indicado en "idioma".
 
-Estos resultados se muestran en un dashboard que incluye gráficos de dispersión
-(parámetro geoquímico vs concentración del compuesto) y una matriz de correlación Spearman.
-Tus textos deben ser coherentes con lo que el usuario está viendo en esos gráficos.
+Guía por LOE:
 
-───────────────────────────────────────────────────────────
-PASO 0 — Verificar relevancia del compuesto
-───────────────────────────────────────────────────────────
-Compuestos relevantes para una barrera ZVI (solventes clorados y subproductos):
-CT, CCl4, CF, CHCl3, PCE, TCE, cis-DCE, trans-DCE, 1,1-DCE, DCE, VC,
-DCM, CFC11, CFC-11, CFC12, CFC-12.
+LOE 1 — Condiciones geoquímicas:
+- Citar mediana de ORP (mV) y OD (mg/L), y la clasificación (ej: OXIDANTE, REDUCTOR).
+- Implicancia: si ORP > 0 → condiciones insuficientes; si OD > 2 → pasivación del ZVI.
 
-Sinónimos aceptados (normalizar antes de evaluar):
-- CT / CCl4 / TC / Tetracloruro de Carbono / Carbon Tetrachloride → CT
-- CF / CHCl3 / Cloroformo / Chloroform → CF
-- PCE / Tetracloroetileno / Percloroetileno / PERC → PCE
-- TCE / Tricloroetileno → TCE
-- DCE / 1,1-DCE / 1,1-Dicloroetileno → DCE
-- CFC11 / CFC-11 / Freon-11 / R-11 → CFC11
-- CFC12 / CFC-12 / Freon-12 / R-12 → CFC12
+LOE 2 — Correlaciones con mecanismo ZVI:
+- Citar ρ y p del ORP. Si n_eventos < 4, mencionar que Spearman tiene baja potencia estadística.
+- Implicancia: qué indica sobre el control de la barrera sobre el compuesto.
 
-Si el compuesto no pertenece a este grupo (benceno, tolueno, nitratos, metales, etc.),
-setear compuesto_relevante = false y completar motivo_irrelevante.
-No evaluar los LOE en ese caso: status "no_cumplido" y texto vacío en los cuatro.
-Si es relevante: compuesto_relevante = true, motivo_irrelevante = null, evaluar todos los LOE.
+LOE 3 — Degradación vs dilución:
+- Si trazador_usado ≠ NINGUNO: citar ρ y p del trazador (CE o STD).
+- Si trazador_usado = NINGUNO: indicar que no hay datos de conductividad ni sólidos disueltos.
+- Implicancia: si la dilución es o no un factor dominante.
 
-───────────────────────────────────────────────────────────
-LOE 1 — Condiciones geoquímicas reductoras
-───────────────────────────────────────────────────────────
-Escala de ORP (PO v3, Sección 7.2):
-  < −200 mV        → FUERTEMENTE_REDUCTOR  (metanogénesis, óptimo ESTCP)
-  −200 a −100 mV   → REDUCTOR              (sulfato-reducción, muy favorable)
-  −100 a 0 mV      → LEVEMENTE_REDUCTOR    (Fe(III)-reducción, favorable)
-  > 0 mV           → OXIDANTE              (desfavorable)
+LOE 4 — Cumplimiento regulatorio:
+- Citar valor vs nivel guía en µg/L.
+- Si hay pct_cambio_desde_lb, mencionar tendencia desde línea base.
+- Si status = no_evaluable: indicar que no hay nivel guía definido.
 
-Escala de OD (PO v3, Sección 7.3):
-  < 0.5 mg/L       → ANÓXICO               (óptimo para ZVI)
-  0.5–1.0 mg/L     → SUBANOXICO            (favorable)
-  1.0–2.0 mg/L     → TRANSICIÓN            (monitorear)
-  > 2.0 mg/L       → ÓXICO                 (pasivación del ZVI)
+Verificar relevancia: si "compuesto_abreviado" no es un solvente clorado relevante para ZVI
+(CT, CF, PCE, TCE, DCE, VC, DCM, CFC11, CFC12), setear compuesto_relevante=false
+con motivo_irrelevante y textos vacíos.`;
 
-Criterio de status:
-  cumplido    → ORP mediana < −100 mV  Y  OD mediana < 1.0 mg/L
-  parcial     → solo uno de los dos criterios cumplido
-  no_cumplido → ninguno cumplido
+export interface LOEResult {
+  compuesto_relevante: boolean;
+  motivo_irrelevante: string | null;
+  loe1: { status: string; texto: string };
+  loe2: { status: string; texto: string };
+  loe3: { status: string; texto: string };
+  loe4: { status: string; texto: string };
+}
 
-Campo clasificacion_orp: usar la escala de 4 niveles sobre el ORP mediano.
-Si ORP < −200 mV, clasificar como FUERTEMENTE_REDUCTOR aunque el status sea "cumplido".
+export async function evaluateLOE(input: LOERawInput): Promise<LOEResult> {
+  if (!isZVICompound(input.compuesto)) {
+    const abbr = compoundAbbreviation(input.compuesto);
+    return {
+      compuesto_relevante: false,
+      motivo_irrelevante: `${abbr} no es un solvente clorado relevante para ZVI`,
+      loe1: { status: 'no_evaluable', texto: '' },
+      loe2: { status: 'no_evaluable', texto: '' },
+      loe3: { status: 'no_evaluable', texto: '' },
+      loe4: { status: 'no_evaluable', texto: '' }
+    };
+  }
 
-Campo evaluacion_integrada: calcular con puntaje (PO v3, Sección 7.5):
-  ORP: < −100 mV → +3 pts; < 0 mV → +2 pts; < 100 mV → +1 pt
-  OD:  < 1.0 mg/L → +2 pts; < 2.0 mg/L → +1 pt
-  pH:  6.5–8.5 → +1 pt
-  Score ≥ 5 → OPTIMA; ≥ 3 → FAVORABLE; ≥ 1 → SUBOPTIMA; 0 → DESFAVORABLE
+  const payload = buildLOEPayload(input);
 
-Texto:
-- Primera oración: citar ORP_mediana y OD_mediana; usar la escala granular.
-  Si ORP < −200 mV, mencionarlo como condición óptima.
-- Segunda oración: qué implica operativamente.
-  Si ORP no baja de −100 mV → la barrera no genera condiciones suficientes para decloración.
-  Si OD > 2 mg/L → el O₂ compite por electrones y pasiva la superficie del ZVI.
-
-───────────────────────────────────────────────────────────
-LOE 2 — Correlaciones consistentes con mecanismo ZVI
-───────────────────────────────────────────────────────────
-Los scatter plots del dashboard muestran la relación entre cada parámetro y el compuesto.
-El LOE debe ser coherente con la tendencia visual del scatter ORP vs compuesto.
-
-Señales esperadas:
-- ρ(compuesto, ORP) NEGATIVO: más reductor → menos solvente.
-- ρ(compuesto, OD)  POSITIVO: más O₂ → peor remoción.
-
-Clasificación basada en ρ(compuesto, ORP):
-  cumplido    → signo negativo, p < 0.05, |ρ| > 0.5
-  parcial     → signo negativo con |ρ| 0.3–0.5, o p 0.05–0.10
-  no_cumplido → signo positivo, o p > 0.10 con |ρ| < 0.3
-
-Campo spearman_aplicable: true solo si n_eventos >= 4.
-Si n_eventos < 4, el test de Spearman no tiene potencia estadística y el resultado
-es solo indicativo. Mencionar esto en el texto; la significancia será evaluable
-a partir del cuarto evento.
-
-Sobre OD: si disponible y significativo, mencionarlo indicando si el signo
-es consistente (POSITIVO = correcto) o inconsistente con el mecanismo.
-
-Texto:
-- Primera oración: citar ρ y p del ORP; mencionar n_eventos si < 4.
-- Segunda oración: qué significa en términos de funcionamiento de la barrera.
-
-───────────────────────────────────────────────────────────
-LOE 3 — Degradación vs dilución
-───────────────────────────────────────────────────────────
-La fila/columna del compuesto en la matriz de correlación del dashboard
-muestra su relación con CE y STD. El LOE 3 debe ser coherente con eso.
-
-Jerarquía de trazadores (PO v3, Sección 8.2.4):
-1. CE (Conductividad): trazador primario. Fórmula: CT_normalizado = CT × 1000 / CE.
-2. STD: alternativa si CE no disponible.
-Usar CE con preferencia. Registrar en trazador_usado cuál se usó.
-
-Si ρ(compuesto, trazador) es alto y significativo → la caída puede ser dilución.
-Si es bajo o no significativo → dilución poco probable.
-
-  cumplido     → |ρ| bajo o no significativo
-  parcial      → |ρ| moderado, dilución no descartable
-  no_cumplido  → |ρ| alto y significativo
-  no_evaluable → ni CE ni STD disponibles → trazador_usado = NINGUNO
-
-No usar umbrales numéricos fijos; justificar con el valor observado y su significancia.
-Citar ρ y p del trazador usado.
-
-Texto:
-- Primera oración: citar ρ(CE o STD) y su significancia.
-- Segunda oración: qué implicaría si la dilución fuera o no la causa dominante.
-
-───────────────────────────────────────────────────────────
-LOE 4 — Cumplimiento regulatorio (Decreto 831/93 Tabla 1)
-───────────────────────────────────────────────────────────
-Niveles guía de referencia del sitio:
-  CT → 3 µg/L    CF → 30 µg/L    PCE → 10 µg/L
-  TCE → 30 µg/L  DCE → 0.3 µg/L  CFC11 → 2 µg/L  CFC12 → 2 µg/L
-
-Clasificación:
-  cumple      → valor_ug_L < ng_ug_L
-  excede      → valor_ug_L ≥ ng_ug_L
-  no_evaluable → cumplimiento_ultimo_evento es null en el payload
-
-Notar si el valor está entre 80–100% del NG aunque no lo supere (zona de alerta).
-
-Texto:
-- Primera oración: valor observado vs NG con unidades; indicar si cumple o excede.
-- Segunda oración: contexto de tendencia si tendencia_lb.pct_cambio disponible
-  (mencionar si viene bajando desde LB y en qué magnitud).
-
-───────────────────────────────────────────────────────────
-Reglas para todos los textos
-───────────────────────────────────────────────────────────
-- Máximo 2 oraciones cortas por LOE.
-- Primera oración: valores numéricos clave y clasificación. Máximo 20 palabras.
-- Segunda oración: una sola idea sobre qué implica para la barrera. Máximo 20 palabras.
-- No repetir números en la segunda oración.
-- No agregar recomendaciones ni conclusiones globales.
-- Responder únicamente con el JSON del schema. Sin texto extra.
-
-Idioma: usar el indicado en "idioma_usuario". Todo el contenido en ese idioma.`;
-
-export async function evaluateLOE(payload: ZVIPayload): Promise<LOEResult> {
   const { output } = await generateText({
     model,
     output: Output.object({ schema: LOESchema }),
     system: SYSTEM_PROMPT,
-    prompt: JSON.stringify(payload, null, 2),
-    maxOutputTokens: 1000
+    prompt: JSON.stringify(payload, null, 2)
   });
-  return output;
+
+  return {
+    compuesto_relevante: output.compuesto_relevante,
+    motivo_irrelevante: output.motivo_irrelevante,
+    loe1: { status: payload.loe1.status, texto: output.loe1_texto },
+    loe2: { status: payload.loe2.status, texto: output.loe2_texto },
+    loe3: { status: payload.loe3.status, texto: output.loe3_texto },
+    loe4: { status: payload.loe4.status, texto: output.loe4_texto }
+  };
 }

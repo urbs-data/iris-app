@@ -10,14 +10,9 @@ import type {
   ParameterName,
   SpearmanMatrix
 } from '../types';
-import { evaluateLOE, type ZVIPayload } from './evaluate-loe';
+import { evaluateLOE, type LOERawInput } from './evaluate-loe';
 import { getLocale } from 'next-intl/server';
-import {
-  percentBelow,
-  safeMedian,
-  spearman,
-  meanOfValues
-} from '@/lib/statistics';
+import { safeMedian, spearman, meanOfValues } from '@/lib/statistics';
 
 interface QueryRow extends Record<string, unknown> {
   id_pozo: string;
@@ -44,6 +39,24 @@ function campanaOrden(nombre: string): number {
   return 999;
 }
 
+const PARAMETER_ALIASES: Record<string, ParameterName> = {
+  'Electrical Conductivity': 'CE',
+  'Conductividad Eléctrica': 'CE',
+  'Conductividad Electrica': 'CE',
+  'Total Dissolved Solids': 'STD',
+  'Sólidos Totales Disueltos': 'STD',
+  'Solidos Totales Disueltos': 'STD',
+  'Dissolved Oxygen': 'OD',
+  'Oxígeno Disuelto': 'OD',
+  'Oxigeno Disuelto': 'OD',
+  Temperature: 'Temp',
+  Temperatura: 'Temp'
+};
+
+function normalizeParameterName(raw: string): string {
+  return PARAMETER_ALIASES[raw] ?? raw;
+}
+
 function normalizeRow(row: QueryRow): CorrelationRow {
   return {
     pozo: row.id_pozo,
@@ -55,7 +68,7 @@ function normalizeRow(row: QueryRow): CorrelationRow {
     limiteCuantificacion: row.limite_cuantificacion ?? null,
     nivelGuia: row.nivel_guia ?? null,
     parameterDate: new Date(row.fecha_parametro),
-    parameterName: row.parametro,
+    parameterName: normalizeParameterName(row.parametro),
     parameterValue: row.medicion_parametro,
     parameterUnit: row.unidad_parametro
   };
@@ -180,15 +193,21 @@ function buildCampaignMap(rows: CorrelationRow[]): Map<string, CampanaEntry> {
   return campaigns;
 }
 
+interface CampaignCumplimiento {
+  valor_ug_L: number;
+  ng_ug_L: number;
+  excede_ng: boolean;
+}
+
 interface CampaignStats {
   n_eventos: number;
-  tendencia_lb: ZVIPayload['tendencia_lb'];
-  cumplimiento_ultimo_evento: ZVIPayload['cumplimiento_ultimo_evento'];
+  pct_cambio_desde_lb: number | null;
+  cumplimiento: CampaignCumplimiento | null;
 }
 
 function buildCumplimiento(
   pozos: Map<string, { valor: number; nivelGuia: number | null }> | undefined
-): ZVIPayload['cumplimiento_ultimo_evento'] {
+): CampaignCumplimiento | null {
   if (!pozos) return null;
   const entries = Array.from(pozos.values());
   const ng = entries[0]?.nivelGuia ?? null;
@@ -196,12 +215,7 @@ function buildCumplimiento(
   const valor_ug_L =
     Math.round(meanOfValues(entries.map((e) => e.valor)) * 100) / 100;
   const excede_ng = valor_ug_L >= ng;
-  return {
-    valor_ug_L,
-    ng_ug_L: ng,
-    excede_ng,
-    estado_global: excede_ng ? 'EXCEDE' : 'CUMPLE'
-  };
+  return { valor_ug_L, ng_ug_L: ng, excede_ng };
 }
 
 function calcCampaignStats(
@@ -215,8 +229,8 @@ function calcCampaignStats(
   if (n_eventos < 2) {
     return {
       n_eventos,
-      tendencia_lb: { pct_cambio: null, flag: null },
-      cumplimiento_ultimo_evento: buildCumplimiento(sorted[0]?.pozos)
+      pct_cambio_desde_lb: null,
+      cumplimiento: buildCumplimiento(sorted[0]?.pozos)
     };
   }
 
@@ -235,21 +249,16 @@ function calcCampaignStats(
       ? Math.round(((lastMean - lbMean) / lbMean) * 10000) / 100
       : null;
 
-  const flag: ZVIPayload['tendencia_lb']['flag'] =
-    pct_cambio !== null ? (lastMean === 0 ? 'REDUCCION_A_ND' : 'NORMAL') : null;
-
   return {
     n_eventos,
-    tendencia_lb: { pct_cambio, flag },
-    cumplimiento_ultimo_evento: buildCumplimiento(last.pozos)
+    pct_cambio_desde_lb: pct_cambio,
+    cumplimiento: buildCumplimiento(last.pozos)
   };
 }
 
-const NEGATIVE_SIGN_PARAMS = new Set(['ORP', 'OD']);
-
-const PARAM_NAME_TO_ZVI: Record<
+const PARAM_NAME_TO_CORR: Record<
   ParameterName,
-  ZVIPayload['correlaciones'][number]['parametro']
+  LOERawInput['correlaciones'][number]['parametro']
 > = {
   ORP: 'ORP',
   OD: 'OD',
@@ -259,67 +268,40 @@ const PARAM_NAME_TO_ZVI: Record<
   Temp: 'Temperatura'
 };
 
-function buildZVIPayload(
-  sustanciaId: string,
+function buildLOERawInput(
   sustanciaName: string,
-  allRows: CorrelationRow[],
   grouped: Map<string, CorrelationRow[]>,
   correlations: CorrelationParameter[],
-  dateFrom: string | undefined,
-  dateTo: string | undefined,
   locale: string
-): ZVIPayload {
+): LOERawInput {
   const ORPValues = grouped.get('ORP')?.map((r) => r.parameterValue) ?? [];
   const ODValues = grouped.get('OD')?.map((r) => r.parameterValue) ?? [];
   const pHValues = grouped.get('pH')?.map((r) => r.parameterValue) ?? [];
 
-  const uniquePozos = new Set(allRows.map((r) => r.pozo));
-  const sampleTimestamps = allRows.map((r) => r.sampleDate.getTime());
-
-  const resolvedDateFrom =
-    dateFrom ??
-    new Date(Math.min(...sampleTimestamps)).toISOString().slice(0, 10);
-  const resolvedDateTo =
-    dateTo ??
-    new Date(Math.max(...sampleTimestamps)).toISOString().slice(0, 10);
+  const allRows = Array.from(grouped.values()).flat();
+  const campaigns = buildCampaignMap(allRows);
+  const { n_eventos, pct_cambio_desde_lb, cumplimiento } =
+    calcCampaignStats(campaigns);
 
   const correlaciones = correlations
     .filter((c) => isParameterName(c.name) && !Number.isNaN(c.correlation))
     .map((c) => ({
-      parametro: PARAM_NAME_TO_ZVI[c.name as ParameterName],
+      parametro: PARAM_NAME_TO_CORR[c.name as ParameterName],
       rho: c.correlation,
       p_valor: c.pvalue,
-      n: c.samples,
-      signo_correcto: NEGATIVE_SIGN_PARAMS.has(c.name)
-        ? c.correlation < 0
-        : true
+      n: c.samples
     }));
 
-  const campaigns = buildCampaignMap(allRows);
-  const { n_eventos, tendencia_lb, cumplimiento_ultimo_evento } =
-    calcCampaignStats(campaigns);
-
   return {
-    compuesto: sustanciaName || sustanciaId,
-    fecha_desde: resolvedDateFrom,
-    fecha_hasta: resolvedDateTo,
-    n_pozos: uniquePozos.size,
-    n_pares_validos: allRows.length,
-    n_eventos,
+    compuesto: sustanciaName,
+    idioma: locale,
     correlaciones,
-    geoquimica_barrera: {
-      ORP_mediana_mv: safeMedian(ORPValues),
-      OD_mediana_mgl: safeMedian(ODValues),
-      pH_mediana: safeMedian(pHValues),
-      pct_ORP_bajo_menos100: percentBelow(ORPValues, -100),
-      pct_ORP_bajo_menos200: percentBelow(ORPValues, -200),
-      pct_OD_anoxic: percentBelow(ODValues, 0.5),
-      pct_OD_subanoxico:
-        percentBelow(ODValues, 1.0) - percentBelow(ODValues, 0.5)
-    },
-    tendencia_lb,
-    cumplimiento_ultimo_evento,
-    idioma_usuario: locale
+    n_eventos,
+    orp_mediana: safeMedian(ORPValues),
+    od_mediana: safeMedian(ODValues),
+    ph_mediana: safeMedian(pHValues),
+    cumplimiento,
+    pct_cambio_desde_lb
   };
 }
 
@@ -384,20 +366,14 @@ export const getCorrelations = authOrganizationActionClient
     const paramIndex = buildParamValueIndex(grouped);
     const matrix = buildMatrix(validParamNames, paramIndex);
 
-    const payload = buildZVIPayload(
-      parsedInput.substance,
+    const loeInput = buildLOERawInput(
       sustanciaName,
-      rows,
       grouped,
       correlationData,
-      parsedInput.dateFrom,
-      parsedInput.dateTo,
       locale
     );
 
-    console.log({ payload });
-
-    const loe = await evaluateLOE(payload);
+    const loe = await evaluateLOE(loeInput);
 
     return {
       substance: parsedInput.substance,
