@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useQueryState, parseAsString } from 'nuqs';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -25,6 +25,7 @@ interface LocalFilters {
 
 export function CorrelationsFilters() {
   const t = useTranslations('dashboard.correlations');
+  const locale = useLocale();
   const { startTransition, isLoading } = useTransitionContext();
 
   const [dateFrom, setDateFrom] = useQueryState(
@@ -57,7 +58,7 @@ export function CorrelationsFilters() {
   });
 
   const { data: substances = [], isLoading: isLoadingSubstances } = useQuery({
-    queryKey: ['substances'],
+    queryKey: ['substances', locale],
     queryFn: () => resolveActionResult(getSubstances())
   });
 

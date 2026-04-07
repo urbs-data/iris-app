@@ -50,17 +50,6 @@ export const navItems: NavItem[] = [
     group: 'group.main'
   },
   {
-    title: 'dashboard-correlations',
-    url: '/dashboard/correlations',
-    icon: 'chartCorrelations',
-    shortcut: ['a', 'r'],
-    items: [],
-    access: {
-      publicMetadataKey: 'nav.dashboard.correlations'
-    },
-    group: 'group.main'
-  },
-  {
     title: 'dashboard-physico-chemical',
     url: '/dashboard/physico-chemical',
     icon: 'chartCombined',
@@ -68,6 +57,17 @@ export const navItems: NavItem[] = [
     items: [],
     access: {
       publicMetadataKey: 'nav.dashboard.physico-chemical'
+    },
+    group: 'group.main'
+  },
+  {
+    title: 'dashboard-correlations',
+    url: '/dashboard/correlations',
+    icon: 'chartCorrelations',
+    shortcut: ['a', 'r'],
+    items: [],
+    access: {
+      publicMetadataKey: 'nav.dashboard.correlations'
     },
     group: 'group.main'
   },

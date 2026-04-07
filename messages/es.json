@@ -55,11 +55,11 @@
         "home": "Inicio",
         "dashboard": "Dashboard",
         "analyze": "Analizar",
-        "dashboard-general": "Análisis General",
-        "dashboard-substance": "Análisis de Concentraciones",
-        "dashboard-physico-chemical": "Análisis Combinado",
-        "dashboard-correlations": "Análisis de Correlaciones",
-        "dashboard-quarterly": "Análisis Trimestrales",
+        "dashboard-general": "General",
+        "dashboard-substance": "Concentraciones",
+        "dashboard-physico-chemical": "Parámetros y Sustancias",
+        "dashboard-correlations": "Correlaciones",
+        "dashboard-quarterly": "Trimestrales",
         "search": "Buscador",
         "explorer": "Explorador",
         "validation": "Validación",
@@ -67,7 +67,7 @@
         "profile": "Perfil",
         "documentation": "Documentación",
         "group": {
-            "main": "Principal",
+            "main": "Análisis",
             "documents": "Documentos",
             "others": "Otros"
         }
@@ -184,9 +184,9 @@
             "title": "Análisis de Concentraciones"
         },
         "physicoChemical": {
-            "title": "Análisis de Parámetros y Compuestos",
+            "title": "Análisis de Parámetros y Sustancias",
             "fqParameter": "Parámetro Físico-Químico",
-            "substanceCompound": "Compuesto Químico",
+            "substanceCompound": "Sustancia",
             "combinedEvolution": "Evolución Temporal Combinada"
         },
         "noData": {
@@ -431,6 +431,15 @@
         "Area A y B": "Área A y B",
         "Resto": "Resto"
     },
+    "fqParameters": {
+        "pH": "pH",
+        "ORP": "ORP",
+        "OD": "Oxígeno Disuelto",
+        "Temp": "Temperatura",
+        "CE": "Conductividad Eléctrica",
+        "STD": "Sólidos Totales Disueltos",
+        "Profundidad al agua": "Profundidad al agua"
+    },
     "search": {
         "title": "Buscador de documentos",
         "description": "Busca y gestiona documentos",
@@ -567,6 +576,7 @@
     },
     "reports": {
         "title": "Reportes",
+        "new": "Nuevo reporte",
         "tabs": {
             "individual": "Reporte Individual",
             "preset": "Preset"
@@ -629,13 +639,13 @@
                 "action": "Acción"
             },
             "aiPdf": {
-                "buttonLabel": "Generar PDF con IA",
-                "progressStart": "Iniciando generación de PDF IA...",
-                "progressRunning": "Procesando archivos y generando contenido descriptivo...",
-                "progressOpening": "PDF IA listo, abriendo archivo...",
-                "success": "PDF IA generado correctamente",
-                "successReused": "Se reutilizó un PDF IA ya generado",
-                "error": "No se pudo generar el PDF IA"
+                "buttonLabel": "Generar PDF ejecutivo",
+                "progressStart": "Iniciando generación de PDF ejecutivo...",
+                "progressRunning": "Procesando archivos y generando resumen ejecutivo...",
+                "progressOpening": "PDF ejecutivo listo, abriendo archivo...",
+                "success": "PDF ejecutivo generado correctamente",
+                "successReused": "Se reutilizó un PDF ejecutivo ya generado",
+                "error": "No se pudo generar el PDF ejecutivo"
             }
         },
         "generator": {

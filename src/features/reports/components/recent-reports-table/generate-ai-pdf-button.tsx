@@ -2,7 +2,7 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { IconLoader2 } from '@tabler/icons-react';
-import { Sparkles } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { resolveActionResult } from '@/lib/actions/client';
@@ -70,7 +70,7 @@ export function GenerateAiPdfButton({
       {mutation.isPending ? (
         <IconLoader2 className='h-4 w-4 animate-spin' />
       ) : (
-        <Sparkles className='h-4 w-4' />
+        <FileText className='h-4 w-4' />
       )}
     </Button>
   );

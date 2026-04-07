@@ -30,9 +30,22 @@ const SeccionSchema = z.object({
 });
 
 export const InformeSchema = z.object({
-  titulo: z.string(),
-  subtitulo: z.string(),
-  periodo: z.string(),
+  titulo: z
+    .string()
+    .max(60)
+    .describe('Nombre breve del reporte, sin fechas ni rangos temporales.'),
+  subtitulo: z
+    .string()
+    .max(80)
+    .describe(
+      'Complemento del título con información adicional relevante. No repetir lo dicho en el título.'
+    ),
+  periodo: z
+    .string()
+    .max(40)
+    .describe(
+      'Rango temporal en formato compacto, por ejemplo "Ene 2024 – Mar 2024".'
+    ),
   secciones: z.array(SeccionSchema)
 });
 
@@ -166,24 +179,46 @@ function checkPageBreak(doc: PDFKit.PDFDocument, needed: number) {
 
 // ── Portada ──────────────────────────────────
 function dibujarPortada(doc: PDFKit.PDFDocument, informe: Informe) {
-  rect(doc, 0, 0, PAGE_W, 120, COLORES.azulOscuro);
+  const PAD_V = 22;
+  const GAP = 10;
+  const TITULO_FS = 18;
+  const SUB_FS = 11;
+  const PER_FS = 10;
 
-  doc.font(APP_FONT_PATH).fontSize(20);
-  colorFill(doc, COLORES.blanco);
-  doc.text(informe.titulo, MARGIN, 35, { width: CONTENT_W, align: 'center' });
+  // Medir alturas reales antes de dibujar para evitar solapamientos
+  doc.font(APP_FONT_PATH).fontSize(TITULO_FS);
+  const tituloH = doc.heightOfString(informe.titulo, { width: CONTENT_W });
 
-  doc.font(APP_FONT_PATH).fontSize(12);
-  doc.text(informe.subtitulo, MARGIN, 72, {
-    width: CONTENT_W,
-    align: 'center'
+  doc.font(APP_FONT_PATH).fontSize(SUB_FS);
+  const subtituloH = doc.heightOfString(informe.subtitulo, {
+    width: CONTENT_W
   });
 
-  doc.moveDown(0.5);
-  doc.font(APP_FONT_PATH).fontSize(10);
-  colorFill(doc, COLORES.azulClaro);
-  doc.text(informe.periodo, MARGIN, 100, { width: CONTENT_W, align: 'center' });
+  doc.font(APP_FONT_PATH).fontSize(PER_FS);
+  const periodoH = doc.heightOfString(informe.periodo, { width: CONTENT_W });
 
-  doc.y = 140;
+  const bannerH = PAD_V + tituloH + GAP + subtituloH + GAP + periodoH + PAD_V;
+
+  rect(doc, 0, 0, PAGE_W, bannerH, COLORES.azulOscuro);
+
+  // Título
+  let y = PAD_V;
+  doc.font(APP_FONT_PATH).fontSize(TITULO_FS);
+  colorFill(doc, COLORES.blanco);
+  doc.text(informe.titulo, MARGIN, y, { width: CONTENT_W, align: 'center' });
+  y += tituloH + GAP;
+
+  // Subtítulo
+  doc.font(APP_FONT_PATH).fontSize(SUB_FS);
+  doc.text(informe.subtitulo, MARGIN, y, { width: CONTENT_W, align: 'center' });
+  y += subtituloH + GAP;
+
+  // Período
+  doc.font(APP_FONT_PATH).fontSize(PER_FS);
+  colorFill(doc, COLORES.azulClaro);
+  doc.text(informe.periodo, MARGIN, y, { width: CONTENT_W, align: 'center' });
+
+  doc.y = bannerH + 20;
 }
 
 // ── Heading nivel 1 ───────────────────────────

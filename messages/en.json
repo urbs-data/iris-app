@@ -55,11 +55,11 @@
         "home": "Home",
         "dashboard": "Dashboard",
         "analyze": "Analyze",
-        "dashboard-general": "General Analysis",
-        "dashboard-substance": "Concentration Analysis",
-        "dashboard-physico-chemical": "Combined Analysis",
-        "dashboard-correlations": "Correlation Analysis",
-        "dashboard-quarterly": "Quarterly Analysis",
+        "dashboard-general": "General",
+        "dashboard-substance": "Concentrations",
+        "dashboard-physico-chemical": "Parameters and Substances",
+        "dashboard-correlations": "Correlations",
+        "dashboard-quarterly": "Quarterly",
         "search": "Search",
         "explorer": "Explorer",
         "validation": "Validation",
@@ -67,7 +67,7 @@
         "profile": "Profile",
         "documentation": "Documentation",
         "group": {
-            "main": "Main",
+            "main": "Analysis",
             "documents": "Documents",
             "others": "Others"
         }
@@ -182,9 +182,9 @@
             "title": "Concentration Analysis"
         },
         "physicoChemical": {
-            "title": "Parameters and Compounds Analysis",
+            "title": "Parameters and Substances Analysis",
             "fqParameter": "Physico-Chemical Parameter",
-            "substanceCompound": "Chemical Compound",
+            "substanceCompound": "Substance",
             "combinedEvolution": "Combined Temporal Evolution"
         },
         "noData": {
@@ -195,7 +195,7 @@
         },
         "filter": {
             "dateRange": "Date range",
-            "substance": "Chemical compound",
+            "substance": "Substance",
             "wellType": "Well type",
             "area": "Area",
             "well": "Well",
@@ -429,6 +429,15 @@
         "Area A y B": "Area A and B",
         "Resto": "Remaining"
     },
+    "fqParameters": {
+        "pH": "pH",
+        "ORP": "ORP",
+        "OD": "Dissolved Oxygen",
+        "Temp": "Temperature",
+        "CE": "Electrical Conductivity",
+        "STD": "Total Dissolved Solids",
+        "Profundidad al agua": "Water Depth"
+    },
     "search": {
         "title": "Document search",
         "description": "Search and manage documents",
@@ -565,6 +574,7 @@
     },
     "reports": {
         "title": "Reports",
+        "new": "New report",
         "tabs": {
             "individual": "Individual report",
             "preset": "Preset"
@@ -627,13 +637,13 @@
                 "action": "Action"
             },
             "aiPdf": {
-                "buttonLabel": "Generate AI PDF",
-                "progressStart": "Starting AI PDF generation...",
-                "progressRunning": "Processing files and generating descriptive content...",
-                "progressOpening": "AI PDF ready, opening file...",
-                "success": "AI PDF generated successfully",
-                "successReused": "Reused an existing AI PDF",
-                "error": "Could not generate AI PDF"
+                "buttonLabel": "Generate executive PDF",
+                "progressStart": "Starting executive PDF generation...",
+                "progressRunning": "Processing files and generating executive summary...",
+                "progressOpening": "Executive PDF ready, opening file...",
+                "success": "Executive PDF generated successfully",
+                "successReused": "Reused an existing executive PDF",
+                "error": "Could not generate executive PDF"
             }
         },
         "generator": {

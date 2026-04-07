@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useQueryState, parseAsString } from 'nuqs';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -28,6 +28,7 @@ interface LocalFilters {
 
 export function PhysicoChemicalFilters() {
   const t = useTranslations('substance');
+  const locale = useLocale();
   const { startTransition, isLoading } = useTransitionContext();
 
   const [dateFrom, setDateFrom] = useQueryState(
@@ -65,12 +66,12 @@ export function PhysicoChemicalFilters() {
   });
 
   const { data: substances = [], isLoading: isLoadingSubstances } = useQuery({
-    queryKey: ['substances'],
+    queryKey: ['substances', locale],
     queryFn: () => resolveActionResult(getSubstances())
   });
 
   const { data: fqParameters = [], isLoading: isLoadingParameters } = useQuery({
-    queryKey: ['fqParameters'],
+    queryKey: ['fqParameters', locale],
     queryFn: () => resolveActionResult(getFqParameters({}))
   });
 

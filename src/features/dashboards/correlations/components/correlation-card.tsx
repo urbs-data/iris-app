@@ -57,7 +57,11 @@ function formatPValue(p: number): string {
 
 export function CorrelationCard({ parameter }: CorrelationCardProps) {
   const t = useTranslations('dashboard.correlations');
+  const tFq = useTranslations('fqParameters');
   const { name, unit, correlation, pvalue, samples, data } = parameter;
+  const displayName = tFq.has(name as Parameters<typeof tFq>[0])
+    ? tFq(name as Parameters<typeof tFq>[0])
+    : name;
   const rhoVariant = getRhoVariant(correlation);
   const isSignificant = !Number.isNaN(pvalue) && pvalue < 0.05;
 
@@ -74,7 +78,9 @@ export function CorrelationCard({ parameter }: CorrelationCardProps) {
     <div className='bg-card flex flex-col gap-2 rounded-xl border p-4'>
       <div className='flex items-start justify-between gap-2'>
         <div className='min-w-0 flex-1'>
-          <span className='text-base leading-tight font-semibold'>{name}</span>
+          <span className='text-base leading-tight font-semibold'>
+            {displayName}
+          </span>
           {unit ? (
             <span className='text-muted-foreground ml-1 text-sm'>({unit})</span>
           ) : null}
@@ -130,11 +136,13 @@ export function CorrelationCard({ parameter }: CorrelationCardProps) {
                   const pt = payload[0]?.payload as { x: number; y: number };
                   return (
                     <div className='bg-popover rounded-md border px-2 py-1.5 text-sm shadow-md'>
-                      <span className='text-muted-foreground'>{name}:</span>{' '}
+                      <span className='text-muted-foreground'>
+                        {displayName}:
+                      </span>{' '}
                       <span className='font-medium'>{pt.y}</span>
                       <br />
                       <span className='text-muted-foreground'>
-                        Sustancia:
+                        {t('filterSubstance')}:
                       </span>{' '}
                       <span className='font-medium'>{pt.x}</span>
                     </div>

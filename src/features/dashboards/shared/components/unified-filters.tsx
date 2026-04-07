@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useQueryState, parseAsString, parseAsStringEnum } from 'nuqs';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -32,17 +32,6 @@ interface LocalFilters {
   sampleType: SampleType;
 }
 
-const WELL_TYPE_OPTIONS = [
-  { value: 'all', label: 'Todos' },
-  { value: WellType.MONITORING, label: 'Monitoreo' },
-  { value: WellType.PUMP, label: 'Bomba' }
-];
-
-const SAMPLE_TYPE_OPTIONS = [
-  { value: SampleType.WATER, label: 'Agua' },
-  { value: SampleType.SOIL, label: 'Suelo' }
-];
-
 interface UnifiedFiltersProps {
   useSubstanceParams?: boolean;
 }
@@ -51,7 +40,21 @@ export function UnifiedFilters({
   useSubstanceParams = false
 }: UnifiedFiltersProps) {
   const t = useTranslations('substance');
+  const tWellTypes = useTranslations('wellTypes');
+  const tSampleTypes = useTranslations('sampleTypes');
+  const locale = useLocale();
   const { startTransition, isLoading } = useTransitionContext();
+
+  const WELL_TYPE_OPTIONS = [
+    { value: 'all', label: tWellTypes('all') },
+    { value: WellType.MONITORING, label: tWellTypes('well') },
+    { value: WellType.PUMP, label: tWellTypes('pump') }
+  ];
+
+  const SAMPLE_TYPE_OPTIONS = [
+    { value: SampleType.WATER, label: tSampleTypes('water') },
+    { value: SampleType.SOIL, label: tSampleTypes('soil') }
+  ];
   const showSubstanceFilter = useSubstanceParams;
 
   const [dateFrom, setDateFrom] = useQueryState(
@@ -111,7 +114,7 @@ export function UnifiedFilters({
   });
 
   const { data: areas = [], isLoading: isLoadingAreas } = useQuery({
-    queryKey: ['areas'],
+    queryKey: ['areas', locale],
     queryFn: () => resolveActionResult(getAreas())
   });
 
@@ -122,7 +125,7 @@ export function UnifiedFilters({
   });
 
   const { data: substances = [], isLoading: isLoadingSubstances } = useQuery({
-    queryKey: ['substances'],
+    queryKey: ['substances', locale],
     queryFn: () => resolveActionResult(getSubstances()),
     enabled: showSubstanceFilter
   });

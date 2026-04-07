@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import type {
   SpearmanMatrix,
@@ -38,7 +39,14 @@ export function CorrelationMatrix({
   data,
   matrix
 }: CorrelationMatrixProps) {
+  const tFq = useTranslations('fqParameters');
+
   const { paramNames, rows } = useMemo(() => {
+    const tp = (name: string): string => {
+      const key = name as Parameters<typeof tFq>[0];
+      return tFq.has(key) ? tFq(key) : name;
+    };
+
     const substanceCorrelations = new Map(
       data.map((d) => [d.name, d.correlation])
     );
@@ -50,7 +58,7 @@ export function CorrelationMatrix({
       new Set([...paramNamesFromMatrix, ...paramNamesFromData])
     );
 
-    const colHeaders = [substanceName, ...allParams];
+    const colHeaders = [substanceName, ...allParams.map(tp)];
 
     const substanceRow: (number | undefined)[] = [
       1.0,
@@ -65,14 +73,14 @@ export function CorrelationMatrix({
           return matrix[rowParam as ParameterName]?.[colParam as ParameterName];
         })
       ];
-      return { label: rowParam, values: rowValues };
+      return { label: tp(rowParam), values: rowValues };
     });
 
     return {
       paramNames: colHeaders,
       rows: [{ label: substanceName, values: substanceRow }, ...paramRows]
     };
-  }, [substanceName, data, matrix]);
+  }, [substanceName, data, matrix, tFq]);
 
   if (rows.length === 0) return null;
 
