@@ -1,6 +1,7 @@
 'use server';
 
 import jwt from 'jsonwebtoken';
+import { getLocale } from 'next-intl/server';
 
 export async function getMetabaseToken(): Promise<string> {
   const METABASE_SECRET_KEY = process.env.METABASE_SECRET_KEY;
@@ -9,8 +10,12 @@ export async function getMetabaseToken(): Promise<string> {
     throw new Error('METABASE_SECRET_KEY is not configured');
   }
 
+  const lang = await getLocale();
+
+  const dashboardId = lang === 'es' ? 2 : 3;
+
   const payload = {
-    resource: { dashboard: 2 },
+    resource: { dashboard: dashboardId },
     params: {},
     exp: Math.round(Date.now() / 1000) + 10 * 60 // 10 minute expiration
   };
