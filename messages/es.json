@@ -187,7 +187,8 @@
             "title": "Análisis de Parámetros y Sustancias",
             "fqParameter": "Parámetro Físico-Químico",
             "substanceCompound": "Sustancia",
-            "combinedEvolution": "Evolución Temporal Combinada"
+            "combinedEvolution": "Evolución Temporal Combinada",
+            "emptyState": "Seleccioná un compuesto y parámetro en los filtros para ver el análisis."
         },
         "noData": {
             "title": "No hay datos disponibles",

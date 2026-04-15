@@ -185,7 +185,8 @@
             "title": "Parameters and Substances Analysis",
             "fqParameter": "Physico-Chemical Parameter",
             "substanceCompound": "Substance",
-            "combinedEvolution": "Combined Temporal Evolution"
+            "combinedEvolution": "Combined Temporal Evolution",
+            "emptyState": "Select a compound and parameter in the filters to see the analysis."
         },
         "noData": {
             "title": "No data available",
@@ -608,7 +609,7 @@
             "injection_params_cig": "Injection params for CIG",
             "volatile_concentrations_cig": "Volatile concentrations for CIG",
             "inorganic_concentrations_cig": "Inorganic concentrations for CIG",
-            "concentrations": "Concentrations",
+            "concentrations": "Compound Concentrations",
             "analysis_performed": "Progress of Remediation Tasks"
         },
         "presetConfig": {

@@ -49,11 +49,6 @@ export function createRecentReportsColumns(
       size: 10
     },
     {
-      accessorKey: 'user',
-      header: translations.user,
-      size: 10
-    },
-    {
       id: 'actions',
       header: '',
       cell: ({ row }) => {

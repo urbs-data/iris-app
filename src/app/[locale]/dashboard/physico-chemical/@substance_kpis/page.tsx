@@ -1,6 +1,7 @@
 import { KpiCard, KpiCardSkeleton, EmptyState } from '@/components/charts';
 import { getGeneralMetrics } from '@/features/dashboards/substance/data/get-general-metrics';
 import { getSubstances } from '@/features/dashboards/substance/data/get-substances';
+import { WellType, SampleType } from '@/features/dashboards/substance/types';
 import {
   fqSearchParamsCache,
   serializeFqParams
@@ -19,20 +20,21 @@ async function SubstanceKpisContent() {
   const dateFrom = fqSearchParamsCache.get('dateFrom');
   const dateTo = fqSearchParamsCache.get('dateTo');
   const substance = fqSearchParamsCache.get('substance');
-  const wellType = fqSearchParamsCache.get('wellType');
+
+  if (!substance) return null;
+
   const area = fqSearchParamsCache.get('area');
   const wells = fqSearchParamsCache.get('wells');
-  const sampleType = fqSearchParamsCache.get('sampleType');
   const wellsArray = wells ? wells.split(',').filter(Boolean) : undefined;
 
   const filters = {
     ...(dateFrom && { dateFrom }),
     ...(dateTo && { dateTo }),
     ...(substance && { substance }),
-    ...(wellType && { wellType }),
+    wellType: WellType.MONITORING,
     ...(area && { area }),
     ...(wellsArray && { wells: wellsArray }),
-    sampleType
+    sampleType: SampleType.WATER
   };
 
   const [metrics, substancesResult] = await Promise.all([

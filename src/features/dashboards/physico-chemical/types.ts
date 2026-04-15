@@ -3,8 +3,6 @@ import { WellType } from '../substance/types';
 export { WellType };
 
 export const FQ_DEFAULTS = {
-  parametro: 'pH',
-  substance: '56-23-5',
   dateFrom: '2019-01-01',
   wellType: WellType.MONITORING
 } as const;

@@ -1,25 +1,16 @@
 import {
   createSearchParamsCache,
   createSerializer,
-  parseAsString,
-  parseAsStringEnum
+  parseAsString
 } from 'nuqs/server';
-import { WellType, FQ_DEFAULTS } from './types';
-import { SampleType } from '../substance/types';
 
 export const fqSearchParams = {
   dateFrom: parseAsString,
   dateTo: parseAsString,
-  parametro: parseAsString.withDefault(FQ_DEFAULTS.parametro),
-  substance: parseAsString.withDefault(FQ_DEFAULTS.substance),
-  wellType: parseAsStringEnum<WellType>(Object.values(WellType)).withDefault(
-    WellType.MONITORING
-  ),
+  parametro: parseAsString,
+  substance: parseAsString,
   area: parseAsString,
-  wells: parseAsString,
-  sampleType: parseAsStringEnum<SampleType>(
-    Object.values(SampleType)
-  ).withDefault(SampleType.WATER)
+  wells: parseAsString
 };
 
 export const fqSearchParamsCache = createSearchParamsCache(fqSearchParams);

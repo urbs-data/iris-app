@@ -21,10 +21,10 @@ async function MapContentWrapper() {
   const dateTo = fqSearchParamsCache.get('dateTo');
   const parametro = fqSearchParamsCache.get('parametro');
   const substance = fqSearchParamsCache.get('substance');
-  const wellType = fqSearchParamsCache.get('wellType');
   const area = fqSearchParamsCache.get('area');
   const wells = fqSearchParamsCache.get('wells');
-  const sampleType = fqSearchParamsCache.get('sampleType');
+
+  if (!parametro || !substance) return null;
 
   const wellsArray = wells ? wells.split(',').filter(Boolean) : undefined;
 
@@ -33,10 +33,8 @@ async function MapContentWrapper() {
     ...(dateTo && { dateTo }),
     ...(parametro && { parametro }),
     ...(substance && { substance }),
-    ...(wellType && { wellType }),
     ...(area && { area }),
-    ...(wellsArray && { wells: wellsArray }),
-    sampleType
+    ...(wellsArray && { wells: wellsArray })
   };
 
   const result = await resolveActionResult(getFqWellMetrics(filters));

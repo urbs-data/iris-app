@@ -5,6 +5,7 @@ import { Output, generateText } from 'ai';
 import { eq } from 'drizzle-orm';
 import JSZip from 'jszip';
 import * as XLSX from 'xlsx';
+import { z } from 'zod';
 import { authOrganizationActionClient } from '@/lib/actions/safe-action';
 import { model } from '@/lib/ai';
 import { getBlobContainer } from '@/lib/azure-blob';
@@ -801,22 +802,18 @@ const GENERATION_SYSTEM_PROMPT = `You are a technical environmental report write
 VOICE & STYLE:
 - Write in flowing NARRATIVE PROSE. The reader is a technical professional, not a database.
 - SYNTHESIZE, do not enumerate. Describe patterns, ranges, and groupings — never dump raw lists.
-- When referring to monitoring points, use GROUP names (e.g. "the 11 EX-series extraction wells", "the D-series piezometers (D11–D21)", "five cPIMW injection wells"). List individual well names ONLY when they are exceptions or noteworthy (e.g. wells where a compound was detected).
+- When referring to monitoring points, use GROUP names (e.g. "the 11 EX-series wells", "the D-series (D11–D21)", "five cPIMW wells"). List individual well names ONLY when they are exceptions or noteworthy (e.g. wells where a compound was detected).
 - Date ranges: say "January 13–28, 2026" not list every date. Mention individual dates only if the set is ≤ 3.
 - Keep the executive summary to ONE concise paragraph (3–5 sentences).
-- Each data summary subsection: 1–2 paragraphs of prose, optionally followed by ONE small derived table if it adds value. A table should have ≤ 8 rows.
+- Each data summary subsection: 1–2 paragraphs of prose.
 
 MANDATORY RULES:
 - STRICTLY DESCRIPTIVE. No interpretation, causes, trends, or recommendations.
 - "ND" = "not detected". Never interpret it as missing data.
 - Use "chemical compounds", never "contaminants".
+- Never use markdown tables, ASCII tables, or column-aligned tabular formatting.
+- If source data is tabular, rewrite it as narrative prose.
 - Respond ONLY with valid JSON matching the schema. Include all keys; use null when a field does not apply.
-
-TABLES:
-- Use tables ONLY for derived summaries (min/max per parameter, detection summary per compound).
-- NEVER reproduce the raw input data as a table.
-- Prefer a single well-chosen table over multiple small ones.
-- For concentrations: a table showing detected compounds with their range and guideline comparison is ideal.
 
 STRUCTURE (exactly 3 level-1 sections):
 1. Executive summary — brief narrative overview of the full dataset.
@@ -831,6 +828,97 @@ Translate ALL text values in this JSON to the target language. Preserve:
 - Numbers, file names, well IDs (EX1, cPIMW01, etc.), units, and chemical formulas unchanged.
 - Compound names in their standard form for the target language.
 Respond ONLY with the translated JSON.`;
+
+const LlmBloqueSchema = z.object({
+  tipo: z.enum(['parrafo', 'lista', 'caja']),
+  texto: z.string().nullable(),
+  items: z.array(z.string()).nullable(),
+  columnas: z.array(z.string()).nullable(),
+  filas: z
+    .array(
+      z.object({
+        valores: z.array(z.string()),
+        alerta: z.enum(['alta', 'media', 'baja', 'ok']).nullable()
+      })
+    )
+    .nullable(),
+  nivel_alerta: z
+    .enum(['critico', 'advertencia', 'info', 'positivo'])
+    .nullable(),
+  titulo_caja: z.string().nullable()
+});
+
+const LlmSeccionSchema = z.object({
+  id: z.string(),
+  heading: z.string(),
+  nivel: z.union([z.literal(1), z.literal(2)]),
+  contenido: z.array(LlmBloqueSchema)
+});
+
+const LlmInformeSchema = z.object({
+  titulo: z.string().max(60),
+  subtitulo: z.string().max(80),
+  periodo: z.string().max(40),
+  secciones: z.array(LlmSeccionSchema)
+});
+
+function isMarkdownTableSeparatorLine(line: string): boolean {
+  return /^\s*\|?[\s:-]+(?:\|[\s:-]+)+\|?\s*$/.test(line);
+}
+
+function isMarkdownTableRowLine(line: string): boolean {
+  return /^\s*\|.*\|\s*$/.test(line);
+}
+
+function stripMarkdownTablesFromText(text: string): string {
+  const lines = text.split('\n');
+  const kept: string[] = [];
+  let i = 0;
+
+  while (i < lines.length) {
+    const current = lines[i];
+    const next = lines[i + 1];
+    const startsTable =
+      isMarkdownTableRowLine(current) &&
+      typeof next === 'string' &&
+      isMarkdownTableSeparatorLine(next);
+
+    if (!startsTable) {
+      kept.push(current);
+      i++;
+      continue;
+    }
+
+    i += 2; // skip markdown header/separator rows
+    while (i < lines.length && isMarkdownTableRowLine(lines[i])) {
+      i++;
+    }
+  }
+
+  return kept
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
+function sanitizeNoTables<T>(value: T): T {
+  if (typeof value === 'string') {
+    return stripMarkdownTablesFromText(value) as T;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => sanitizeNoTables(item)) as T;
+  }
+
+  if (value && typeof value === 'object') {
+    const mapped = Object.fromEntries(
+      Object.entries(value).map(([k, v]) => [k, sanitizeNoTables(v)])
+    );
+    return mapped as T;
+  }
+
+  return value;
+}
 
 function createPrompt(input: {
   reportName: string;
@@ -874,31 +962,31 @@ async function generateInforme(input: {
 }): Promise<Informe> {
   const { output } = await generateText({
     model,
-    output: Output.object({ schema: InformeSchema }),
+    output: Output.object({ schema: LlmInformeSchema }),
     system: GENERATION_SYSTEM_PROMPT,
     prompt: createPrompt(input)
   });
 
-  return output as Informe;
+  return sanitizeNoTables(output as Informe);
 }
 
 async function translateInforme(
   informe: Informe,
   targetLocale: string
 ): Promise<Informe> {
-  if (targetLocale === 'en') return informe; // already in English
+  if (targetLocale === 'en') return sanitizeNoTables(informe); // already in English
 
   const targetLanguage =
     targetLocale === 'es' ? 'Spanish (Latin America)' : targetLocale;
 
   const { output } = await generateText({
     model,
-    output: Output.object({ schema: InformeSchema }),
+    output: Output.object({ schema: LlmInformeSchema }),
     system: TRANSLATION_SYSTEM_PROMPT,
     prompt: createTranslationPrompt(informe, targetLanguage)
   });
 
-  return output as Informe;
+  return sanitizeNoTables(output as Informe);
 }
 
 /**

@@ -19,10 +19,11 @@ async function FqKpisContent() {
   const dateTo = fqSearchParamsCache.get('dateTo');
   const parametro = fqSearchParamsCache.get('parametro');
   const substance = fqSearchParamsCache.get('substance');
-  const wellType = fqSearchParamsCache.get('wellType');
+
+  if (!parametro || !substance) return null;
+
   const area = fqSearchParamsCache.get('area');
   const wells = fqSearchParamsCache.get('wells');
-  const sampleType = fqSearchParamsCache.get('sampleType');
   const wellsArray = wells ? wells.split(',').filter(Boolean) : undefined;
 
   const filters = {
@@ -30,10 +31,8 @@ async function FqKpisContent() {
     ...(dateTo && { dateTo }),
     ...(parametro && { parametro }),
     ...(substance && { substance }),
-    ...(wellType && { wellType }),
     ...(area && { area }),
-    ...(wellsArray && { wells: wellsArray }),
-    sampleType
+    ...(wellsArray && { wells: wellsArray })
   };
 
   const metrics = await resolveActionResult(getFqGeneralMetrics(filters));

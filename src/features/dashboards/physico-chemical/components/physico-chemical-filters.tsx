@@ -134,21 +134,6 @@ export function PhysicoChemicalFilters() {
       </div>
 
       <div className='space-y-2'>
-        <Label className='text-sm font-medium'>{t('wells')}</Label>
-        <MultiSelect
-          values={localFilters.wells}
-          onValuesChange={(values) =>
-            setLocalFilters((prev) => ({ ...prev, wells: values }))
-          }
-          options={wellsData.map((w) => ({ value: w.value, label: w.label }))}
-          placeholder={t('wells')}
-          searchPlaceholder={t('searchWell')}
-          isLoading={isLoadingWells}
-          className='h-9'
-        />
-      </div>
-
-      <div className='space-y-2'>
         <Label className='text-sm font-medium'>{t('substance')}</Label>
         <Combobox
           value={localFilters.substance}
@@ -176,6 +161,21 @@ export function PhysicoChemicalFilters() {
           placeholder={t('fqParameter')}
           searchPlaceholder={t('searchFqParameter')}
           emptyMessage={t('noFqParameterFound')}
+          className='h-9'
+        />
+      </div>
+
+      <div className='space-y-2'>
+        <Label className='text-sm font-medium'>{t('wells')}</Label>
+        <MultiSelect
+          values={localFilters.wells}
+          onValuesChange={(values) =>
+            setLocalFilters((prev) => ({ ...prev, wells: values }))
+          }
+          options={wellsData.map((w) => ({ value: w.value, label: w.label }))}
+          placeholder={t('wells')}
+          searchPlaceholder={t('searchWell')}
+          isLoading={isLoadingWells}
           className='h-9'
         />
       </div>

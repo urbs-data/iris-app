@@ -28,8 +28,8 @@ export const getFqGeneralMetrics = authOrganizationActionClient
         SELECT *
         FROM pozos
         WHERE tipo IN ('WELL', 'PUMP')
+          AND tipo = 'WELL'
           ${parsedInput.area ? sql`AND area = ${parsedInput.area}` : sql``}
-          ${parsedInput.wellType ? sql`AND tipo = ${parsedInput.wellType}` : sql``}
           ${wells ? sql`AND LOWER(id_pozo) IN ${sql.raw(`(${wells.map((w) => `'${w}'`).join(',')})`)}` : sql``}
       ),
       raw_fq AS (

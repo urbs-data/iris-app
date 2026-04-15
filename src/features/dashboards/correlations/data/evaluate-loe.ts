@@ -419,16 +419,21 @@ Guía por LOE:
 
 LOE 1 — Condiciones geoquímicas:
 - Citar mediana de ORP (mV) y OD (mg/L), y la clasificación (ej: OXIDANTE, REDUCTOR).
-- Implicancia: si ORP > 0 → condiciones insuficientes; si OD > 2 → pasivación del ZVI.
+- Implicancia: si ORP < -100 mV → condiciones reductoras favorables; 
+  si ORP entre -100 y 0 → actividad ZVI limitada; 
+  si ORP > 0 → condiciones insuficientes. 
+  Solo mencionar pasivación si OD > 2 mg/L.
 
 LOE 2 — Correlaciones con mecanismo ZVI:
-- Citar ρ y p del ORP. Si n_eventos < 4, mencionar que Spearman tiene baja potencia estadística.
-- Implicancia: qué indica sobre el control de la barrera sobre el compuesto.
+- Citar ρ y p del ORP. Si n_eventos =< 4, mencionar que Spearman tiene baja potencia estadística.
+- Implicancia: si p > 0.05 o n_eventos =< 4 → sin evidencia interpretable 
+  del control de la barrera. No usar "débil evidencia".
 
 LOE 3 — Degradación vs dilución:
 - Si trazador_usado ≠ NINGUNO: citar ρ y p del trazador (CE o STD).
 - Si trazador_usado = NINGUNO: indicar que no hay datos de conductividad ni sólidos disueltos.
-- Implicancia: si la dilución es o no un factor dominante.
+- Implicancia: si ρ(CT, trazador) es alto y positivo → dilución puede ser 
+  factor dominante. Si ρ bajo o negativo → dilución no explica la atenuación.
 
 LOE 4 — Cumplimiento regulatorio:
 - Citar valor vs nivel guía en µg/L.

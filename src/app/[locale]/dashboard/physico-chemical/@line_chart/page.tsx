@@ -3,6 +3,7 @@ import type { SeriesConfig } from '@/components/charts/line-chart';
 import { getFqDailyMetrics } from '@/features/dashboards/physico-chemical/data/get-fq-daily-metrics';
 import { getDailyMetrics } from '@/features/dashboards/substance/data/get-daily-metrics';
 import { getSubstances } from '@/features/dashboards/substance/data/get-substances';
+import { WellType, SampleType } from '@/features/dashboards/substance/types';
 import {
   fqSearchParamsCache,
   serializeFqParams
@@ -64,10 +65,10 @@ async function LineChartContent() {
   const dateTo = fqSearchParamsCache.get('dateTo');
   const parametro = fqSearchParamsCache.get('parametro');
   const substance = fqSearchParamsCache.get('substance');
-  const wellType = fqSearchParamsCache.get('wellType');
   const area = fqSearchParamsCache.get('area');
   const wells = fqSearchParamsCache.get('wells');
-  const sampleType = fqSearchParamsCache.get('sampleType');
+
+  if (!parametro || !substance) return null;
 
   const wellsArray = wells ? wells.split(',').filter(Boolean) : undefined;
 
@@ -76,20 +77,18 @@ async function LineChartContent() {
     ...(dateTo && { dateTo }),
     ...(parametro && { parametro }),
     ...(substance && { substance }),
-    ...(wellType && { wellType }),
     ...(area && { area }),
-    ...(wellsArray && { wells: wellsArray }),
-    sampleType
+    ...(wellsArray && { wells: wellsArray })
   };
 
   const substanceFilters = {
     ...(dateFrom && { dateFrom }),
     ...(dateTo && { dateTo }),
     ...(substance && { substance }),
-    ...(wellType && { wellType }),
+    wellType: WellType.MONITORING,
     ...(area && { area }),
     ...(wellsArray && { wells: wellsArray }),
-    sampleType
+    sampleType: SampleType.WATER
   };
 
   const [fqResult, substanceResult, substancesResult] = await Promise.all([

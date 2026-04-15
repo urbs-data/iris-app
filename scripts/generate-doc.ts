@@ -9,24 +9,13 @@ import { join } from 'path';
 import 'dotenv/config';
 
 const BloqueSchema = z.object({
-  tipo: z.enum(['parrafo', 'lista', 'tabla', 'caja']),
+  tipo: z.enum(['parrafo', 'lista', 'caja']),
 
   // parrafo
   texto: z.string().optional(),
 
   // lista
   items: z.array(z.string()).optional(),
-
-  // tabla
-  columnas: z.array(z.string()).optional(),
-  filas: z
-    .array(
-      z.object({
-        valores: z.array(z.string()),
-        alerta: z.enum(['alta', 'media', 'baja', 'ok']).nullable().optional()
-      })
-    )
-    .optional(),
 
   // caja
   nivel_alerta: z
@@ -200,7 +189,6 @@ Analizá los datos de monitoreo de agua subterránea que te pasan y generá un i
 Reglas de contenido:
 - No inventes datos. Solo usá la información presente en el JSON de entrada.
 - Todos los números deben citarse con sus unidades y nivel guía correspondiente.
-- Para alertas de filas en tablas: "alta" si supera 10x el nivel guía, "media" entre 1x y 10x, "baja" si está cerca (0.5x–1x), "ok" si está por debajo.
 - Para cajas: "critico" en concentraciones extremas o anomalías graves, "advertencia" en tendencias preocupantes, "info" en observaciones sin urgencia, "positivo" en aspectos favorables.
 - Los datos de concentraciones fueron preprocesados: solo se enviaron compuestos con al menos una detección. 
 El campo "no_detectados" lista todos los compuestos analizados que resultaron ND en la totalidad de los pozos — mencioná su cantidad total en el informe pero no los enumeres individualmente.
@@ -377,100 +365,6 @@ function dibujarLista(doc: PDFKit.PDFDocument, items: string[]) {
   }
   doc.y += 4;
 }
-
-// ── Tabla ─────────────────────────────────────
-function dibujarTabla(
-  doc: PDFKit.PDFDocument,
-  columnas: string[],
-  filas: Array<{ valores: string[]; alerta: string | null }>
-) {
-  const nCols = columnas.length;
-  if (nCols === 0) return;
-
-  const colW = CONTENT_W / nCols;
-  const padX = 4;
-  const padY = 4;
-  const headerH = 20;
-  const rowH = 18;
-  const fontSize = 7.5;
-
-  // Calcular altura total para check de página
-  const totalH = headerH + filas.length * rowH + 2;
-  checkPageBreak(doc, Math.min(totalH, 120));
-
-  let y = doc.y;
-
-  // Header
-  rect(doc, MARGIN, y, CONTENT_W, headerH, COLORES.azulOscuro);
-  columnas.forEach((col, i) => {
-    doc.font('Helvetica-Bold').fontSize(fontSize);
-    colorFill(doc, COLORES.blanco);
-    doc.text(col, MARGIN + i * colW + padX, y + padY, {
-      width: colW - padX * 2,
-      height: headerH - padY * 2,
-      ellipsis: true,
-      lineBreak: false
-    });
-  });
-  y += headerH;
-
-  // Filas
-  filas.forEach((fila, rowIdx) => {
-    // Salto de página si es necesario
-    if (y + rowH > PAGE_H - MARGIN) {
-      doc.addPage();
-      y = MARGIN;
-      // Redibujar header
-      rect(doc, MARGIN, y, CONTENT_W, headerH, COLORES.azulOscuro);
-      columnas.forEach((col, i) => {
-        doc.font('Helvetica-Bold').fontSize(fontSize);
-        colorFill(doc, COLORES.blanco);
-        doc.text(col, MARGIN + i * colW + padX, y + padY, {
-          width: colW - padX * 2,
-          height: headerH - padY * 2,
-          ellipsis: true,
-          lineBreak: false
-        });
-      });
-      y += headerH;
-    }
-
-    // Fondo de fila
-    const bgColor =
-      fila.alerta && ALERTA_FILA[fila.alerta]
-        ? ALERTA_FILA[fila.alerta]
-        : rowIdx % 2 === 0
-          ? COLORES.blanco
-          : COLORES.azulMuyCl;
-
-    rect(doc, MARGIN, y, CONTENT_W, rowH, bgColor);
-
-    // Borde inferior fino
-    colorStroke(doc, COLORES.azulClaro);
-    doc
-      .moveTo(MARGIN, y + rowH)
-      .lineTo(MARGIN + CONTENT_W, y + rowH)
-      .lineWidth(0.3)
-      .stroke();
-
-    // Celdas
-    fila.valores.forEach((val, i) => {
-      doc.font('Helvetica').fontSize(fontSize);
-      colorFill(doc, COLORES.negro);
-      doc.text(String(val ?? ''), MARGIN + i * colW + padX, y + padY, {
-        width: colW - padX * 2,
-        height: rowH - padY * 2,
-        ellipsis: true,
-        lineBreak: false
-      });
-    });
-
-    y += rowH;
-  });
-
-  doc.y = y + 8;
-}
-
 // ── Caja destacada ────────────────────────────
 function dibujarCaja(
   doc: PDFKit.PDFDocument,
@@ -591,14 +485,6 @@ function construirPDF(informe: Informe, outputPath: string): Promise<void> {
             break;
           case 'lista':
             if (bloque.items) dibujarLista(doc, bloque.items);
-            break;
-          case 'tabla':
-            if (bloque.columnas && bloque.filas)
-              dibujarTabla(
-                doc,
-                bloque.columnas,
-                bloque.filas as { valores: string[]; alerta: string | null }[]
-              );
             break;
           case 'caja':
             if (bloque.nivel_alerta)
