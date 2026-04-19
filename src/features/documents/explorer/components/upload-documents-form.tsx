@@ -17,7 +17,9 @@ import { resolveActionResult } from '@/lib/actions/client';
 import { uploadDocuments } from '../actions/upload-documents';
 import {
   uploadDocumentsSchema,
-  UploadDocumentsSchema
+  UploadDocumentsSchema,
+  UPLOAD_MAX_FILES,
+  UPLOAD_MAX_TOTAL_BYTES
 } from '../actions/upload-documents-schema';
 import {
   CLASSIFICATIONS_MAP,
@@ -172,8 +174,9 @@ export function UploadDocumentsForm() {
                       shouldValidate: true
                     });
                   }}
-                  maxFiles={10}
-                  maxSize={100 * 1024 * 1024}
+                  maxFiles={UPLOAD_MAX_FILES}
+                  maxSize={UPLOAD_MAX_TOTAL_BYTES}
+                  maxTotalSize={UPLOAD_MAX_TOTAL_BYTES}
                   multiple
                   accept={{
                     'application/pdf': ['.pdf'],

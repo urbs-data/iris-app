@@ -37,10 +37,7 @@ export function KpiCard({ items, title, className }: KpiCardProps) {
               {item.label}
             </span>
             <span
-              className={cn(
-                'text-lg font-bold tabular-nums md:text-xl',
-                item.className
-              )}
+              className={cn('text-lg font-bold tabular-nums', item.className)}
             >
               {item.value}
               {item.unit && (

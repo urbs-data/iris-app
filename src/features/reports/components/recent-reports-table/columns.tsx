@@ -1,11 +1,14 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
+import { formatRelative } from 'date-fns';
+import { enUS, es } from 'date-fns/locale';
 import type { RecentExport } from '../../lib/types';
 import { DownloadButton } from '@/features/shared/components/download-button';
 import { GenerateAiPdfButton } from './generate-ai-pdf-button';
 
 interface ColumnsOptions {
+  locale: string;
   translations: {
     name: string;
     generatedAt: string;
@@ -27,7 +30,8 @@ interface ColumnsOptions {
 export function createRecentReportsColumns(
   options: ColumnsOptions
 ): ColumnDef<RecentExport>[] {
-  const { translations } = options;
+  const { locale, translations } = options;
+  const dateFnsLocale = locale === 'es' ? es : enUS;
 
   return [
     {
@@ -41,6 +45,16 @@ export function createRecentReportsColumns(
     {
       accessorKey: 'generatedAt',
       header: translations.generatedAt,
+      cell: ({ row }) => {
+        const date = new Date(row.original.generatedAt);
+        if (Number.isNaN(date.getTime())) {
+          return '-';
+        }
+
+        return formatRelative(date, new Date(), {
+          locale: dateFnsLocale
+        });
+      },
       size: 10
     },
     {

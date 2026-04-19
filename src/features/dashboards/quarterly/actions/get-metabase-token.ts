@@ -17,7 +17,7 @@ export async function getMetabaseToken(): Promise<string> {
   const payload = {
     resource: { dashboard: dashboardId },
     params: {},
-    exp: Math.round(Date.now() / 1000) + 10 * 60 // 10 minute expiration
+    exp: Math.round(Date.now() / 1000) + 30 * 60 // 30 minute expiration
   };
 
   return jwt.sign(payload, METABASE_SECRET_KEY);

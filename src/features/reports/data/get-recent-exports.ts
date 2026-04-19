@@ -4,9 +4,7 @@ import { authOrganizationActionClient } from '@/lib/actions/safe-action';
 import { getRecentExportsSchema } from './get-recent-exports-schema';
 import { reportsTable } from '@/db/schema';
 import { desc, count, eq } from 'drizzle-orm';
-import { format, formatRelative } from 'date-fns';
-import { enUS, es } from 'date-fns/locale';
-import { getLocale } from 'next-intl/server';
+import { format } from 'date-fns';
 import type { RecentExport } from '../lib/types';
 
 export interface RecentExportsPaginated {
@@ -39,15 +37,10 @@ export const getRecentExports = authOrganizationActionClient
       return { rows, totalCount: Number(totalResult[0]?.count ?? 0) };
     });
 
-    const locale = await getLocale();
-    const dateFnsLocale = locale === 'es' ? es : enUS;
-    const now = new Date();
     const data: RecentExport[] = rows.map((row) => ({
       id: row.id_reporte,
       name: row.nombre_archivo,
-      generatedAt: formatRelative(row.created_at, now, {
-        locale: dateFnsLocale
-      }),
+      generatedAt: row.created_at.toISOString(),
       range: `${format(row.fecha_desde, 'yyyy-MM-dd')} - ${format(row.fecha_hasta, 'yyyy-MM-dd')}`,
       user: row.nombre_usuario,
       format: row.extension as RecentExport['format'],

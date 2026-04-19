@@ -2,7 +2,7 @@
 
 import { DataTable } from '@/components/ui/table/data-table';
 import { useDataTable } from '@/hooks/use-data-table';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { createRecentReportsColumns } from './columns';
 import type { RecentExport } from '../../lib/types';
 
@@ -17,9 +17,11 @@ export function RecentReportsTable({
   totalCount,
   pageCount
 }: RecentReportsTableProps) {
+  const locale = useLocale();
   const t = useTranslations('reports.recent');
 
   const columns = createRecentReportsColumns({
+    locale,
     translations: {
       name: t('columns.name'),
       generatedAt: t('columns.generatedAt'),

@@ -1,6 +1,10 @@
 import { z } from 'zod';
 
-const MAX_FILE_SIZE = 100 * 1024 * 1024;
+export const UPLOAD_MAX_FILES = 50;
+export const UPLOAD_MAX_TOTAL_BYTES = 100 * 1024 * 1024;
+
+const MAX_FILES = UPLOAD_MAX_FILES;
+const MAX_TOTAL_UPLOAD_SIZE = UPLOAD_MAX_TOTAL_BYTES;
 
 const EXCEL_MIME_TYPES = [
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -27,9 +31,12 @@ export const uploadDocumentsSchema = z
     files: z
       .array(z.instanceof(File))
       .min(1, 'uploadDocument.atLeastOneFile')
+      .max(MAX_FILES, 'uploadDocument.tooManyFiles')
       .refine(
-        (files) => files.every((file) => file.size <= MAX_FILE_SIZE),
-        'uploadDocument.fileTooLarge'
+        (files) =>
+          files.reduce((sum, file) => sum + file.size, 0) <=
+          MAX_TOTAL_UPLOAD_SIZE,
+        'uploadDocument.totalSizeTooLarge'
       )
   })
   .superRefine((data, ctx) => {

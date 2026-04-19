@@ -76,6 +76,12 @@ export interface FileUploaderProps
   maxFiles?: DropzoneProps['maxFiles'];
 
   /**
+   * Maximum combined size of all selected files (bytes).
+   * When set, files are added in order until this total would be exceeded.
+   */
+  maxTotalSize?: number;
+
+  /**
    * Whether the uploader should accept multiple files.
    * @type boolean
    * @default false
@@ -101,6 +107,7 @@ export function FileUploader(props: FileUploaderProps) {
     accept = { 'image/*': [] },
     maxSize = 1024 * 1024 * 2,
     maxFiles = 1,
+    maxTotalSize,
     multiple = false,
     disabled = false,
     className,
@@ -125,7 +132,41 @@ export function FileUploader(props: FileUploaderProps) {
         return;
       }
 
-      const updatedFiles = files ? [...files, ...acceptedFiles] : acceptedFiles;
+      const currentFiles = files ?? [];
+      let updatedFiles: File[];
+
+      if (maxTotalSize !== undefined) {
+        const next: File[] = [...currentFiles];
+        let total = next.reduce((sum, f) => sum + f.size, 0);
+        let skippedDueToTotal = false;
+
+        for (const file of acceptedFiles) {
+          if (next.length >= maxFiles) break;
+          if (total + file.size > maxTotalSize) {
+            skippedDueToTotal = true;
+            break;
+          }
+          next.push(file);
+          total += file.size;
+        }
+
+        const addedFromBatch = next.length - currentFiles.length;
+        if (
+          skippedDueToTotal &&
+          acceptedFiles.length > 0 &&
+          addedFromBatch < acceptedFiles.length
+        ) {
+          toast.error(
+            t('totalSizeExceeded', { max: formatBytes(maxTotalSize) })
+          );
+        }
+
+        updatedFiles = next;
+      } else {
+        updatedFiles = currentFiles.length
+          ? [...currentFiles, ...acceptedFiles]
+          : acceptedFiles;
+      }
 
       setFiles(updatedFiles);
 
@@ -158,7 +199,7 @@ export function FileUploader(props: FileUploaderProps) {
       }
     },
 
-    [files, maxFiles, multiple, onUpload, setFiles, t]
+    [files, maxFiles, maxTotalSize, multiple, onUpload, setFiles, t]
   );
 
   function onRemove(index: number) {
@@ -222,14 +263,19 @@ export function FileUploader(props: FileUploaderProps) {
                           {t('dragAndDrop')}
                         </p>
                         <p className='text-muted-foreground/70 text-sm'>
-                          {t('youCanUpload')}
                           {maxFiles > 1
-                            ? ` ${
-                                maxFiles === Infinity
-                                  ? t('multipleFiles')
-                                  : maxFiles
-                              } ${t('filesUpTo', { size: formatBytes(maxSize) })}`
-                            : ` ${t('fileWith', { size: formatBytes(maxSize) })}`}
+                            ? maxTotalSize !== undefined
+                              ? t('multipleWithTotalLimit', {
+                                  count: maxFiles,
+                                  total: formatBytes(maxTotalSize),
+                                  each: formatBytes(maxSize)
+                                })
+                              : `${t('youCanUpload')} ${
+                                  maxFiles === Infinity
+                                    ? t('multipleFiles')
+                                    : maxFiles
+                                } ${t('filesUpTo', { size: formatBytes(maxSize) })}`
+                            : `${t('youCanUpload')} ${t('fileWith', { size: formatBytes(maxSize) })}`}
                         </p>
                       </div>
                     </div>
