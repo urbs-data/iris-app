@@ -164,6 +164,8 @@
     "documentTypes": {
         "EDD Muestras": "EDD Muestras",
         "EDD Parametros Fisico Quimicos": "EDD Parámetros Físico Químicos",
+        "EDD Profundidad Agua": "EDD Profundidad Agua",
+        "Resumen Parametros": "Resumen Parametros",
         "Pozos": "Pozos",
         "Sustancias": "Sustancias"
     },

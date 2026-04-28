@@ -33,7 +33,8 @@ const PARAMETRO_ESTANDAR: Record<string, string> = {
 export class ParametrosFisicoQuimicosETL implements ETLProcessor {
   canProcess(ctx: ETLContext): boolean {
     return (
-      ctx.tipo === DocumentType.EDDParametrosFisicoQuimicos &&
+      (ctx.tipo === DocumentType.EDDParametrosFisicoQuimicos ||
+        ctx.tipo === DocumentType.EDDProfundidadAgua) &&
       isExcelFile(ctx.fileName)
     );
   }

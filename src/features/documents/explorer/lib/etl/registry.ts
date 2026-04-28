@@ -3,6 +3,7 @@ import { WellsETL } from './wells-etl';
 import { SubstancesETL } from './substances-etl';
 import { SamplesETL } from './samples-etl';
 import { ParametrosFisicoQuimicosETL } from './parametros-fisico-quimicos-etl';
+import { ResumenParametrosETL } from './resumen-parametros-etl';
 
 class ETLRegistry {
   private processors: ETLProcessor[] = [];
@@ -22,6 +23,7 @@ registry.register(new WellsETL());
 registry.register(new SubstancesETL());
 registry.register(new SamplesETL());
 registry.register(new ParametrosFisicoQuimicosETL());
+registry.register(new ResumenParametrosETL());
 
 export function resolveETLProcessor(ctx: ETLContext): ETLProcessor | null {
   return registry.resolve(ctx);

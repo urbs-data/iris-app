@@ -162,6 +162,8 @@
     "documentTypes": {
         "EDD Muestras": "EDD Samples",
         "EDD Parametros Fisico Quimicos": "EDD Physical-Chemical Parameters",
+        "EDD Profundidad Agua": "EDD Water Depth",
+        "Resumen Parametros": "Summary Parameters",
         "Pozos": "Wells",
         "Sustancias": "Substances"
     },

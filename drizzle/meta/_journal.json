@@ -155,6 +155,20 @@
       "when": 1773684567857,
       "tag": "0021_dazzling_ironclad",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1777389584875,
+      "tag": "0022_right_meteorite",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1777398519935,
+      "tag": "0023_gray_raider",
+      "breakpoints": true
     }
   ]
 }

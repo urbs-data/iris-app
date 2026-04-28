@@ -75,6 +75,57 @@ export function validateRequiredColumns(
   return missingColumns;
 }
 
+export function normalizeHeaderName(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, ' ');
+}
+
+export function buildNormalizedHeaderMap(
+  headers: string[]
+): Record<string, string> {
+  const map: Record<string, string> = {};
+
+  for (const header of headers) {
+    const normalized = normalizeHeaderName(header);
+    if (normalized && !map[normalized]) {
+      map[normalized] = header;
+    }
+  }
+
+  return map;
+}
+
+export function validateRequiredNormalizedColumns(
+  headers: string[],
+  requiredColumns: readonly string[],
+  aliases: Record<string, readonly string[]> = {}
+): string[] {
+  const normalizedHeaderMap = buildNormalizedHeaderMap(headers);
+  const missingColumns: string[] = [];
+
+  for (const required of requiredColumns) {
+    const normalizedRequired = normalizeHeaderName(required);
+    const normalizedAliases = (aliases[required] ?? []).map(
+      normalizeHeaderName
+    );
+    const candidates = [normalizedRequired, ...normalizedAliases];
+
+    const hasAnyCandidate = candidates.some((candidate) =>
+      Boolean(normalizedHeaderMap[candidate])
+    );
+
+    if (!hasAnyCandidate) {
+      missingColumns.push(required);
+    }
+  }
+
+  return missingColumns;
+}
+
 export function readExcelFirstSheet(buffer: Buffer): SheetData | null {
   try {
     const workbook = XLSX.read(buffer, { type: 'buffer', cellDates: true });

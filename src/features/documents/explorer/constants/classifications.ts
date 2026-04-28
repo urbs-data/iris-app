@@ -58,6 +58,8 @@ export const CLASSIFICATIONS_MAP: Record<string, string[]> = {
 export const DocumentType = {
   EDDMuestras: 'EDD Muestras',
   EDDParametrosFisicoQuimicos: 'EDD Parametros Fisico Quimicos',
+  EDDProfundidadAgua: 'EDD Profundidad Agua',
+  ResumenParametros: 'Resumen Parametros',
   Pozos: 'Pozos',
   Sustancias: 'Sustancias'
 } as const;

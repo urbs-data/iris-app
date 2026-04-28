@@ -243,6 +243,25 @@ export const parametrosFisicoQuimicosTable = pgTable(
   (t) => [orgIsolationPolicy('parametros_fisico_quimicos')]
 ).enableRLS();
 
+export const resumenParametrosTable = pgTable(
+  'resumen_parametros',
+  {
+    id_resumen_parametros: varchar('id_resumen_parametros', {
+      length: 100
+    }).primaryKey(),
+    organization_id: varchar('organization_id', { length: 100 }).notNull(),
+    id_pozo: varchar('id_pozo', { length: 100 }),
+    fecha_hora_medicion: timestamp('fecha_hora_medicion'),
+    olor: varchar('olor', { length: 255 }),
+    apariencia_agua_inicio: varchar('apariencia_agua_inicio', { length: 255 }),
+    apariencia_agua_estabilizacion: varchar('apariencia_agua_estabilizacion', {
+      length: 255
+    }),
+    documento_origen: varchar('documento_origen', { length: 200 })
+  },
+  (t) => [orgIsolationPolicy('resumen_parametros')]
+).enableRLS();
+
 export const campanasTable = pgTable('campanas', {
   id: serial('id').primaryKey(),
   nombre: varchar('nombre', { length: 100 }).notNull(),
@@ -280,6 +299,9 @@ export type ParametroFisicoQuimico =
   typeof parametrosFisicoQuimicosTable.$inferSelect;
 export type NewParametroFisicoQuimico =
   typeof parametrosFisicoQuimicosTable.$inferInsert;
+
+export type ResumenParametro = typeof resumenParametrosTable.$inferSelect;
+export type NewResumenParametro = typeof resumenParametrosTable.$inferInsert;
 
 export type ReporteConfiguracion =
   typeof reporteConfiguracionesTable.$inferSelect;

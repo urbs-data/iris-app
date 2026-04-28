@@ -27,7 +27,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE
   public.sustancias,
   public.reportes,
   public.reporte_configuraciones,
-  public.parametros_muestras
+  public.parametros_muestras,
+  public.resumen_parametros
 TO app_user;
 
 -- Permisos de uso en los schemas
