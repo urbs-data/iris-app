@@ -14,6 +14,18 @@ function getFileExtension(filePath: string): string {
   return parts.length > 1 ? parts[parts.length - 1].toLowerCase() : '';
 }
 
+function buildContentDisposition(filename: string): string {
+  // Azure rejects non-ASCII characters in the rscd query parameter, so we build
+  // an RFC 5987 Content-Disposition: an ASCII-safe `filename` fallback plus a
+  // `filename*` with percent-encoded UTF-8 that browsers use for the real name.
+  const asciiFilename = filename
+    // eslint-disable-next-line no-control-regex
+    .replace(/[^\x20-\x7E]/g, '_')
+    .replace(/["\\]/g, '_');
+  const encodedFilename = encodeURIComponent(filename);
+  return `attachment; filename="${asciiFilename}"; filename*=UTF-8''${encodedFilename}`;
+}
+
 export const getSasUri = authOrganizationActionClient
   .metadata({ actionName: 'getSasUri' })
   .inputSchema(getSasUriSchema)
@@ -32,7 +44,7 @@ export const getSasUri = authOrganizationActionClient
     const filename = blobName.split('/').pop() || blobName;
 
     const contentDisposition =
-      fileExtension === 'pdf' ? 'inline' : `attachment; filename="${filename}"`;
+      fileExtension === 'pdf' ? 'inline' : buildContentDisposition(filename);
 
     const contentType =
       mime.lookup(parsedInput.blobPath) || 'application/octet-stream';

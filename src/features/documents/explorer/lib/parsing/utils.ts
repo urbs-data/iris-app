@@ -126,6 +126,40 @@ export function validateRequiredNormalizedColumns(
   return missingColumns;
 }
 
+export function readExcelSheet(
+  buffer: Buffer,
+  preferredName: string
+): SheetData | null {
+  try {
+    const workbook = XLSX.read(buffer, { type: 'buffer', cellDates: true });
+
+    const sheetName = workbook.SheetNames.includes(preferredName)
+      ? preferredName
+      : workbook.SheetNames[0];
+
+    if (!sheetName) {
+      return null;
+    }
+
+    const sheet = workbook.Sheets[sheetName];
+
+    const data = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, {
+      raw: false,
+      dateNF: 'yyyy-mm-dd'
+    });
+
+    if (data.length === 0) {
+      return null;
+    }
+
+    const headers = Object.keys(data[0]);
+
+    return { name: sheetName, sheet, data, headers };
+  } catch {
+    return null;
+  }
+}
+
 export function readExcelFirstSheet(buffer: Buffer): SheetData | null {
   try {
     const workbook = XLSX.read(buffer, { type: 'buffer', cellDates: true });

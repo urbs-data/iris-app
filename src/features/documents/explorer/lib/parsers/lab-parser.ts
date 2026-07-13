@@ -2,7 +2,7 @@ import {
   parseNumber,
   parseExcelDate,
   validateRequiredColumns,
-  readExcelFirstSheet
+  readExcelSheet
 } from '../parsing/utils';
 
 const REQUIRED_COLUMNS = [
@@ -49,7 +49,7 @@ export interface ParseResult {
 
 export function parseLabExcel(buffer: Buffer, fileName: string): ParseResult {
   try {
-    const sheetData = readExcelFirstSheet(buffer);
+    const sheetData = readExcelSheet(buffer, 'EDDStructure');
 
     if (!sheetData) {
       return {

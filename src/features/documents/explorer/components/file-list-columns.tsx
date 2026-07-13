@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ColumnDef } from '@tanstack/react-table';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
+import { Checkbox } from '@/components/ui/checkbox';
 import { FileIcon } from '@/features/shared/components/file-icon';
 import { FileItem } from '../lib/types';
 import { serialize } from '../searchparams';
@@ -24,11 +25,49 @@ function formatFileSize(bytes: number | null): string {
   return `${size.toFixed(2)} ${units[unitIndex]}`;
 }
 
+export interface FileListSelection {
+  selectedIds: Set<string>;
+  toggleId: (id: string) => void;
+  toggleAll: () => void;
+  allSelected: boolean;
+  someSelected: boolean;
+  hasSelectable: boolean;
+}
+
 export function createFileListColumns(
-  currentPath: string
+  currentPath: string,
+  selection: FileListSelection
 ): ColumnDef<FileItem>[] {
   const t = useTranslations('fileExplorer');
   return [
+    {
+      id: 'select',
+      header: () => (
+        <Checkbox
+          checked={
+            selection.allSelected
+              ? true
+              : selection.someSelected
+                ? 'indeterminate'
+                : false
+          }
+          onCheckedChange={() => selection.toggleAll()}
+          disabled={!selection.hasSelectable}
+          aria-label='Seleccionar todos'
+        />
+      ),
+      cell: ({ row }) => {
+        if (row.original.type !== 'file') return null;
+        return (
+          <Checkbox
+            checked={selection.selectedIds.has(row.original.id)}
+            onCheckedChange={() => selection.toggleId(row.original.id)}
+            aria-label='Seleccionar archivo'
+          />
+        );
+      },
+      enableSorting: false
+    },
     {
       accessorKey: 'type',
       header: t('columns.type'),
