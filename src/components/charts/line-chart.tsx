@@ -287,6 +287,7 @@ export function LineChart({
                 key={index}
                 y={ref.value}
                 yAxisId='left'
+                ifOverflow='extendDomain'
                 stroke={ref.color ?? 'var(--destructive)'}
                 strokeDasharray={ref.strokeDasharray ?? '5 5'}
                 strokeWidth={1.5}

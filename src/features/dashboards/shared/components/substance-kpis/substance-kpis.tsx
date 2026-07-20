@@ -54,17 +54,19 @@ export function SubstanceKpis({
           />
           <MetricItem
             label={t('kpi.guidelineLevel')}
-            value={generalMetrics.guideLevel}
-            unit={unit}
+            value={generalMetrics.guideLevel ?? '—'}
+            unit={generalMetrics.guideLevel !== null ? unit : undefined}
           />
           <MetricItem
             label={t('kpi.average')}
             value={generalMetrics.average.toFixed(1)}
             unit={unit}
             valueClassName={
-              generalMetrics.average > generalMetrics.guideLevel
-                ? 'text-destructive'
-                : 'text-green-600'
+              generalMetrics.guideLevel === null
+                ? ''
+                : generalMetrics.average > generalMetrics.guideLevel
+                  ? 'text-destructive'
+                  : 'text-green-600'
             }
           />
           <MetricItem
@@ -78,6 +80,7 @@ export function SubstanceKpis({
             value={generalMetrics.max.toFixed(2)}
             unit={unit}
             valueClassName={
+              generalMetrics.guideLevel !== null &&
               generalMetrics.max > generalMetrics.guideLevel
                 ? 'text-destructive'
                 : ''
@@ -116,7 +119,8 @@ export function SubstanceKpis({
                   <td
                     className={cn(
                       'px-2 py-1.5 text-right tabular-nums',
-                      well.max > generalMetrics.guideLevel
+                      generalMetrics.guideLevel !== null &&
+                        well.max > generalMetrics.guideLevel
                         ? 'text-destructive font-semibold'
                         : ''
                     )}

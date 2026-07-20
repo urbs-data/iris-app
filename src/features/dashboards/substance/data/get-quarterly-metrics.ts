@@ -8,7 +8,7 @@ import { sql } from 'drizzle-orm';
 
 interface QuarterlyMetricsResult {
   data: QuarterlyStats[];
-  guideLevel: number;
+  guideLevel: number | null;
   unit: string | null;
 }
 
@@ -70,7 +70,7 @@ export const getQuarterlyMetrics = authOrganizationActionClient
     const results = await ctx.db.execute<QueryRow>(query);
 
     const guideLevel =
-      results.rows.length > 0 ? (results.rows[0].nivel_guia ?? 100) : 100;
+      results.rows.length > 0 ? (results.rows[0].nivel_guia ?? null) : null;
 
     const data: QuarterlyStats[] = results.rows.map((row) => ({
       period: row.anio,

@@ -16,7 +16,7 @@ import { berazateguiGeoJson } from '@/shared/lib/berazategui-geojson';
 
 interface MapContentProps {
   data: WellMetrics[];
-  guideLevel: number;
+  guideLevel: number | null;
 }
 
 function LocationTooltip({ well }: { well: WellMetrics }) {
@@ -93,7 +93,7 @@ export function MapContent({ data, guideLevel }: MapContentProps) {
 
         {/* Wells markers */}
         {data.map((well) => {
-          const exceedsGuide = well.mean > guideLevel;
+          const exceedsGuide = guideLevel !== null && well.mean > guideLevel;
           const size = calculateSize(well.mean);
 
           return (

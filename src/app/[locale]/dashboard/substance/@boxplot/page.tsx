@@ -52,14 +52,18 @@ async function BoxplotContent() {
       title={t('boxplot.defaultTitle')}
       data={result.data}
       yAxisLabel={`${t('lineplot.concentration')} [${result.unit}]`}
-      referenceLines={[
-        {
-          value: result.guideLevel,
-          label: t('lineplot.guidelineLevel'),
-          color: 'var(--destructive)',
-          strokeDasharray: '5 5'
-        }
-      ]}
+      referenceLines={
+        result.guideLevel !== null
+          ? [
+              {
+                value: result.guideLevel,
+                label: t('lineplot.guidelineLevel'),
+                color: 'var(--destructive)',
+                strokeDasharray: '5 5'
+              }
+            ]
+          : []
+      }
       className='h-full'
     />
   );

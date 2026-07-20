@@ -117,7 +117,7 @@ export const getWellMetrics = authOrganizationActionClient
     const results = await ctx.db.execute<QueryRow>(query);
 
     const guideLevel =
-      results.rows.length > 0 ? (results.rows[0].nivel_guia ?? 100) : 100;
+      results.rows.length > 0 ? (results.rows[0].nivel_guia ?? null) : null;
 
     const data: WellMetrics[] = results.rows.map((row) => ({
       wellId: row.pozo,

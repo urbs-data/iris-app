@@ -124,8 +124,8 @@ export const getGeneralMetrics = authOrganizationActionClient
         min: 0,
         max: 0,
         stdDev: 0,
-        guideLevel: 0,
-        vsGuidePercent: 0,
+        guideLevel: null,
+        vsGuidePercent: null,
         vsMaxPercent: 0,
         lastMonthlyAverage: 0,
         maxMonthlyAverage: 0,
@@ -140,13 +140,15 @@ export const getGeneralMetrics = authOrganizationActionClient
     const min = row.minimo_concentracion ?? 0;
     const max = row.maximo_concentracion ?? 0;
     const stdDev = row.desvio_concentracion ?? 0;
-    const guideLevel = row.nivel_guia ?? 0;
+    const guideLevel = row.nivel_guia ?? null;
     const ultimoPromedioMensual = row.ultimo_promedio_mensual ?? average;
     const maxPromedioMensual = row.max_promedio_mensual ?? average;
     const unit = row.unidad ?? 'µg/l';
 
     const vsGuidePercent =
-      guideLevel > 0 ? (ultimoPromedioMensual / guideLevel) * 100 : 0;
+      guideLevel !== null && guideLevel > 0
+        ? (ultimoPromedioMensual / guideLevel) * 100
+        : null;
     const vsMaxPercent =
       maxPromedioMensual > 0
         ? (ultimoPromedioMensual / maxPromedioMensual - 1) * 100

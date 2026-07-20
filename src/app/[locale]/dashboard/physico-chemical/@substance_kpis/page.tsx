@@ -81,8 +81,8 @@ async function SubstanceKpisContent() {
     },
     {
       label: t('dashboard.kpi.guidelineLevel'),
-      value: metrics.guideLevel,
-      unit: metrics.unit
+      value: metrics.guideLevel ?? '—',
+      unit: metrics.guideLevel !== null ? metrics.unit : undefined
     }
   ];
 

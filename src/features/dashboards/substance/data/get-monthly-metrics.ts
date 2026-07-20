@@ -9,7 +9,7 @@ import { parseISO } from 'date-fns';
 
 interface MonthlyMetricsResult {
   data: Concentration[];
-  guideLevel: number;
+  guideLevel: number | null;
   unit: string;
 }
 
@@ -58,7 +58,7 @@ export const getMonthlyMetrics = authOrganizationActionClient
     const results = await ctx.db.execute<QueryRow>(query);
 
     const guideLevel =
-      results.rows.length > 0 ? (results.rows[0].nivel_guia ?? 100) : 100;
+      results.rows.length > 0 ? (results.rows[0].nivel_guia ?? null) : null;
 
     const unit =
       results.rows.length > 0 ? (results.rows[0].unidad ?? 'µg/l') : 'µg/l';

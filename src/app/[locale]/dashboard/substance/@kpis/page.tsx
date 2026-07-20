@@ -79,13 +79,19 @@ async function KpisContent() {
   const guideKpis = [
     {
       label: t('dashboard.kpi.guidelineLevel'),
-      value: metrics.guideLevel,
-      unit: metrics.unit
+      value: metrics.guideLevel ?? '—',
+      unit: metrics.guideLevel !== null ? metrics.unit : undefined
     },
     {
       label: t('dashboard.kpi.percentageToGuideline'),
-      value: `${metrics.vsGuidePercent.toFixed(2)} %`,
-      className: metrics.vsGuidePercent > 100 ? 'text-destructive' : ''
+      value:
+        metrics.vsGuidePercent !== null
+          ? `${metrics.vsGuidePercent.toFixed(2)} %`
+          : '—',
+      className:
+        metrics.vsGuidePercent !== null && metrics.vsGuidePercent > 100
+          ? 'text-destructive'
+          : ''
     },
     {
       label: t('dashboard.kpi.percentageToMaximum'),

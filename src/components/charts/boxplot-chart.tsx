@@ -147,6 +147,29 @@ export function BoxplotChart({
     [data]
   );
 
+  // Recharts calcula el dominio automático sumando los stacks de las barras, y
+  // ahí ifOverflow='extendDomain' de las ReferenceLine no lo altera. Calculamos
+  // el dominio a mano para que el nivel guía siempre entre en la escala.
+  const yDomain = React.useMemo<[number, number]>(() => {
+    // El tope visible de cada caja es la suma del stack, no item.max.
+    const stackTops = transformedData.map(
+      (d) => d.min + d.bottomWhisker + d.bottomBox + d.topBox + d.topWhisker
+    );
+    const means = transformedData
+      .map((d) => d.mean)
+      .filter((v): v is number => v != null);
+    const refs = referenceLines.map((r) => r.value);
+
+    const values = [...stackTops, ...means, ...refs];
+    if (values.length === 0) return [0, 1];
+
+    const lower = Math.min(0, ...values);
+    const upper = Math.max(...values);
+    const padding = (upper - lower) * 0.05 || 1;
+
+    return [lower, upper + padding];
+  }, [transformedData, referenceLines]);
+
   return (
     <Card className={cn('flex h-full min-h-0 flex-col', className)}>
       {title && (
@@ -202,6 +225,7 @@ export function BoxplotChart({
                 tick={{ fontSize: 10 }}
               />
               <YAxis
+                domain={yDomain}
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
@@ -259,6 +283,7 @@ export function BoxplotChart({
                 <ReferenceLine
                   key={index}
                   y={ref.value}
+                  ifOverflow='extendDomain'
                   stroke={ref.color || 'var(--destructive)'}
                   strokeDasharray={ref.strokeDasharray || '10 10'}
                   strokeWidth={2}

@@ -50,8 +50,8 @@ export interface GeneralMetrics {
   min: number;
   max: number;
   stdDev: number;
-  guideLevel: number;
-  vsGuidePercent: number;
+  guideLevel: number | null;
+  vsGuidePercent: number | null;
   vsMaxPercent: number;
   lastMonthlyAverage?: number;
   maxMonthlyAverage?: number;
@@ -91,7 +91,7 @@ export interface WellMetrics {
 
 export interface WellMetricsResult {
   data: WellMetrics[];
-  guideLevel: number;
+  guideLevel: number | null;
 }
 
 export type MapMetricsResult = WellMetricsResult;

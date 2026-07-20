@@ -56,14 +56,18 @@ async function LineChartContent() {
       tooltipLabel={t('dashboard.lineplot.average')}
       tooltipUnit={result.unit}
       locale={locale === 'en' ? 'en-US' : 'es-ES'}
-      referenceLines={[
-        {
-          value: result.guideLevel,
-          label: t('dashboard.lineplot.guidelineLevel'),
-          color: 'var(--destructive)',
-          strokeDasharray: '5 5'
-        }
-      ]}
+      referenceLines={
+        result.guideLevel !== null
+          ? [
+              {
+                value: result.guideLevel,
+                label: t('dashboard.lineplot.guidelineLevel'),
+                color: 'var(--destructive)',
+                strokeDasharray: '5 5'
+              }
+            ]
+          : []
+      }
     />
   );
 }
