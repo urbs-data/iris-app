@@ -10,6 +10,8 @@ import {
   serializeCorrelationsParams
 } from '@/features/dashboards/correlations/searchparams';
 
+import { titleMetadata } from '@/lib/page-metadata';
+export const generateMetadata = titleMetadata('dashboard.correlations.title');
 interface CorrelationsPageProps {
   searchParams: Promise<SearchParams>;
 }

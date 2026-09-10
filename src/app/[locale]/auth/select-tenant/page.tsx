@@ -1,10 +1,7 @@
-import { Metadata } from 'next';
 import { TenantSelector } from '@/features/tenant/components/tenant-selector';
 
-export const metadata: Metadata = {
-  title: 'Seleccionar Proyecto',
-  description: 'Selecciona el proyecto para continuar.'
-};
+import { titleMetadata } from '@/lib/page-metadata';
+export const generateMetadata = titleMetadata('auth.tenant.selectProject');
 
 export default function SelectTenantPage() {
   return <TenantSelector />;

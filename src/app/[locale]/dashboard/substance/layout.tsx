@@ -9,6 +9,8 @@ import {
   substanceInfoContentEn
 } from '@/config/infoconfig';
 
+import { titleMetadata } from '@/lib/page-metadata';
+export const generateMetadata = titleMetadata('dashboard.substance.title');
 interface SubstanceLayoutProps {
   kpis: React.ReactNode;
   line_chart: React.ReactNode;

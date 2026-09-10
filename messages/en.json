@@ -1,721 +1,727 @@
 {
-    "profile": {
-        "title": "Profile",
-        "description": "Manage your user profile",
-        "personalInfo": {
-            "title": "Personal Information",
-            "nameLabel": "Name",
-            "emailLabel": "Email",
-            "locationLabel": "Location",
-            "defaultUserName": "User"
-        },
-        "security": {
-            "title": "Security",
-            "logoutButton": "Log out"
-        },
-        "changePassword": {
-            "title": "Change Password",
-            "description": "Update your password to keep your account secure",
-            "form": {
-                "newPasswordLabel": "New Password",
-                "newPasswordPlaceholder": "New password",
-                "confirmPasswordLabel": "Confirm Password",
-                "confirmPasswordPlaceholder": "Confirm password",
-                "submitButton": "Change Password",
-                "loadingButton": "Updating..."
-            },
-            "requirements": {
-                "minLength": "Minimum 8 characters",
-                "uppercase": "At least one uppercase letter",
-                "lowercase": "At least one lowercase letter",
-                "number": "At least one number",
-                "specialChar": "At least one special character",
-                "passwordsMatch": "Passwords match"
-            },
-            "validation": {
-                "minLength": "Password must be at least 8 characters long",
-                "uppercase": "Password must contain at least one uppercase letter",
-                "lowercase": "Password must contain at least one lowercase letter",
-                "number": "Password must contain at least one number",
-                "specialChar": "Password must contain at least one special character",
-                "passwordsMatch": "Passwords do not match"
-            },
-            "toast": {
-                "success": "Password updated successfully",
-                "error": "Error changing password"
-            }
-        },
-        "languageSwitcher": {
-            "spanish": "Español",
-            "english": "English"
-        }
+  "profile": {
+    "title": "Profile",
+    "description": "Manage your user profile",
+    "personalInfo": {
+      "title": "Personal Information",
+      "nameLabel": "Name",
+      "emailLabel": "Email",
+      "locationLabel": "Location",
+      "defaultUserName": "User"
     },
-    "nav": {
-        "logout": "Logout",
-        "home": "Home",
-        "dashboard": "Dashboard",
-        "analyze": "Analyze",
-        "dashboard-general": "General",
-        "dashboard-substance": "Concentrations",
-        "dashboard-physico-chemical": "Parameters and Substances",
-        "dashboard-correlations": "Correlations",
-        "dashboard-quarterly": "Quarterly",
-        "search": "Search",
-        "explorer": "Explorer",
-        "validation": "Validation",
-        "reports": "Reports",
-        "profile": "Profile",
-        "documentation": "Documentation",
-        "group": {
-            "main": "Analysis",
-            "documents": "Documents",
-            "others": "Others"
-        }
+    "security": {
+      "title": "Security",
+      "logoutButton": "Log out"
     },
-    "sidebar": {
-        "profileDropdown": {
-            "profile": "Profile",
-            "logout": "Log out"
-        }
+    "changePassword": {
+      "title": "Change Password",
+      "description": "Update your password to keep your account secure",
+      "form": {
+        "newPasswordLabel": "New Password",
+        "newPasswordPlaceholder": "New password",
+        "confirmPasswordLabel": "Confirm Password",
+        "confirmPasswordPlaceholder": "Confirm password",
+        "submitButton": "Change Password",
+        "loadingButton": "Updating..."
+      },
+      "requirements": {
+        "minLength": "Minimum 8 characters",
+        "uppercase": "At least one uppercase letter",
+        "lowercase": "At least one lowercase letter",
+        "number": "At least one number",
+        "specialChar": "At least one special character",
+        "passwordsMatch": "Passwords match"
+      },
+      "validation": {
+        "minLength": "Password must be at least 8 characters long",
+        "uppercase": "Password must contain at least one uppercase letter",
+        "lowercase": "Password must contain at least one lowercase letter",
+        "number": "Password must contain at least one number",
+        "specialChar": "Password must contain at least one special character",
+        "passwordsMatch": "Passwords do not match"
+      },
+      "toast": {
+        "success": "Password updated successfully",
+        "error": "Error changing password"
+      }
     },
-    "breadcrumb": {
-        "analyze": {
-            "kpi": "KPI Analysis"
-        },
-        "explorer": {
-            "upload": "Upload Document"
-        }
+    "languageSwitcher": {
+      "spanish": "Español",
+      "english": "English"
+    }
+  },
+  "nav": {
+    "logout": "Logout",
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "analyze": "Analyze",
+    "dashboard-general": "General",
+    "dashboard-substance": "Concentrations",
+    "dashboard-physico-chemical": "Parameters and Substances",
+    "dashboard-correlations": "Correlations",
+    "dashboard-quarterly": "Quarterly",
+    "search": "Search",
+    "explorer": "Explorer",
+    "validation": "Validation",
+    "reports": "Reports",
+    "profile": "Profile",
+    "documentation": "Documentation",
+    "group": {
+      "main": "Analysis",
+      "documents": "Documents",
+      "others": "Others"
+    }
+  },
+  "sidebar": {
+    "profileDropdown": {
+      "profile": "Profile",
+      "logout": "Log out"
+    }
+  },
+  "breadcrumb": {
+    "analyze": {
+      "kpi": "KPI Analysis"
     },
-    "fileExplorer": {
-        "title": "Document Explorer",
-        "description": "Navigate and manage your documents",
-        "upload": "Upload Document",
-        "deleteConfirmationTitle": "Are you sure?",
-        "deleteConfirmationDescription": "This action cannot be undone. The file will be deleted and all related data will be removed.",
-        "cancel": "Cancel",
-        "delete": "Delete",
-        "fileDeleted": "File deleted successfully",
-        "fileDeleteError": "Error deleting file",
-        "unknownError": "Unknown error",
-        "columns": {
-            "type": "Type",
-            "name": "Name",
-            "metadata": "Metadata",
-            "size": "Size",
-            "actions": "Actions"
-        },
-        "deletingFiles": "Deleting files",
-        "bulkDeleteSuccess": "{0} files deleted successfully",
-        "bulkDeleteError": "Error deleting {0} of {1} files",
-        "emptyFolder": "No files in this folder"
+    "explorer": {
+      "upload": "Upload Document"
+    }
+  },
+  "fileExplorer": {
+    "title": "Document Explorer",
+    "description": "Navigate and manage your documents",
+    "upload": "Upload Document",
+    "deleteConfirmationTitle": "Are you sure?",
+    "deleteConfirmationDescription": "This action cannot be undone. The file will be deleted and all related data will be removed.",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "fileDeleted": "File deleted successfully",
+    "fileDeleteError": "Error deleting file",
+    "unknownError": "Unknown error",
+    "columns": {
+      "type": "Type",
+      "name": "Name",
+      "metadata": "Metadata",
+      "size": "Size",
+      "actions": "Actions"
     },
-    "uploadDocument": {
-        "title": "Upload Documents",
-        "description": "Upload one or more documents to the system",
-        "atLeastOneFile": "You must select at least one file",
-        "tooManyFiles": "You can upload at most 50 files",
-        "totalSizeTooLarge": "The combined size of all files cannot exceed 100 MB",
-        "dateRequired": "The date is required",
-        "invalidFileTypeForSamplesWellsSubstances": "For wells, substances and samples, only Excel files (.xlsx or .xlsm) are allowed",
-        "fileTooLarge": "The maximum allowed file size is 10MB",
-        "uploadSuccess": "Documents uploaded successfully",
-        "uploadError": "Error uploading documents",
-        "documentDateLabel": "Document date",
-        "documentDatePlaceholder": "Select a date",
-        "documentDateError": "The date is required",
-        "classificationLabel": "Classification",
-        "classificationPlaceholder": "Select a classification",
-        "classificationError": "The classification is required",
-        "subclassificationLabel": "Subclassification",
-        "subclassificationPlaceholder": "Select a subclassification",
-        "subclassificationError": "The subclassification is required",
-        "areaLabel": "Area",
-        "areaPlaceholder": "Select an area",
-        "tipoLabel": "Document type",
-        "tipoPlaceholder": "Select a type",
-        "filesLabel": "Documents",
-        "dragMoreFiles": "Drag more files or click to add",
-        "clickToSelectFiles": "Click to select files",
-        "anyFileType": "Up to 50 files and 100 MB total (each file up to 100 MB)",
-        "dragAndDropFiles": "Drag and drop your files here or",
-        "clickToAddFiles": "Click to add files",
-        "loading": "Loading...",
-        "upload": "Upload documents",
-        "cancel": "Cancel"
-    },
-    "documentClassifications": {
-        "Muestras": "Samples",
-        "Procesos de remediacion": "Remediation processes",
-        "Procesos de remediación": "Remediation processes",
-        "Reportes de monitoreo": "Monitoring reports",
-        "Memorandum tecnicos": "Technical memorandums",
-        "Reportes tecnicos": "Technical reports",
-        "Reportes a las autoridades": "Reports to authorities",
-        "Estudios complementarios": "Complementary studies",
-        "Estudios hidrogeologicos": "Hydrogeological studies",
-        "Estudios hidrogeológicos": "Hydrogeological studies",
-        "Informes de avance": "Advance reports",
-        "Pozos": "Wells",
-        "Sustancias": "Substances",
-        "Otros": "Others"
-    },
-    "documentTypes": {
-        "EDD Muestras": "EDD Samples",
-        "EDD Parametros Fisico Quimicos": "EDD Physical-Chemical Parameters",
-        "EDD Profundidad Agua": "EDD Water Depth",
-        "Resumen Parametros": "Summary Parameters",
-        "Pozos": "Wells",
-        "Sustancias": "Substances"
-    },
-    "documentSubclassifications": {
-        "Cadenas de custodia": "Chain of custody",
-        "Muestras de suelo": "Soil samples",
-        "Muestras de agua": "Water samples",
-        "CoC de agua": "Water CoC",
-        "CoC de suelo": "Soil CoC",
-        "Reportes diarios": "Daily reports",
-        "Inyección": "Injection",
-        "Otros": "Others"
-    },
-    "dashboard": {
-        "all": "All",
-        "general": {
-            "title": "General Analysis"
-        },
-        "substance": {
-            "title": "Concentration Analysis"
-        },
-        "physicoChemical": {
-            "title": "Parameters and Substances Analysis",
-            "fqParameter": "Physico-Chemical Parameter",
-            "substanceCompound": "Substance",
-            "combinedEvolution": "Combined Temporal Evolution",
-            "emptyState": "Select a compound and parameter in the filters to see the analysis."
-        },
-        "noData": {
-            "title": "No data available",
-            "description": "There is no data matching the selected filters. Try adjusting the date range or filters to see results.",
-            "kpisDescription": "There are no metrics to display with the current filters. Try adjusting the date range or filters.",
-            "mapDescription": "There is no spatial data to display with the current filters. Try adjusting the filters to see results on the map."
-        },
-        "filter": {
-            "dateRange": "Date range",
-            "substance": "Substance",
-            "wellType": "Well type",
-            "area": "Area",
-            "well": "Well",
-            "sampleType": "Sample type"
-        },
-        "lineplot": {
-            "concentration": "Concentration",
-            "guidelineLevel": "Guideline level",
-            "average": "Average",
-            "title": "Average {0} by period",
-            "defaultTitle": "Average concentration by period"
-        },
-        "boxplot": {
-            "interquartileRange": "Interquartile range",
-            "outlierRange": "Outlier range",
-            "average": "Average",
-            "median": "Median",
-            "guidelineLevel": "Guideline level",
-            "defaultTitle": "Distribution of concentrations by year",
-            "defaultTooltip": "This chart shows how the concentrations behave in each year, allowing you to see if the values tend to be more dispersed or more close to each other with time.",
-            "moreDetails": "For more details, consult the",
-            "documentation": "documentation"
-        },
-        "map": {
-            "title": "Distribution map",
-            "viewInMap": "View in map",
-            "spatialDistribution": "Spatial distribution",
-            "light": "Light",
-            "dark": "Dark",
-            "satellite": "Satellite",
-            "default": "Default",
-            "concentrations": "Concentrations",
-            "markers": "Markers",
-            "areas": {
-                "Area C": "Area C",
-                "Area A y B": "Area A and B",
-                "Sitio Berazategui": "Berazategui site"
-            },
-            "locationTooltip": {
-                "period": "Period",
-                "sampleCount": "Sample count",
-                "average": "Average",
-                "median": "Median",
-                "minimum": "Minimum",
-                "maximum": "Maximum",
-                "standardDeviation": "Standard deviation"
-            }
-        },
-        "kpi": {
-            "sampleCount": "Sample count",
-            "lastValue": "Last value",
-            "guidelineLevel": "Guideline level",
-            "average": "Average",
-            "minimum": "Minimum",
-            "maximum": "Maximum",
-            "median": "Median",
-            "standardDeviation": "Standard deviation",
-            "well": "Well",
-            "firstSample": "First sample",
-            "lastSample": "Last sample",
-            "lastSampleConcentration": "Last sample concentration",
-            "percentageToGuideline": "% vs Guideline",
-            "percentageToMaximum": "% vs Maximum",
-            "percentageToGuidelineTooltip": "Percentage variation of the last average value compared to the guideline level. A negative value indicates that it is below the guideline level.",
-            "percentageToMaximumTooltip": "Percentage variation of the last average value compared to the maximum historical value. A negative value indicates that it is below the maximum historical value."
-        },
-        "correlations": {
-            "title": "ZVI Correlations",
-            "description": "Spearman correlation analysis between concentrations and physicochemical parameters",
-            "correlationsWith": "Correlations with {substance}",
-            "matrixTitle": "Spearman Matrix · All parameters",
-            "loeTitle": "ZVI Hypothesis Analysis",
-            "loeSubtitle": "Lines of Evidence — system status",
-            "loe1Title": "Reducing conditions",
-            "loe2Title": "Correlations with ZVI mechanism",
-            "loe3Title": "Degradation vs dilution",
-            "loe4Title": "Regulatory compliance (Decreto 831/93)",
-            "statusCumplido": "FULFILLED",
-            "statusParcial": "PARTIAL",
-            "statusNoCumplido": "NOT FULFILLED",
-            "statusNoEval": "NO EVAL.",
-            "statusCumple": "COMPLETED",
-            "statusExcede": "EXCEEDED",
-            "noData": "No data for the selected filters.",
-            "emptySubstance": "Select a substance in the filters to see correlations.",
-            "filters": "Filters",
-            "filterDateRange": "Date range",
-            "filterDateFrom": "Date from",
-            "filterDateTo": "Date to",
-            "filterSubstance": "Substance",
-            "filterArea": "Area",
-            "filterAreaPlaceholder": "All areas",
-            "filterWells": "Wells",
-            "filterWellsPlaceholder": "All wells",
-            "filterSubstancePlaceholder": "Select substance",
-            "search": "Search",
-            "clearFilters": "Clear filters",
-            "sig": "sig.",
-            "ns": "n.s.",
-            "noDataLabel": "No data",
-            "rhoStrongNeg": "Strong neg.",
-            "rhoModNeg": "Moderate neg.",
-            "rhoWeakNeg": "Weak neg.",
-            "rhoWeakPos": "Weak pos.",
-            "rhoModPos": "Moderate pos.",
-            "rhoStrongPos": "Strong pos.",
-            "rhoNa": "n/a"
-        }
-    },
-    "substances": {
-        "carbonTetrachloride": "Carbon tetrachloride",
-        "chloroform": "Chloroform"
-    },
+    "deletingFiles": "Deleting files",
+    "bulkDeleteSuccess": "{0} files deleted successfully",
+    "bulkDeleteError": "Error deleting {0} of {1} files",
+    "emptyFolder": "No files in this folder"
+  },
+  "uploadDocument": {
+    "title": "Upload Documents",
+    "description": "Upload one or more documents to the system",
+    "atLeastOneFile": "You must select at least one file",
+    "tooManyFiles": "You can upload at most 50 files",
+    "totalSizeTooLarge": "The combined size of all files cannot exceed 100 MB",
+    "dateRequired": "The date is required",
+    "invalidFileTypeForSamplesWellsSubstances": "For wells, substances and samples, only Excel files (.xlsx or .xlsm) are allowed",
+    "fileTooLarge": "The maximum allowed file size is 10MB",
+    "uploadSuccess": "Documents uploaded successfully",
+    "uploadError": "Error uploading documents",
+    "documentDateLabel": "Document date",
+    "documentDatePlaceholder": "Select a date",
+    "documentDateError": "The date is required",
+    "classificationLabel": "Classification",
+    "classificationPlaceholder": "Select a classification",
+    "classificationError": "The classification is required",
+    "subclassificationLabel": "Subclassification",
+    "subclassificationPlaceholder": "Select a subclassification",
+    "subclassificationError": "The subclassification is required",
+    "areaLabel": "Area",
+    "areaPlaceholder": "Select an area",
+    "tipoLabel": "Document type",
+    "tipoPlaceholder": "Select a type",
+    "filesLabel": "Documents",
+    "dragMoreFiles": "Drag more files or click to add",
+    "clickToSelectFiles": "Click to select files",
+    "anyFileType": "Up to 50 files and 100 MB total (each file up to 100 MB)",
+    "dragAndDropFiles": "Drag and drop your files here or",
+    "clickToAddFiles": "Click to add files",
+    "loading": "Loading...",
+    "upload": "Upload documents",
+    "cancel": "Cancel"
+  },
+  "documentClassifications": {
+    "Muestras": "Samples",
+    "Procesos de remediacion": "Remediation processes",
+    "Procesos de remediación": "Remediation processes",
+    "Reportes de monitoreo": "Monitoring reports",
+    "Memorandum tecnicos": "Technical memorandums",
+    "Reportes tecnicos": "Technical reports",
+    "Reportes a las autoridades": "Reports to authorities",
+    "Estudios complementarios": "Complementary studies",
+    "Estudios hidrogeologicos": "Hydrogeological studies",
+    "Estudios hidrogeológicos": "Hydrogeological studies",
+    "Informes de avance": "Advance reports",
+    "Pozos": "Wells",
+    "Sustancias": "Substances",
+    "Otros": "Others"
+  },
+  "documentTypes": {
+    "EDD Muestras": "EDD Samples",
+    "EDD Parametros Fisico Quimicos": "EDD Physical-Chemical Parameters",
+    "EDD Profundidad Agua": "EDD Water Depth",
+    "Resumen Parametros": "Summary Parameters",
+    "Pozos": "Wells",
+    "Sustancias": "Substances"
+  },
+  "documentSubclassifications": {
+    "Cadenas de custodia": "Chain of custody",
+    "Muestras de suelo": "Soil samples",
+    "Muestras de agua": "Water samples",
+    "CoC de agua": "Water CoC",
+    "CoC de suelo": "Soil CoC",
+    "Reportes diarios": "Daily reports",
+    "Inyección": "Injection",
+    "Otros": "Others"
+  },
+  "dashboard": {
+    "all": "All",
     "general": {
-        "title": "General Dashboard",
-        "chloroform": "Chloroform",
-        "carbonTetrachloride": "Carbon Tetrachloride",
-        "chloroformConcentration": "Chloroform - Average concentration",
-        "carbonTetrachlorideConcentration": "Carbon Tetrachloride - Average concentration"
-    },
-    "errors": {
-        "somethingWentWrong": "Something went wrong",
-        "substanceDashboardError": "Error loading substance dashboard.",
-        "physicoChemicalDashboardError": "Error loading combined analysis dashboard.",
-        "tryAgain": "Try again",
-        "retry": "Retry",
-        "kpisError": "Error loading KPIs. Please try again.",
-        "lineChartError": "Error loading chart. Please try again.",
-        "boxplotError": "Error loading chart. Please try again.",
-        "mapError": "Error loading map. Please try again.",
-        "generalDashboard": {
-            "title": "Error loading dashboard",
-            "message": "Could not load the data. Please try again."
-        },
-        "generalKpis": {
-            "title": "Error loading KPIs",
-            "tetracloruroMessage": "Could not load carbon tetrachloride indicators.",
-            "cloroformoMessage": "Could not load chloroform indicators."
-        },
-        "generalChart": {
-            "title": "Error loading chart",
-            "tetracloruroMessage": "Could not load carbon tetrachloride chart.",
-            "cloroformoMessage": "Could not load chloroform chart."
-        },
-        "loadingData": {
-            "title": "Error loading data",
-            "message": "Something went wrong loading this section."
-        }
-    },
-    "components": {
-        "infoSidebar": {
-            "learnMore": "Learn more",
-            "noContentAvailable": "No content available"
-        },
-        "breadcrumbs": {
-            "dashboard": "Home",
-            "dashboard-general": "General Analysis",
-            "dashboard-substance": "Concentration Analysis",
-            "dashboard-physico-chemical": "Combined Analysis",
-            "dashboard-correlations": "Correlation Analysis",
-            "dashboard-quarterly": "Quarterly Analysis",
-            "search": "Search",
-            "explorer": "Explorer",
-            "validate": "Validation",
-            "reports": "Reports",
-            "new": "New report",
-            "upload": "Upload Documents",
-            "results": "Results",
-            "profile": "Profile"
-        },
-        "alertModal": {
-            "areYouSure": "Are you sure?",
-            "thisActionCannotBeUndone": "This action cannot be undone.",
-            "cancel": "Cancel",
-            "continue": "Continue"
-        },
-        "combobox": {
-            "placeholder": "Select...",
-            "searchPlaceholder": "Search",
-            "emptyMessage": "No results found"
-        },
-        "dateRangePicker": {
-            "year": "Year",
-            "month": "Month",
-            "from": "From",
-            "to": "To",
-            "clearSelection": "Clear selection"
-        },
-        "table": {
-            "total": "{count, plural, =0 {No records} =1 {1 record in total} other {# records in total}}.",
-            "selected": "{selected, plural, =0 {No records selected} =1 {1 record selected} other {# records selected}} of {total}.",
-            "rowsPerPage": "Rows per page",
-            "pageInfo": "Page {page} of {total}",
-            "noResults": "No results"
-        },
-        "multiSelect": {
-            "loading": "Loading...",
-            "multiple": "Multiple ({count})",
-            "emptyMessage": "No results found",
-            "placeholder": "Select options..."
-        },
-        "fileUploader": {
-            "dropFilesHere": "Drop the files here",
-            "dragAndDrop": "Drag 'n' drop files here, or click to select files",
-            "youCanUpload": "You can upload",
-            "multipleFiles": "multiple",
-            "filesUpTo": "files (up to {size} each)",
-            "multipleWithTotalLimit": "You can upload up to {count} files (max. {total} combined; each file up to {each})",
-            "totalSizeExceeded": "Combined file size exceeds the limit ({max}). Remove files or choose smaller ones.",
-            "fileWith": "a file with {size}",
-            "cannotUploadMoreThanOne": "Cannot upload more than 1 file at a time",
-            "cannotUploadMoreThan": "Cannot upload more than {count} files",
-            "fileRejected": "File {name} was rejected",
-            "uploading": "Uploading {target}...",
-            "uploaded": "{target} uploaded",
-            "failedToUpload": "Failed to upload {target}",
-            "removeFile": "Remove file",
-            "atLeastOneFile": "You must select at least one file"
-        }
-    },
-    "wellTypes": {
-        "all": "All",
-        "well": "Monitoring",
-        "pump": "Pump"
-    },
-    "sampleTypes": {
-        "water": "Water",
-        "soil": "Soil"
-    },
-    "areas": {
-        "": "All",
-        "Area C": "Area C",
-        "Area A y B": "Area A and B",
-        "Resto": "Remaining"
-    },
-    "fqParameters": {
-        "pH": "pH",
-        "ORP": "ORP",
-        "OD": "Dissolved Oxygen",
-        "Temp": "Temperature",
-        "CE": "Electrical Conductivity",
-        "STD": "Total Dissolved Solids",
-        "Profundidad al agua": "Water Depth"
-    },
-    "search": {
-        "title": "Document search",
-        "description": "Search and manage documents",
-        "fileTypes": {
-            "excels": "Excels",
-            "documents": "Documents",
-            "others": "Others"
-        },
-        "fileType": "File type",
-        "years": "Year",
-        "classifications": "Classification",
-        "subClassifications": "Subclassification",
-        "resetFilters": "Reset filters",
-        "table": {
-            "title": "Title",
-            "pageNumber": "Page",
-            "relevance": "Relevance",
-            "download": "Download",
-            "useful": "Useful",
-            "unuseful": "Useless",
-            "moveUp": "Move up",
-            "moveDown": "Move down"
-        },
-        "search": "Search",
-        "searching": "Searching...",
-        "noResults": "No results found",
-        "selected": "selected"
-    },
-    "validation": {
-        "title": "Analytical validation",
-        "description": "Validate the documents of samples made by the laboratory.",
-        "reset": "New validation",
-        "documentTypes": {
-            "preliminar": "Preliminary Samples",
-            "edd": "EDD Samples",
-            "matrixSpike": "Matrix Spike",
-            "parametros": "Physical-Chemical Parameters"
-        },
-        "upload": {
-            "error": "Please upload the three required files",
-            "success": "Validation completed",
-            "fileTooLarge": "The maximum allowed file size is 10MB",
-            "fileInvalidType": "Only Excel files (.xlsx or .xls) are allowed",
-            "preliminar": "Preliminar Samples",
-            "edd": "EDD Samples",
-            "parametrosFQ": "EDD Physical-Chemical Parameters",
-            "changeFile": "Click to change file",
-            "dragAndDrop": "Drag and drop your Excel file here",
-            "orClickToSelect": "or click to select",
-            "processing": "Processing...",
-            "validateFiles": "Validate Files",
-            "matrixSpike": "Matrix Spike Samples"
-        },
-        "results": {
-            "title": "Validation results",
-            "noResults": "No validations with status {status} to show.",
-            "success": "Success",
-            "warning": "Warning",
-            "error": "Error",
-            "skipped": "Skipped"
-        },
-        "exportToPdf": {
-            "title": "Validation results",
-            "filesAnalyzed": "Files analyzed:",
-            "exportToPdf": "Export to PDF",
-            "documentName": "validation-results",
-            "date": "Date",
-            "dateLanguage": "en-US"
-        },
-        "rules": {
-            "existingWells": {
-                "success": "All wells exist in the database",
-                "error": "The following wells do not exist in the database",
-                "skipped": "All wells exist in the database"
-            },
-            "sampleId": {
-                "success": "The sample names comply with the standard",
-                "error": "The sample names do not comply with the standard",
-                "skipped": "The sample names do not comply with the standard"
-            },
-            "requiredColumns": {
-                "success": "The document has the required columns",
-                "error": "The columns {columns} were not found in the document"
-            },
-            "rangeValues": {
-                "success": "The column {column} has values within the allowed range [{min_value}, {max_value}]",
-                "warning": "The column {column} has values outside the allowed range [{min_value}, {max_value}]",
-                "skipped": "The document has values within the allowed range"
-            },
-            "holdingTime": {
-                "success": "The holding time is correct for all parameters",
-                "error": "The holding time is incorrect for some parameters",
-                "skipped": "The holding time is correct for all parameters"
-            },
-            "guidelineLevel": {
-                "success": "The concentrations of the parameters do not exceed the guideline levels",
-                "warning": "The concentrations of the parameters exceed the guideline levels",
-                "skipped": "The concentrations of the parameters do not exceed the guideline levels"
-            },
-            "equality": {
-                "success": "The preliminar and EDD files of the laboratory are equal",
-                "error": "The preliminar and EDD files of the laboratory are not equal",
-                "skipped": "The preliminar and EDD files of the laboratory are equal"
-            },
-            "duplicidadPreliminar": {
-                "success": "The duplicated samples comply with the duplication criteria",
-                "warning": "The duplicated samples {original} and {duplicado} do not comply with the duplication criteria",
-                "skipped": "The duplicated samples comply with the duplication criteria"
-            },
-            "duplicidadPreliminarNoRPD": {
-                "warning": "The measurements of {original} and {duplicado} do not exceed the RL2 or RL5 thresholds. Requires the analyst's criteria."
-            },
-            "matrixSpike": {
-                "success": "The recovery percentages of the matrix spike samples are within the allowed limits",
-                "warning": "The recovery percentages of the matrix spike samples are not within the allowed limits",
-                "skipped": "The recovery percentages of the matrix spike samples are within the allowed limits"
-            },
-            "matrixSpikeDuplicates": {
-                "success": "The matrix spike duplicate samples comply with the duplication criteria",
-                "warning": "The matrix spike duplicate samples do not comply with the duplication criteria",
-                "skipped": "The matrix spike duplicate samples comply with the duplication criteria"
-            },
-            "missing": {
-                "success": "The samples are in the preliminar and EDD files",
-                "skipped": "The samples are in the preliminar and EDD files",
-                "edd": {
-                    "error": "The following sample and substance combinations in the EDD are not in the preliminar"
-                },
-                "preliminar": {
-                    "error": "The following sample and substance combinations in the preliminar are not in the EDD"
-                }
-            }
-        }
-    },
-    "reports": {
-        "title": "Reports",
-        "new": "New report",
-        "tabs": {
-            "individual": "Individual report",
-            "preset": "Preset"
-        },
-        "individual": {
-            "title": "Generate individual report"
-        },
-        "preset": {
-            "title": "Generate from preset",
-            "helper": "Preset endpoint is temporarily mocked until backend support is available."
-        },
-        "fields": {
-            "reportType": "Report type",
-            "reportTypeSearch": "Search report type...",
-            "preset": "Preset",
-            "presetSearch": "Search preset...",
-            "dateRange": "Date range",
-            "dateRangePlaceholder": "Select a date range",
-            "from": "Date from",
-            "to": "Date to",
-            "wells": "Wells",
-            "wellsPlaceholder": "Select wells",
-            "wellsSearch": "Search well...",
-            "empty": "No results"
-        },
-        "types": {
-            "well_depth": "Water depth",
-            "well_depth_cig": "Water depth for CIG",
-            "sampling_params": "Sampling params",
-            "sampling_params_cig": "Sampling params for CIG",
-            "injection_params_cig": "Injection params for CIG",
-            "volatile_concentrations_cig": "Volatile concentrations for CIG",
-            "inorganic_concentrations_cig": "Inorganic concentrations for CIG",
-            "concentrations": "Compound Concentrations",
-            "analysis_performed": "Progress of Remediation Tasks"
-        },
-        "presetConfig": {
-            "title": "Report-level configuration",
-            "reportsIncluded": "{count} reports included",
-            "include": "Include"
-        },
-        "export": {
-            "downloadIndividual": "Download report",
-            "downloadPreset": "Download preset",
-            "downloading": "Downloading...",
-            "success": "Report generated successfully",
-            "successPreset": "Preset generated successfully",
-            "download": "Download report",
-            "error": "Could not generate the report",
-            "missingDates": "You must select start and end dates",
-            "missingSelection": "You must select at least one report"
-        },
-        "recent": {
-            "title": "Recently generated reports",
-            "columns": {
-                "name": "Name",
-                "generatedAt": "Generated at",
-                "range": "Range",
-                "user": "User",
-                "action": "Action"
-            },
-            "aiPdf": {
-                "buttonLabel": "Generate executive PDF",
-                "progressStart": "Starting executive PDF generation...",
-                "progressRunning": "Processing files and generating executive summary...",
-                "progressOpening": "Executive PDF ready, opening file...",
-                "success": "Executive PDF generated successfully",
-                "successReused": "Reused an existing executive PDF",
-                "error": "Could not generate executive PDF"
-            }
-        },
-        "generator": {
-            "title": "Report Generator",
-            "globalFilters": "Global Filters",
-            "globalFiltersDesc": "Set the date range for all generated reports.",
-            "addReport": "Add report",
-            "reportTitlePlaceholder": "Report name",
-            "reportTypeLabel": "Report Type",
-            "reportTypeHint": "Select the main category to load filters.",
-            "specificFiltersLabel": "Specific Filters",
-            "selectTypeFirst": "Select a report type to see available filters.",
-            "noSpecificFilters": "This report type has no specific filters.",
-            "addMoreTitle": "Need another report?",
-            "addMoreDesc": "Click here or use the button above to add a new data output.",
-            "summary": "Summary",
-            "filesReady": "{count, plural, =0 {No files} one {# file} other {# files}}",
-            "cancel": "Cancel",
-            "zipPlaceholder": "E.g.: Monthly_Reports_October",
-            "generateAll": "Generate All"
-        }
+      "title": "General Analysis"
     },
     "substance": {
-        "title": "Substance Analysis",
-        "filters": "Filters",
-        "clearFilters": "Clear filters",
-        "dateRange": "Date range",
-        "dateFrom": "Date from",
-        "dateTo": "Date to",
-        "substance": "Substance",
-        "searchSubstance": "Search substance...",
-        "noSubstanceFound": "Substance not found",
-        "wellType": "Well Type",
-        "searchWellType": "Search well type...",
-        "noWellTypeFound": "Well type not found",
-        "area": "Area",
-        "searchArea": "Search area...",
-        "noAreaFound": "Area not found",
-        "well": "Well",
-        "wells": "Wells",
-        "searchWell": "Search well...",
-        "sampleType": "Sample Type",
-        "searchSampleType": "Search sample type...",
-        "noSampleTypeFound": "Sample type not found",
-        "search": "Search",
-        "fqParameter": "Physico-Chemical Parameter",
-        "searchFqParameter": "Search parameter...",
-        "noFqParameterFound": "Parameter not found"
+      "title": "Concentration Analysis"
     },
-    "auth": {
-        "termsAndPrivacy": "By clicking continue, you agree to our <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>.",
-        "tenant": {
-            "selectProject": "Select Project",
-            "selectProjectDescription": "Select the project to continue.",
-            "country": "Country",
-            "selectCountry": "Select country",
-            "selectCountryFirst": "Select country first",
-            "site": "Site",
-            "selectSite": "Select site",
-            "selectSiteFirst": "Select site first",
-            "project": "Project",
-            "loading": "Loading...",
-            "continue": "Continue",
-            "noProjectAccess": "You do not have access to any project.",
-            "noProjectAccessError": "Error selecting project. Please try again."
-        }
+    "physicoChemical": {
+      "title": "Parameters and Substances Analysis",
+      "fqParameter": "Physico-Chemical Parameter",
+      "substanceCompound": "Substance",
+      "combinedEvolution": "Combined Temporal Evolution",
+      "emptyState": "Select a compound and parameter in the filters to see the analysis."
+    },
+    "noData": {
+      "title": "No data available",
+      "description": "There is no data matching the selected filters. Try adjusting the date range or filters to see results.",
+      "kpisDescription": "There are no metrics to display with the current filters. Try adjusting the date range or filters.",
+      "mapDescription": "There is no spatial data to display with the current filters. Try adjusting the filters to see results on the map."
+    },
+    "filter": {
+      "dateRange": "Date range",
+      "substance": "Substance",
+      "wellType": "Well type",
+      "area": "Area",
+      "well": "Well",
+      "sampleType": "Sample type"
+    },
+    "lineplot": {
+      "concentration": "Concentration",
+      "guidelineLevel": "Guideline level",
+      "average": "Average",
+      "title": "Average {0} by period",
+      "defaultTitle": "Average concentration by period"
+    },
+    "boxplot": {
+      "interquartileRange": "Interquartile range",
+      "outlierRange": "Outlier range",
+      "average": "Average",
+      "median": "Median",
+      "guidelineLevel": "Guideline level",
+      "defaultTitle": "Distribution of concentrations by year",
+      "defaultTooltip": "This chart shows how the concentrations behave in each year, allowing you to see if the values tend to be more dispersed or more close to each other with time.",
+      "moreDetails": "For more details, consult the",
+      "documentation": "documentation"
+    },
+    "map": {
+      "title": "Distribution map",
+      "viewInMap": "View in map",
+      "spatialDistribution": "Spatial distribution",
+      "light": "Light",
+      "dark": "Dark",
+      "satellite": "Satellite",
+      "default": "Default",
+      "concentrations": "Concentrations",
+      "markers": "Markers",
+      "areas": {
+        "Area C": "Area C",
+        "Area A y B": "Area A and B",
+        "Sitio Berazategui": "Berazategui site"
+      },
+      "locationTooltip": {
+        "period": "Period",
+        "sampleCount": "Sample count",
+        "average": "Average",
+        "median": "Median",
+        "minimum": "Minimum",
+        "maximum": "Maximum",
+        "standardDeviation": "Standard deviation"
+      }
+    },
+    "kpi": {
+      "sampleCount": "Sample count",
+      "lastValue": "Last value",
+      "guidelineLevel": "Guideline level",
+      "average": "Average",
+      "minimum": "Minimum",
+      "maximum": "Maximum",
+      "median": "Median",
+      "standardDeviation": "Standard deviation",
+      "well": "Well",
+      "firstSample": "First sample",
+      "lastSample": "Last sample",
+      "lastSampleConcentration": "Last sample concentration",
+      "percentageToGuideline": "% vs Guideline",
+      "percentageToMaximum": "% vs Maximum",
+      "percentageToGuidelineTooltip": "Percentage variation of the last average value compared to the guideline level. A negative value indicates that it is below the guideline level.",
+      "percentageToMaximumTooltip": "Percentage variation of the last average value compared to the maximum historical value. A negative value indicates that it is below the maximum historical value."
+    },
+    "correlations": {
+      "title": "ZVI Correlations",
+      "description": "Spearman correlation analysis between concentrations and physicochemical parameters",
+      "correlationsWith": "Correlations with {substance}",
+      "matrixTitle": "Spearman Matrix · All parameters",
+      "loeTitle": "ZVI Hypothesis Analysis",
+      "loeSubtitle": "Lines of Evidence — system status",
+      "loe1Title": "Reducing conditions",
+      "loe2Title": "Correlations with ZVI mechanism",
+      "loe3Title": "Degradation vs dilution",
+      "loe4Title": "Regulatory compliance (Decreto 831/93)",
+      "statusCumplido": "FULFILLED",
+      "statusParcial": "PARTIAL",
+      "statusNoCumplido": "NOT FULFILLED",
+      "statusNoEval": "NO EVAL.",
+      "statusCumple": "COMPLETED",
+      "statusExcede": "EXCEEDED",
+      "noData": "No data for the selected filters.",
+      "emptySubstance": "Select a substance in the filters to see correlations.",
+      "filters": "Filters",
+      "filterDateRange": "Date range",
+      "filterDateFrom": "Date from",
+      "filterDateTo": "Date to",
+      "filterSubstance": "Substance",
+      "filterArea": "Area",
+      "filterAreaPlaceholder": "All areas",
+      "filterWells": "Wells",
+      "filterWellsPlaceholder": "All wells",
+      "filterSubstancePlaceholder": "Select substance",
+      "search": "Search",
+      "clearFilters": "Clear filters",
+      "sig": "sig.",
+      "ns": "n.s.",
+      "noDataLabel": "No data",
+      "rhoStrongNeg": "Strong neg.",
+      "rhoModNeg": "Moderate neg.",
+      "rhoWeakNeg": "Weak neg.",
+      "rhoWeakPos": "Weak pos.",
+      "rhoModPos": "Moderate pos.",
+      "rhoStrongPos": "Strong pos.",
+      "rhoNa": "n/a"
     }
+  },
+  "substances": {
+    "carbonTetrachloride": "Carbon tetrachloride",
+    "chloroform": "Chloroform"
+  },
+  "general": {
+    "title": "General Dashboard",
+    "chloroform": "Chloroform",
+    "carbonTetrachloride": "Carbon Tetrachloride",
+    "chloroformConcentration": "Chloroform - Average concentration",
+    "carbonTetrachlorideConcentration": "Carbon Tetrachloride - Average concentration"
+  },
+  "errors": {
+    "somethingWentWrong": "Something went wrong",
+    "substanceDashboardError": "Error loading substance dashboard.",
+    "physicoChemicalDashboardError": "Error loading combined analysis dashboard.",
+    "tryAgain": "Try again",
+    "retry": "Retry",
+    "kpisError": "Error loading KPIs. Please try again.",
+    "lineChartError": "Error loading chart. Please try again.",
+    "boxplotError": "Error loading chart. Please try again.",
+    "mapError": "Error loading map. Please try again.",
+    "generalDashboard": {
+      "title": "Error loading dashboard",
+      "message": "Could not load the data. Please try again."
+    },
+    "generalKpis": {
+      "title": "Error loading KPIs",
+      "tetracloruroMessage": "Could not load carbon tetrachloride indicators.",
+      "cloroformoMessage": "Could not load chloroform indicators."
+    },
+    "generalChart": {
+      "title": "Error loading chart",
+      "tetracloruroMessage": "Could not load carbon tetrachloride chart.",
+      "cloroformoMessage": "Could not load chloroform chart."
+    },
+    "loadingData": {
+      "title": "Error loading data",
+      "message": "Something went wrong loading this section."
+    }
+  },
+  "components": {
+    "infoSidebar": {
+      "learnMore": "Learn more",
+      "noContentAvailable": "No content available"
+    },
+    "breadcrumbs": {
+      "dashboard": "Home",
+      "dashboard-general": "General Analysis",
+      "dashboard-substance": "Concentration Analysis",
+      "dashboard-physico-chemical": "Combined Analysis",
+      "dashboard-correlations": "Correlation Analysis",
+      "dashboard-quarterly": "Quarterly Analysis",
+      "search": "Search",
+      "explorer": "Explorer",
+      "validate": "Validation",
+      "reports": "Reports",
+      "new": "New report",
+      "upload": "Upload Documents",
+      "results": "Results",
+      "profile": "Profile"
+    },
+    "alertModal": {
+      "areYouSure": "Are you sure?",
+      "thisActionCannotBeUndone": "This action cannot be undone.",
+      "cancel": "Cancel",
+      "continue": "Continue"
+    },
+    "combobox": {
+      "placeholder": "Select...",
+      "searchPlaceholder": "Search",
+      "emptyMessage": "No results found"
+    },
+    "dateRangePicker": {
+      "year": "Year",
+      "month": "Month",
+      "from": "From",
+      "to": "To",
+      "clearSelection": "Clear selection"
+    },
+    "table": {
+      "total": "{count, plural, =0 {No records} =1 {1 record in total} other {# records in total}}.",
+      "selected": "{selected, plural, =0 {No records selected} =1 {1 record selected} other {# records selected}} of {total}.",
+      "rowsPerPage": "Rows per page",
+      "pageInfo": "Page {page} of {total}",
+      "noResults": "No results"
+    },
+    "multiSelect": {
+      "loading": "Loading...",
+      "multiple": "Multiple ({count})",
+      "emptyMessage": "No results found",
+      "placeholder": "Select options..."
+    },
+    "fileUploader": {
+      "dropFilesHere": "Drop the files here",
+      "dragAndDrop": "Drag 'n' drop files here, or click to select files",
+      "youCanUpload": "You can upload",
+      "multipleFiles": "multiple",
+      "filesUpTo": "files (up to {size} each)",
+      "multipleWithTotalLimit": "You can upload up to {count} files (max. {total} combined; each file up to {each})",
+      "totalSizeExceeded": "Combined file size exceeds the limit ({max}). Remove files or choose smaller ones.",
+      "fileWith": "a file with {size}",
+      "cannotUploadMoreThanOne": "Cannot upload more than 1 file at a time",
+      "cannotUploadMoreThan": "Cannot upload more than {count} files",
+      "fileRejected": "File {name} was rejected",
+      "uploading": "Uploading {target}...",
+      "uploaded": "{target} uploaded",
+      "failedToUpload": "Failed to upload {target}",
+      "removeFile": "Remove file",
+      "atLeastOneFile": "You must select at least one file"
+    }
+  },
+  "wellTypes": {
+    "all": "All",
+    "well": "Monitoring",
+    "pump": "Pump"
+  },
+  "sampleTypes": {
+    "water": "Water",
+    "soil": "Soil"
+  },
+  "areas": {
+    "": "All",
+    "Area C": "Area C",
+    "Area A y B": "Area A and B",
+    "Resto": "Remaining"
+  },
+  "fqParameters": {
+    "pH": "pH",
+    "ORP": "ORP",
+    "OD": "Dissolved Oxygen",
+    "Temp": "Temperature",
+    "CE": "Electrical Conductivity",
+    "STD": "Total Dissolved Solids",
+    "Profundidad al agua": "Water Depth"
+  },
+  "search": {
+    "title": "Document search",
+    "description": "Search and manage documents",
+    "fileTypes": {
+      "excels": "Excels",
+      "documents": "Documents",
+      "others": "Others"
+    },
+    "fileType": "File type",
+    "years": "Year",
+    "classifications": "Classification",
+    "subClassifications": "Subclassification",
+    "resetFilters": "Reset filters",
+    "table": {
+      "title": "Title",
+      "pageNumber": "Page",
+      "relevance": "Relevance",
+      "download": "Download",
+      "useful": "Useful",
+      "unuseful": "Useless",
+      "moveUp": "Move up",
+      "moveDown": "Move down"
+    },
+    "search": "Search",
+    "searching": "Searching...",
+    "noResults": "No results found",
+    "selected": "selected"
+  },
+  "validation": {
+    "title": "Analytical validation",
+    "description": "Validate the documents of samples made by the laboratory.",
+    "reset": "New validation",
+    "documentTypes": {
+      "preliminar": "Preliminary Samples",
+      "edd": "EDD Samples",
+      "matrixSpike": "Matrix Spike",
+      "parametros": "Physical-Chemical Parameters"
+    },
+    "upload": {
+      "error": "Please upload the three required files",
+      "success": "Validation completed",
+      "fileTooLarge": "The maximum allowed file size is 10MB",
+      "fileInvalidType": "Only Excel files (.xlsx or .xls) are allowed",
+      "preliminar": "Preliminar Samples",
+      "edd": "EDD Samples",
+      "parametrosFQ": "EDD Physical-Chemical Parameters",
+      "changeFile": "Click to change file",
+      "dragAndDrop": "Drag and drop your Excel file here",
+      "orClickToSelect": "or click to select",
+      "processing": "Processing...",
+      "validateFiles": "Validate Files",
+      "matrixSpike": "Matrix Spike Samples"
+    },
+    "results": {
+      "title": "Validation results",
+      "noResults": "No validations with status {status} to show.",
+      "success": "Success",
+      "warning": "Warning",
+      "error": "Error",
+      "skipped": "Skipped"
+    },
+    "exportToPdf": {
+      "title": "Validation results",
+      "filesAnalyzed": "Files analyzed:",
+      "exportToPdf": "Export to PDF",
+      "documentName": "validation-results",
+      "date": "Date",
+      "dateLanguage": "en-US"
+    },
+    "rules": {
+      "existingWells": {
+        "success": "All wells exist in the database",
+        "error": "The following wells do not exist in the database",
+        "skipped": "All wells exist in the database"
+      },
+      "sampleId": {
+        "success": "The sample names comply with the standard",
+        "error": "The sample names do not comply with the standard",
+        "skipped": "The sample names do not comply with the standard"
+      },
+      "requiredColumns": {
+        "success": "The document has the required columns",
+        "error": "The columns {columns} were not found in the document"
+      },
+      "rangeValues": {
+        "success": "The column {column} has values within the allowed range [{min_value}, {max_value}]",
+        "warning": "The column {column} has values outside the allowed range [{min_value}, {max_value}]",
+        "skipped": "The document has values within the allowed range"
+      },
+      "holdingTime": {
+        "success": "The holding time is correct for all parameters",
+        "error": "The holding time is incorrect for some parameters",
+        "skipped": "The holding time is correct for all parameters"
+      },
+      "guidelineLevel": {
+        "success": "The concentrations of the parameters do not exceed the guideline levels",
+        "warning": "The concentrations of the parameters exceed the guideline levels",
+        "skipped": "The concentrations of the parameters do not exceed the guideline levels"
+      },
+      "equality": {
+        "success": "The preliminar and EDD files of the laboratory are equal",
+        "error": "The preliminar and EDD files of the laboratory are not equal",
+        "skipped": "The preliminar and EDD files of the laboratory are equal"
+      },
+      "duplicidadPreliminar": {
+        "success": "The duplicated samples comply with the duplication criteria",
+        "warning": "The duplicated samples {original} and {duplicado} do not comply with the duplication criteria",
+        "skipped": "The duplicated samples comply with the duplication criteria"
+      },
+      "duplicidadPreliminarNoRPD": {
+        "warning": "The measurements of {original} and {duplicado} do not exceed the RL2 or RL5 thresholds. Requires the analyst's criteria."
+      },
+      "matrixSpike": {
+        "success": "The recovery percentages of the matrix spike samples are within the allowed limits",
+        "warning": "The recovery percentages of the matrix spike samples are not within the allowed limits",
+        "skipped": "The recovery percentages of the matrix spike samples are within the allowed limits"
+      },
+      "matrixSpikeDuplicates": {
+        "success": "The matrix spike duplicate samples comply with the duplication criteria",
+        "warning": "The matrix spike duplicate samples do not comply with the duplication criteria",
+        "skipped": "The matrix spike duplicate samples comply with the duplication criteria"
+      },
+      "missing": {
+        "success": "The samples are in the preliminar and EDD files",
+        "skipped": "The samples are in the preliminar and EDD files",
+        "edd": {
+          "error": "The following sample and substance combinations in the EDD are not in the preliminar"
+        },
+        "preliminar": {
+          "error": "The following sample and substance combinations in the preliminar are not in the EDD"
+        }
+      }
+    }
+  },
+  "reports": {
+    "title": "Reports",
+    "new": "New report",
+    "tabs": {
+      "individual": "Individual report",
+      "preset": "Preset"
+    },
+    "individual": {
+      "title": "Generate individual report"
+    },
+    "preset": {
+      "title": "Generate from preset",
+      "helper": "Preset endpoint is temporarily mocked until backend support is available."
+    },
+    "fields": {
+      "reportType": "Report type",
+      "reportTypeSearch": "Search report type...",
+      "preset": "Preset",
+      "presetSearch": "Search preset...",
+      "dateRange": "Date range",
+      "dateRangePlaceholder": "Select a date range",
+      "from": "Date from",
+      "to": "Date to",
+      "wells": "Wells",
+      "wellsPlaceholder": "Select wells",
+      "wellsSearch": "Search well...",
+      "empty": "No results"
+    },
+    "types": {
+      "well_depth": "Water depth",
+      "well_depth_cig": "Water depth for CIG",
+      "sampling_params": "Sampling params",
+      "sampling_params_cig": "Sampling params for CIG",
+      "injection_params_cig": "Injection params for CIG",
+      "volatile_concentrations_cig": "Volatile concentrations for CIG",
+      "inorganic_concentrations_cig": "Inorganic concentrations for CIG",
+      "concentrations": "Compound Concentrations",
+      "analysis_performed": "Progress of Remediation Tasks"
+    },
+    "presetConfig": {
+      "title": "Report-level configuration",
+      "reportsIncluded": "{count} reports included",
+      "include": "Include"
+    },
+    "export": {
+      "downloadIndividual": "Download report",
+      "downloadPreset": "Download preset",
+      "downloading": "Downloading...",
+      "success": "Report generated successfully",
+      "successPreset": "Preset generated successfully",
+      "download": "Download report",
+      "error": "Could not generate the report",
+      "missingDates": "You must select start and end dates",
+      "missingSelection": "You must select at least one report"
+    },
+    "recent": {
+      "title": "Recently generated reports",
+      "columns": {
+        "name": "Name",
+        "generatedAt": "Generated at",
+        "range": "Range",
+        "user": "User",
+        "action": "Action"
+      },
+      "aiPdf": {
+        "buttonLabel": "Generate executive PDF",
+        "progressStart": "Starting executive PDF generation...",
+        "progressRunning": "Processing files and generating executive summary...",
+        "progressOpening": "Executive PDF ready, opening file...",
+        "success": "Executive PDF generated successfully",
+        "successReused": "Reused an existing executive PDF",
+        "error": "Could not generate executive PDF"
+      }
+    },
+    "generator": {
+      "title": "Report Generator",
+      "globalFilters": "Global Filters",
+      "globalFiltersDesc": "Set the date range for all generated reports.",
+      "addReport": "Add report",
+      "reportTitlePlaceholder": "Report name",
+      "reportTypeLabel": "Report Type",
+      "reportTypeHint": "Select the main category to load filters.",
+      "specificFiltersLabel": "Specific Filters",
+      "selectTypeFirst": "Select a report type to see available filters.",
+      "noSpecificFilters": "This report type has no specific filters.",
+      "addMoreTitle": "Need another report?",
+      "addMoreDesc": "Click here or use the button above to add a new data output.",
+      "summary": "Summary",
+      "filesReady": "{count, plural, =0 {No files} one {# file} other {# files}}",
+      "cancel": "Cancel",
+      "zipPlaceholder": "E.g.: Monthly_Reports_October",
+      "generateAll": "Generate All"
+    }
+  },
+  "substance": {
+    "title": "Substance Analysis",
+    "filters": "Filters",
+    "clearFilters": "Clear filters",
+    "dateRange": "Date range",
+    "dateFrom": "Date from",
+    "dateTo": "Date to",
+    "substance": "Substance",
+    "searchSubstance": "Search substance...",
+    "noSubstanceFound": "Substance not found",
+    "wellType": "Well Type",
+    "searchWellType": "Search well type...",
+    "noWellTypeFound": "Well type not found",
+    "area": "Area",
+    "searchArea": "Search area...",
+    "noAreaFound": "Area not found",
+    "well": "Well",
+    "wells": "Wells",
+    "searchWell": "Search well...",
+    "sampleType": "Sample Type",
+    "searchSampleType": "Search sample type...",
+    "noSampleTypeFound": "Sample type not found",
+    "search": "Search",
+    "fqParameter": "Physico-Chemical Parameter",
+    "searchFqParameter": "Search parameter...",
+    "noFqParameterFound": "Parameter not found"
+  },
+  "auth": {
+    "termsAndPrivacy": "By clicking continue, you agree to our <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>.",
+    "tenant": {
+      "selectProject": "Select Project",
+      "selectProjectDescription": "Select the project to continue.",
+      "country": "Country",
+      "selectCountry": "Select country",
+      "selectCountryFirst": "Select country first",
+      "site": "Site",
+      "selectSite": "Select site",
+      "selectSiteFirst": "Select site first",
+      "project": "Project",
+      "loading": "Loading...",
+      "continue": "Continue",
+      "noProjectAccess": "You do not have access to any project.",
+      "noProjectAccessError": "Error selecting project. Please try again."
+    },
+    "signIn": {
+      "title": "Sign in"
+    },
+    "signUp": {
+      "title": "Sign up"
+    }
+  }
 }

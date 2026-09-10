@@ -8,7 +8,6 @@ import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
-  title: 'IRIS',
   description: 'IRIS is a platform for analyzing and managing data'
 };
 

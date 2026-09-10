@@ -11,9 +11,8 @@ import { SearchToolbar } from '@/features/documents/search/components/search-tab
 import SearchListing from '@/features/documents/search/components/search-listing';
 import { searchInfoContentEs, searchInfoContentEn } from '@/config/infoconfig';
 
-export const metadata = {
-  title: 'Dashboard: Search'
-};
+import { titleMetadata } from '@/lib/page-metadata';
+export const generateMetadata = titleMetadata('search.title');
 
 interface PageProps {
   params: Promise<{ locale: string }>;

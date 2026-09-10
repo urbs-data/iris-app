@@ -17,9 +17,8 @@ import {
   explorerInfoContentEn
 } from '@/config/infoconfig';
 
-export const metadata = {
-  title: 'Dashboard: Explorador de Archivos'
-};
+import { titleMetadata } from '@/lib/page-metadata';
+export const generateMetadata = titleMetadata('fileExplorer.title');
 
 interface PageProps {
   params: Promise<{ locale: string }>;

@@ -2,9 +2,8 @@ import { ValidationForm } from '@/features/documents/validation/components/valid
 import PageContainer from '@/components/layout/page-container';
 import { getTranslations } from 'next-intl/server';
 
-export const metadata = {
-  title: 'Dashboard: Validación de Documentos'
-};
+import { titleMetadata } from '@/lib/page-metadata';
+export const generateMetadata = titleMetadata('validation.title');
 
 export default async function ValidatePage() {
   const t = await getTranslations('validation');

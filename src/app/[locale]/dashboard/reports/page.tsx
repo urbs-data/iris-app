@@ -14,9 +14,8 @@ import {
   reportsListInfoContentEn
 } from '@/config/infoconfig';
 
-export const metadata = {
-  title: 'Dashboard: Reports'
-};
+import { titleMetadata } from '@/lib/page-metadata';
+export const generateMetadata = titleMetadata('reports.title');
 
 interface PageProps {
   params: Promise<{ locale: string }>;

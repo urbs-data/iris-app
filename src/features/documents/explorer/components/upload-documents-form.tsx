@@ -99,15 +99,15 @@ export function UploadDocumentsForm() {
   };
 
   return (
-    <Card className='mx-auto w-full'>
+    <Card className='mx-auto w-full max-w-6xl'>
       <CardContent>
         <Form
           form={form}
           onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-8'
+          className='space-y-6'
         >
-          <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
-            <div className='space-y-6'>
+          <div className='grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-10'>
+            <div className='space-y-5'>
               <FormDatePicker
                 control={form.control}
                 name='date'
@@ -156,13 +156,14 @@ export function UploadDocumentsForm() {
               />
             </div>
 
-            <div className='space-y-4'>
-              <div>
+            <div className='flex flex-col'>
+              <div className='flex flex-1 flex-col'>
                 <label className='mb-2 block text-sm font-medium'>
                   {t('filesLabel')}
                   <span className='ml-1 text-red-500'>*</span>
                 </label>
                 <FileUploader
+                  className='h-full'
                   value={files}
                   onValueChange={(newFiles) => {
                     const fileArray =
@@ -198,16 +199,16 @@ export function UploadDocumentsForm() {
             </div>
           </div>
 
-          <div className='flex gap-4'>
-            <Button type='submit' disabled={isPending}>
-              {isPending ? t('loading') : t('upload')}
-            </Button>
+          <div className='flex justify-end gap-3 border-t pt-6'>
             <Button
               type='button'
               variant='outline'
               onClick={() => router.push('/dashboard/explorer')}
             >
               {t('cancel')}
+            </Button>
+            <Button type='submit' disabled={isPending}>
+              {isPending ? t('loading') : t('upload')}
             </Button>
           </div>
         </Form>

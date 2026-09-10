@@ -10,6 +10,10 @@ import {
   physicoChemicalInfoContentEn
 } from '@/config/infoconfig';
 
+import { titleMetadata } from '@/lib/page-metadata';
+export const generateMetadata = titleMetadata(
+  'dashboard.physicoChemical.title'
+);
 interface PhysicoChemicalLayoutProps {
   fq_kpis: React.ReactNode;
   substance_kpis: React.ReactNode;

@@ -15,7 +15,7 @@ const META_THEME_COLORS = {
 };
 
 export const metadata: Metadata = {
-  title: 'IRIS',
+  title: { default: 'IRIS', template: 'IRIS: %s' },
   description: 'IRIS is a platform for analyzing and managing data',
   icons: {
     icon: [

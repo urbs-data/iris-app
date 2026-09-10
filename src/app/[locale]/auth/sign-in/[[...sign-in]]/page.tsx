@@ -1,10 +1,7 @@
-import { Metadata } from 'next';
 import SignInViewPage from '@/features/auth/components/sign-in-view';
 
-export const metadata: Metadata = {
-  title: 'Authentication | Sign In',
-  description: 'Sign In page for authentication.'
-};
+import { titleMetadata } from '@/lib/page-metadata';
+export const generateMetadata = titleMetadata('auth.signIn.title');
 
 export default function Page() {
   return <SignInViewPage />;

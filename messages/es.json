@@ -1,723 +1,729 @@
 {
-    "profile": {
-        "title": "Perfil",
-        "description": "Gestiona tu perfil de usuario",
-        "personalInfo": {
-            "title": "Información Personal",
-            "nameLabel": "Nombre",
-            "emailLabel": "Email",
-            "locationLabel": "Sitio",
-            "defaultUserName": "Usuario"
-        },
-        "security": {
-            "title": "Seguridad",
-            "logoutButton": "Cerrar sesión"
-        },
-        "changePassword": {
-            "title": "Cambiar Contraseña",
-            "description": "Actualiza tu contraseña para mantener tu cuenta segura",
-            "form": {
-                "newPasswordLabel": "Nueva Contraseña",
-                "newPasswordPlaceholder": "Nueva contraseña",
-                "confirmPasswordLabel": "Confirmar Contraseña",
-                "confirmPasswordPlaceholder": "Confirmar contraseña",
-                "submitButton": "Cambiar Contraseña",
-                "loadingButton": "Actualizando..."
-            },
-            "requirements": {
-                "minLength": "Mínimo 8 caracteres",
-                "uppercase": "Al menos una letra mayúscula",
-                "lowercase": "Al menos una letra minúscula",
-                "number": "Al menos un número",
-                "specialChar": "Al menos un carácter especial",
-                "passwordsMatch": "Las contraseñas coinciden"
-            },
-            "validation": {
-                "minLength": "La contraseña debe tener al menos 8 caracteres",
-                "uppercase": "La contraseña debe contener al menos una mayúscula",
-                "lowercase": "La contraseña debe contener al menos una minúscula",
-                "number": "La contraseña debe contener al menos un número",
-                "specialChar": "La contraseña debe contener al menos un carácter especial",
-                "passwordsMatch": "Las contraseñas no coinciden"
-            },
-            "toast": {
-                "success": "Contraseña actualizada correctamente",
-                "error": "Error al cambiar la contraseña"
-            }
-        },
-        "languageSwitcher": {
-            "spanish": "Español",
-            "english": "English"
-        }
+  "profile": {
+    "title": "Perfil",
+    "description": "Gestiona tu perfil de usuario",
+    "personalInfo": {
+      "title": "Información Personal",
+      "nameLabel": "Nombre",
+      "emailLabel": "Email",
+      "locationLabel": "Sitio",
+      "defaultUserName": "Usuario"
     },
-    "nav": {
-        "logout": "Cerrar sesión",
-        "home": "Inicio",
-        "dashboard": "Dashboard",
-        "analyze": "Analizar",
-        "dashboard-general": "General",
-        "dashboard-substance": "Concentraciones",
-        "dashboard-physico-chemical": "Parámetros y Sustancias",
-        "dashboard-correlations": "Correlaciones",
-        "dashboard-quarterly": "Trimestrales",
-        "search": "Buscador",
-        "explorer": "Explorador",
-        "validation": "Validación",
-        "reports": "Reportes",
-        "profile": "Perfil",
-        "documentation": "Documentación",
-        "group": {
-            "main": "Análisis",
-            "documents": "Documentos",
-            "others": "Otros"
-        }
+    "security": {
+      "title": "Seguridad",
+      "logoutButton": "Cerrar sesión"
     },
-    "sidebar": {
-        "profileDropdown": {
-            "profile": "Perfil",
-            "logout": "Cerrar sesión"
-        }
+    "changePassword": {
+      "title": "Cambiar Contraseña",
+      "description": "Actualiza tu contraseña para mantener tu cuenta segura",
+      "form": {
+        "newPasswordLabel": "Nueva Contraseña",
+        "newPasswordPlaceholder": "Nueva contraseña",
+        "confirmPasswordLabel": "Confirmar Contraseña",
+        "confirmPasswordPlaceholder": "Confirmar contraseña",
+        "submitButton": "Cambiar Contraseña",
+        "loadingButton": "Actualizando..."
+      },
+      "requirements": {
+        "minLength": "Mínimo 8 caracteres",
+        "uppercase": "Al menos una letra mayúscula",
+        "lowercase": "Al menos una letra minúscula",
+        "number": "Al menos un número",
+        "specialChar": "Al menos un carácter especial",
+        "passwordsMatch": "Las contraseñas coinciden"
+      },
+      "validation": {
+        "minLength": "La contraseña debe tener al menos 8 caracteres",
+        "uppercase": "La contraseña debe contener al menos una mayúscula",
+        "lowercase": "La contraseña debe contener al menos una minúscula",
+        "number": "La contraseña debe contener al menos un número",
+        "specialChar": "La contraseña debe contener al menos un carácter especial",
+        "passwordsMatch": "Las contraseñas no coinciden"
+      },
+      "toast": {
+        "success": "Contraseña actualizada correctamente",
+        "error": "Error al cambiar la contraseña"
+      }
     },
-    "breadcrumb": {
-        "analyze": {
-            "kpi": "Análisis KPIs"
-        },
-        "explorer": {
-            "upload": "Cargar Documento"
-        }
+    "languageSwitcher": {
+      "spanish": "Español",
+      "english": "English"
+    }
+  },
+  "nav": {
+    "logout": "Cerrar sesión",
+    "home": "Inicio",
+    "dashboard": "Dashboard",
+    "analyze": "Analizar",
+    "dashboard-general": "General",
+    "dashboard-substance": "Concentraciones",
+    "dashboard-physico-chemical": "Parámetros y Sustancias",
+    "dashboard-correlations": "Correlaciones",
+    "dashboard-quarterly": "Trimestrales",
+    "search": "Buscador",
+    "explorer": "Explorador",
+    "validation": "Validación",
+    "reports": "Reportes",
+    "profile": "Perfil",
+    "documentation": "Documentación",
+    "group": {
+      "main": "Análisis",
+      "documents": "Documentos",
+      "others": "Otros"
+    }
+  },
+  "sidebar": {
+    "profileDropdown": {
+      "profile": "Perfil",
+      "logout": "Cerrar sesión"
+    }
+  },
+  "breadcrumb": {
+    "analyze": {
+      "kpi": "Análisis KPIs"
     },
-    "fileExplorer": {
-        "title": "Explorador de Documentos",
-        "description": "Navega y gestiona tus documentos",
-        "upload": "Cargar Documento",
-        "deleteSuccess": "Archivo eliminado correctamente",
-        "deleteError": "Error al eliminar el archivo",
-        "deleteConfirmationTitle": "¿Estás seguro?",
-        "deleteConfirmationDescription": "Esta acción no se puede deshacer. Se eliminará el archivo y todos los datos relacionados.",
-        "cancel": "Cancelar",
-        "delete": "Eliminar",
-        "fileDeleted": "Archivo eliminado correctamente",
-        "fileDeleteError": "Error al eliminar el archivo",
-        "unknownError": "Error desconocido",
-        "columns": {
-            "type": "Tipo",
-            "name": "Nombre",
-            "metadata": "Metadata",
-            "size": "Tamaño",
-            "actions": "Acciones"
-        },
-        "deletingFiles": "Eliminando archivos",
-        "bulkDeleteSuccess": "{0} archivos eliminados correctamente",
-        "bulkDeleteError": "Error al eliminar {0} de {1} archivos",
-        "emptyFolder": "No hay archivos en esta carpeta"
+    "explorer": {
+      "upload": "Cargar Documento"
+    }
+  },
+  "fileExplorer": {
+    "title": "Explorador de Documentos",
+    "description": "Navega y gestiona tus documentos",
+    "upload": "Cargar Documento",
+    "deleteSuccess": "Archivo eliminado correctamente",
+    "deleteError": "Error al eliminar el archivo",
+    "deleteConfirmationTitle": "¿Estás seguro?",
+    "deleteConfirmationDescription": "Esta acción no se puede deshacer. Se eliminará el archivo y todos los datos relacionados.",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "fileDeleted": "Archivo eliminado correctamente",
+    "fileDeleteError": "Error al eliminar el archivo",
+    "unknownError": "Error desconocido",
+    "columns": {
+      "type": "Tipo",
+      "name": "Nombre",
+      "metadata": "Metadata",
+      "size": "Tamaño",
+      "actions": "Acciones"
     },
-    "uploadDocument": {
-        "title": "Cargar Documentos",
-        "description": "Sube uno o más documentos al sistema",
-        "atLeastOneFile": "Debes seleccionar al menos un archivo",
-        "tooManyFiles": "Puedes subir como máximo 50 archivos",
-        "totalSizeTooLarge": "El tamaño total de los archivos no puede superar 100 MB",
-        "dateRequired": "La fecha es requerida",
-        "invalidFileTypeForSamplesWellsSubstances": "Para pozos, sustancias y muestras, solo se permiten archivos Excel (.xlsx o .xlsm)",
-        "fileTooLarge": "El tamaño máximo permitido es 10MB",
-        "uploadSuccess": "Documentos cargados correctamente",
-        "uploadError": "Error al cargar los documentos",
-        "documentDateLabel": "Fecha del documento",
-        "documentDatePlaceholder": "Selecciona una fecha",
-        "documentDateError": "La fecha es requerida",
-        "classificationLabel": "Clasificación",
-        "classificationPlaceholder": "Selecciona una clasificación",
-        "classificationError": "La clasificación es requerida",
-        "subclassificationLabel": "Subclasificación",
-        "subclassificationPlaceholder": "Selecciona una subclasificación",
-        "subclassificationError": "La subclasificación es requerida",
-        "areaLabel": "Área",
-        "areaPlaceholder": "Selecciona un área",
-        "tipoLabel": "Tipo de documento",
-        "tipoPlaceholder": "Selecciona un tipo",
-        "filesLabel": "Documentos",
-        "dragMoreFiles": "Arrastra más archivos o haz clic para agregar",
-        "clickToSelectFiles": "Haz clic para seleccionar archivos",
-        "anyFileType": "Hasta 50 archivos y 100 MB en total (cada archivo hasta 100 MB)",
-        "dragAndDropFiles": "Arrastra y suelta tus archivos aquí o",
-        "clickToAddFiles": "Haz clic para agregar archivos",
-        "loading": "Cargando...",
-        "upload": "Cargar documentos",
-        "cancel": "Cancelar"
-    },
-    "documentClassifications": {
-        "Muestras": "Muestras",
-        "Procesos de remediacion": "Procesos de remediacion",
-        "Procesos de remediación": "Procesos de remediación",
-        "Reportes de monitoreo": "Reportes de monitoreo",
-        "Memorandum tecnicos": "Memorandum tecnicos",
-        "Reportes tecnicos": "Reportes tecnicos",
-        "Reportes a las autoridades": "Reportes a las autoridades",
-        "Estudios complementarios": "Estudios complementarios",
-        "Estudios hidrogeologicos": "Estudios hidrogeológicos",
-        "Estudios hidrogeológicos": "Estudios hidrogeológicos",
-        "Informes de avance": "Informes de avance",
-        "Pozos": "Pozos",
-        "Sustancias": "Sustancias",
-        "Otros": "Otros"
-    },
-    "documentTypes": {
-        "EDD Muestras": "EDD Muestras",
-        "EDD Parametros Fisico Quimicos": "EDD Parámetros Físico Químicos",
-        "EDD Profundidad Agua": "EDD Profundidad Agua",
-        "Resumen Parametros": "Resumen Parametros",
-        "Pozos": "Pozos",
-        "Sustancias": "Sustancias"
-    },
-    "documentSubclassifications": {
-        "Cadenas de custodia": "Cadenas de custodia",
-        "Muestras de suelo": "Muestras de suelo",
-        "Muestras de agua": "Muestras de agua",
-        "CoC de agua": "CoC de agua",
-        "CoC de suelo": "CoC de suelo",
-        "Reportes diarios": "Reportes diarios",
-        "Inyección": "Inyección",
-        "Otros": "Otros"
-    },
-    "dashboard": {
-        "all": "Todos",
-        "general": {
-            "title": "Análisis General"
-        },
-        "substance": {
-            "title": "Análisis de Concentraciones"
-        },
-        "physicoChemical": {
-            "title": "Análisis de Parámetros y Sustancias",
-            "fqParameter": "Parámetro Físico-Químico",
-            "substanceCompound": "Sustancia",
-            "combinedEvolution": "Evolución Temporal Combinada",
-            "emptyState": "Seleccioná un compuesto y parámetro en los filtros para ver el análisis."
-        },
-        "noData": {
-            "title": "No hay datos disponibles",
-            "description": "No hay datos que coincidan con los filtros seleccionados. Intente ajustar el rango de fechas o los filtros para ver resultados.",
-            "kpisDescription": "No hay métricas para mostrar con los filtros actuales. Intente ajustar el rango de fechas o los filtros.",
-            "mapDescription": "No hay datos espaciales para mostrar con los filtros actuales. Intente ajustar los filtros para ver resultados en el mapa."
-        },
-        "filter": {
-            "dateRange": "Rango de Fechas",
-            "substance": "Sustancia",
-            "wellType": "Tipo de Pozo",
-            "area": "Área",
-            "well": "Pozo",
-            "sampleType": "Tipo de Muestra"
-        },
-        "lineplot": {
-            "concentration": "Concentración",
-            "guidelineLevel": "Nivel Guía",
-            "average": "Promedio",
-            "title": "{0} promedio por período",
-            "defaultTitle": "Concentración promedio por período"
-        },
-        "boxplot": {
-            "interquartileRange": "Rango intercuartil",
-            "outlierRange": "Rango sin valores atípicos",
-            "average": "Promedio",
-            "median": "Mediana",
-            "guidelineLevel": "Nivel Guía",
-            "defaultTitle": "Distribución de concentraciones por año",
-            "defaultTooltip": "Este gráfico muestra cómo se comportan las concentraciones en cada año, permitiendo ver si los valores tienden a ser más dispersos o más cercanos entre sí con el paso del tiempo.",
-            "moreDetails": "Para más detalles, consulta la",
-            "documentation": "documentación"
-        },
-        "map": {
-            "title": "Mapa de distribución",
-            "viewInMap": "Ver en mapa",
-            "spatialDistribution": "Distribución espacial",
-            "light": "Claro",
-            "dark": "Oscuro",
-            "satellite": "Satélite",
-            "default": "Defecto",
-            "concentrations": "Concentraciones",
-            "markers": "Marcadores",
-            "areas": {
-                "Area C": "Área C",
-                "Area A y B": "Área A y B",
-                "Sitio Berazategui": "Sitio Berazategui"
-            },
-            "locationTooltip": {
-                "period": "Período",
-                "sampleCount": "Muestras",
-                "average": "Promedio",
-                "median": "Mediana",
-                "minimum": "Mínimo",
-                "maximum": "Máximo",
-                "standardDeviation": "Desvío"
-            }
-        },
-        "kpi": {
-            "sampleCount": "Muestras",
-            "lastValue": "Último valor",
-            "guidelineLevel": "Nivel Guía",
-            "average": "Promedio",
-            "minimum": "Mínimo",
-            "maximum": "Máximo",
-            "median": "Mediana",
-            "standardDeviation": "Desvío",
-            "well": "Pozo",
-            "firstSample": "Primer muestra",
-            "lastSample": "Última muestra",
-            "lastSampleConcentration": "Concentracion últ. muestra",
-            "percentageToGuideline": "% vs Guía",
-            "percentageToMaximum": "% vs Máx",
-            "percentageToGuidelineTooltip": "Variación porcentual del último valor medio respecto al nivel guía. Un valor negativo indica que está por debajo del nivel guía.",
-            "percentageToMaximumTooltip": "Variación porcentual del último valor medio respecto al máximo histórico. Un valor negativo indica que está por debajo del máximo histórico."
-        },
-        "correlations": {
-            "title": "Correlaciones ZVI",
-            "description": "Análisis de correlaciones Spearman entre concentraciones y parámetros fisicoquímicos",
-            "correlationsWith": "Correlaciones con {substance}",
-            "matrixTitle": "Matriz Spearman · Todos los parámetros",
-            "loeTitle": "Análisis de Hipótesis ZVI",
-            "loeSubtitle": "Lines of Evidence — estado del sistema",
-            "loe1Title": "Condiciones reductoras",
-            "loe2Title": "Correlaciones con mecanismo ZVI",
-            "loe3Title": "Degradación vs dilución",
-            "loe4Title": "Cumplimiento Decreto 831/93",
-            "statusCumplido": "CUMPLIDO",
-            "statusParcial": "PARCIAL",
-            "statusNoCumplido": "NO CUMPLIDO",
-            "statusNoEval": "NO EVAL.",
-            "statusCumple": "CUMPLE",
-            "statusExcede": "EXCEDE",
-            "noData": "Sin datos para los filtros seleccionados.",
-            "emptySubstance": "Seleccioná una sustancia en los filtros para ver las correlaciones.",
-            "filters": "Filtros",
-            "filterDateRange": "Rango de fechas",
-            "filterDateFrom": "Fecha desde",
-            "filterDateTo": "Fecha hasta",
-            "filterSubstance": "Sustancia",
-            "filterArea": "Área",
-            "filterAreaPlaceholder": "Todas las áreas",
-            "filterWells": "Pozos",
-            "filterWellsPlaceholder": "Todos los pozos",
-            "filterSubstancePlaceholder": "Seleccionar sustancia",
-            "search": "Buscar",
-            "clearFilters": "Limpiar filtros",
-            "sig": "sig.",
-            "ns": "n.s.",
-            "noDataLabel": "Sin datos",
-            "rhoStrongNeg": "Fuerte neg.",
-            "rhoModNeg": "Moderada neg.",
-            "rhoWeakNeg": "Débil neg.",
-            "rhoWeakPos": "Débil pos.",
-            "rhoModPos": "Moderada pos.",
-            "rhoStrongPos": "Fuerte pos.",
-            "rhoNa": "n/a"
-        }
-    },
-    "substances": {
-        "carbonTetrachloride": "Tetracloruro de Carbono",
-        "chloroform": "Cloroformo"
-    },
+    "deletingFiles": "Eliminando archivos",
+    "bulkDeleteSuccess": "{0} archivos eliminados correctamente",
+    "bulkDeleteError": "Error al eliminar {0} de {1} archivos",
+    "emptyFolder": "No hay archivos en esta carpeta"
+  },
+  "uploadDocument": {
+    "title": "Cargar Documentos",
+    "description": "Sube uno o más documentos al sistema",
+    "atLeastOneFile": "Debes seleccionar al menos un archivo",
+    "tooManyFiles": "Puedes subir como máximo 50 archivos",
+    "totalSizeTooLarge": "El tamaño total de los archivos no puede superar 100 MB",
+    "dateRequired": "La fecha es requerida",
+    "invalidFileTypeForSamplesWellsSubstances": "Para pozos, sustancias y muestras, solo se permiten archivos Excel (.xlsx o .xlsm)",
+    "fileTooLarge": "El tamaño máximo permitido es 10MB",
+    "uploadSuccess": "Documentos cargados correctamente",
+    "uploadError": "Error al cargar los documentos",
+    "documentDateLabel": "Fecha del documento",
+    "documentDatePlaceholder": "Selecciona una fecha",
+    "documentDateError": "La fecha es requerida",
+    "classificationLabel": "Clasificación",
+    "classificationPlaceholder": "Selecciona una clasificación",
+    "classificationError": "La clasificación es requerida",
+    "subclassificationLabel": "Subclasificación",
+    "subclassificationPlaceholder": "Selecciona una subclasificación",
+    "subclassificationError": "La subclasificación es requerida",
+    "areaLabel": "Área",
+    "areaPlaceholder": "Selecciona un área",
+    "tipoLabel": "Tipo de documento",
+    "tipoPlaceholder": "Selecciona un tipo",
+    "filesLabel": "Documentos",
+    "dragMoreFiles": "Arrastra más archivos o haz clic para agregar",
+    "clickToSelectFiles": "Haz clic para seleccionar archivos",
+    "anyFileType": "Hasta 50 archivos y 100 MB en total (cada archivo hasta 100 MB)",
+    "dragAndDropFiles": "Arrastra y suelta tus archivos aquí o",
+    "clickToAddFiles": "Haz clic para agregar archivos",
+    "loading": "Cargando...",
+    "upload": "Cargar documentos",
+    "cancel": "Cancelar"
+  },
+  "documentClassifications": {
+    "Muestras": "Muestras",
+    "Procesos de remediacion": "Procesos de remediacion",
+    "Procesos de remediación": "Procesos de remediación",
+    "Reportes de monitoreo": "Reportes de monitoreo",
+    "Memorandum tecnicos": "Memorandum tecnicos",
+    "Reportes tecnicos": "Reportes tecnicos",
+    "Reportes a las autoridades": "Reportes a las autoridades",
+    "Estudios complementarios": "Estudios complementarios",
+    "Estudios hidrogeologicos": "Estudios hidrogeológicos",
+    "Estudios hidrogeológicos": "Estudios hidrogeológicos",
+    "Informes de avance": "Informes de avance",
+    "Pozos": "Pozos",
+    "Sustancias": "Sustancias",
+    "Otros": "Otros"
+  },
+  "documentTypes": {
+    "EDD Muestras": "EDD Muestras",
+    "EDD Parametros Fisico Quimicos": "EDD Parámetros Físico Químicos",
+    "EDD Profundidad Agua": "EDD Profundidad Agua",
+    "Resumen Parametros": "Resumen Parametros",
+    "Pozos": "Pozos",
+    "Sustancias": "Sustancias"
+  },
+  "documentSubclassifications": {
+    "Cadenas de custodia": "Cadenas de custodia",
+    "Muestras de suelo": "Muestras de suelo",
+    "Muestras de agua": "Muestras de agua",
+    "CoC de agua": "CoC de agua",
+    "CoC de suelo": "CoC de suelo",
+    "Reportes diarios": "Reportes diarios",
+    "Inyección": "Inyección",
+    "Otros": "Otros"
+  },
+  "dashboard": {
+    "all": "Todos",
     "general": {
-        "title": "Dashboard General",
-        "chloroform": "Cloroformo",
-        "carbonTetrachloride": "Tetracloruro de Carbono",
-        "chloroformConcentration": "Cloroformo - Concentración promedio",
-        "carbonTetrachlorideConcentration": "Tetracloruro de Carbono - Concentración promedio"
-    },
-    "errors": {
-        "somethingWentWrong": "Algo salió mal",
-        "substanceDashboardError": "Error al cargar el tablero de sustancias.",
-        "physicoChemicalDashboardError": "Error al cargar el tablero de análisis combinado.",
-        "tryAgain": "Intentar de nuevo",
-        "retry": "Reintentar",
-        "kpisError": "Error al cargar los KPIs. Intente nuevamente.",
-        "lineChartError": "Error al cargar el gráfico. Intente nuevamente.",
-        "boxplotError": "Error al cargar el gráfico. Intente nuevamente.",
-        "mapError": "Error al cargar el mapa. Intente nuevamente.",
-        "generalDashboard": {
-            "title": "Error al cargar el dashboard",
-            "message": "No se pudieron cargar los datos. Por favor, intenta de nuevo."
-        },
-        "generalKpis": {
-            "title": "Error al cargar KPIs",
-            "tetracloruroMessage": "No se pudieron cargar los indicadores de tetracloruro.",
-            "cloroformoMessage": "No se pudieron cargar los indicadores de cloroformo."
-        },
-        "generalChart": {
-            "title": "Error al cargar gráfico",
-            "tetracloruroMessage": "No se pudo cargar el gráfico de tetracloruro.",
-            "cloroformoMessage": "No se pudo cargar el gráfico de cloroformo."
-        },
-        "loadingData": {
-            "title": "Error al cargar datos",
-            "message": "Algo salió mal al cargar esta sección."
-        }
-    },
-    "components": {
-        "infoSidebar": {
-            "learnMore": "Aprender más",
-            "noContentAvailable": "No hay contenido disponible"
-        },
-        "breadcrumbs": {
-            "dashboard": "Inicio",
-            "dashboard-general": "Análisis General",
-            "dashboard-substance": "Análisis de Concentraciones",
-            "dashboard-physico-chemical": "Análisis Combinado",
-            "dashboard-correlations": "Análisis de Correlaciones",
-            "dashboard-quarterly": "Análisis Trimestrales",
-            "search": "Buscador",
-            "explorer": "Explorador",
-            "validate": "Validación",
-            "reports": "Reportes",
-            "new": "Nuevo reporte",
-            "upload": "Cargar Documentos",
-            "results": "Resultados",
-            "profile": "Perfil"
-        },
-        "alertModal": {
-            "areYouSure": "¿Estás seguro?",
-            "thisActionCannotBeUndone": "Esta acción no se puede deshacer.",
-            "cancel": "Cancelar",
-            "continue": "Continuar"
-        },
-        "combobox": {
-            "placeholder": "Seleccionar...",
-            "searchPlaceholder": "Buscar",
-            "emptyMessage": "No se encontraron resultados"
-        },
-        "dateRangePicker": {
-            "year": "Año",
-            "month": "Mes",
-            "from": "Desde",
-            "to": "Hasta",
-            "clearSelection": "Limpiar selección"
-        },
-        "table": {
-            "total": "{count, plural, =0 {Sin registros} =1 {1 registro en total} other {# registros en total}}.",
-            "selected": "{selected, plural, =0 {Sin registros seleccionados} =1 {1 registro seleccionado} other {# registros seleccionados}} de {total}.",
-            "rowsPerPage": "Registros por página",
-            "pageInfo": "Página {page} de {total}",
-            "noResults": "No hay resultados"
-        },
-        "multiSelect": {
-            "loading": "Cargando...",
-            "multiple": "Varios ({count})",
-            "emptyMessage": "No se encontraron resultados",
-            "placeholder": "Seleccione opciones..."
-        },
-        "fileUploader": {
-            "dropFilesHere": "Suelta los archivos aquí",
-            "dragAndDrop": "Arrastra y suelta archivos aquí, o haz clic para seleccionar archivos",
-            "youCanUpload": "Puedes subir",
-            "multipleFiles": "múltiples",
-            "filesUpTo": "archivos (hasta {size} cada uno)",
-            "multipleWithTotalLimit": "Puedes subir hasta {count} archivos ({total} en total como máximo; cada archivo hasta {each})",
-            "totalSizeExceeded": "Superaste el tamaño total máximo ({max}). Quita archivos o elige otros más pequeños.",
-            "fileWith": "un archivo de {size}",
-            "cannotUploadMoreThanOne": "No se pueden subir más de 1 archivo a la vez",
-            "cannotUploadMoreThan": "No se pueden subir más de {count} archivos",
-            "fileRejected": "El archivo {name} fue rechazado",
-            "uploading": "Subiendo {target}...",
-            "uploaded": "{target} subido",
-            "failedToUpload": "Error al subir {target}",
-            "removeFile": "Eliminar archivo",
-            "atLeastOneFile": "Debes seleccionar al menos un archivo"
-        }
-    },
-    "wellTypes": {
-        "all": "Todos",
-        "well": "Monitoreo",
-        "pump": "Bomba"
-    },
-    "sampleTypes": {
-        "water": "Agua",
-        "soil": "Suelo"
-    },
-    "areas": {
-        "": "Todos",
-        "Area C": "Área C",
-        "Area A y B": "Área A y B",
-        "Resto": "Resto"
-    },
-    "fqParameters": {
-        "pH": "pH",
-        "ORP": "ORP",
-        "OD": "Oxígeno Disuelto",
-        "Temp": "Temperatura",
-        "CE": "Conductividad Eléctrica",
-        "STD": "Sólidos Totales Disueltos",
-        "Profundidad al agua": "Profundidad al agua"
-    },
-    "search": {
-        "title": "Buscador de documentos",
-        "description": "Busca y gestiona documentos",
-        "fileTypes": {
-            "excels": "Excels",
-            "documents": "Documentos",
-            "others": "Otros"
-        },
-        "fileType": "Tipo de archivo",
-        "years": "Año",
-        "classifications": "Clasificación",
-        "subClassifications": "Subclasificación",
-        "resetFilters": "Eliminar filtros",
-        "table": {
-            "title": "Título",
-            "pageNumber": "Página",
-            "relevance": "Relevancia",
-            "download": "Descargar",
-            "useful": "Useful",
-            "unuseful": "Useless",
-            "moveUp": "Move up",
-            "moveDown": "Move down"
-        },
-        "search": "Buscar",
-        "searching": "Buscando...",
-        "noResults": "No se encontraron resultados",
-        "selected": "seleccionados"
-    },
-    "validation": {
-        "title": "Validación de documentos",
-        "description": "Valida los documentos de muestras realizadas por el laboratorio.",
-        "reset": "Nueva validación",
-        "documentTypes": {
-            "preliminar": "Preliminar Muestras",
-            "edd": "EDD Muestras",
-            "matrixSpike": "Matrix Spike",
-            "parametros": "Parámetros FQ"
-        },
-        "upload": {
-            "error": "Por favor sube los tres archivos requeridos",
-            "success": "Validación completada",
-            "fileTooLarge": "El tamaño máximo permitido es 10MB",
-            "fileInvalidType": "Solo se permiten archivos Excel (.xlsx o .xls)",
-            "preliminar": "Preliminar Muestras",
-            "edd": "EDD Muestras",
-            "parametrosFQ": "EDD Parametros Fisico-Quimicos",
-            "changeFile": "Haz clic para cambiar el archivo",
-            "dragAndDrop": "Arrastra y suelta tu archivo Excel aquí",
-            "orClickToSelect": "o haz clic para seleccionar",
-            "processing": "Procesando...",
-            "validateFiles": "Validar Archivos",
-            "matrixSpike": "Muestras de Matrix Spike"
-        },
-        "results": {
-            "title": "Resultados de la validación",
-            "noResults": "No hay validaciones con estado {status} para mostrar.",
-            "success": "Éxito",
-            "warning": "Advertencia",
-            "error": "Error",
-            "skipped": "Omitido"
-        },
-        "exportToPdf": {
-            "title": "Resultados de la validación",
-            "filesAnalyzed": "Archivos analizados:",
-            "exportToPdf": "Exportar a PDF",
-            "documentName": "resultados-validacion",
-            "date": "Fecha",
-            "dateLanguage": "es-ES"
-        },
-        "rules": {
-            "existingWells": {
-                "success": "Todos los pozos existen en la base de datos",
-                "error": "Los siguientes pozos no existen en la base de datos",
-                "skipped": "Todos los pozos existen en la base de datos"
-            },
-            "sampleId": {
-                "success": "El nombre de las muestras cumplen el estandar",
-                "error": "El nombre de las muestras no cumplen el estandar",
-                "skipped": "El nombre de las muestras no cumplen el estandar"
-            },
-            "requiredColumns": {
-                "success": "El documento tiene las columnas requeridas",
-                "error": "Las columnas {columns} no fueron encontradas en el documento"
-            },
-            "rangeValues": {
-                "success": "La columna {column} tiene valores dentro del rango permitido [{min_value}, {max_value}]",
-                "warning": "La columna {column} tiene valores fuera del rango permitido [{min_value}, {max_value}]",
-                "skipped": "El documento tiene valores dentro del rango permitido"
-            },
-            "holdingTime": {
-                "success": "El holding time es correcto para todos los parámetros",
-                "error": "El holding time es incorrecto para algunos parámetros",
-                "skipped": "El holding time es correcto para todos los parámetros"
-            },
-            "guidelineLevel": {
-                "success": "Las concentraciones de los parámetros no superan los niveles guía",
-                "warning": "Las concentraciones de los parámetros superan los niveles guía",
-                "skipped": "Las concentraciones de los parámetros no superan los niveles guía"
-            },
-            "equality": {
-                "success": "Los archivos preliminar y EDD del laboratorio son iguales",
-                "error": "Los archivos preliminar y EDD del laboratorio no son iguales",
-                "skipped": "Los archivos preliminar y EDD del laboratorio son iguales"
-            },
-            "duplicidadPreliminar": {
-                "success": "Las muestras duplicadas cumplen con los criterios de duplicidad",
-                "warning": "Las muestras duplicadas {original} y {duplicado} no cumplen con los criterios de duplicidad",
-                "skipped": "Las muestras duplicadas cumplen con los criterios de duplicidad"
-            },
-            "duplicidadPreliminarNoRPD": {
-                "warning": "Las mediciones de {original} y {duplicado} no superan los umbrales de RL2 o RL5. Requiere del criterio del analista."
-            },
-            "matrixSpike": {
-                "success": "Los porcentajes de recuperación de las muestras de matrix spike están dentro de los límites permitidos",
-                "warning": "Los porcentajes de recuperación de las muestras de matrix spike no están dentro de los límites permitidos",
-                "skipped": "Los porcentajes de recuperación de las muestras de matrix spike están dentro de los límites permitidos"
-            },
-            "matrixSpikeDuplicates": {
-                "success": "Las muestras de matrix spike duplicadas cumplen con los criterios de duplicidad",
-                "warning": "Las muestras de matrix spike duplicadas no cumplen con los criterios de duplicidad",
-                "skipped": "Las muestras de matrix spike duplicadas cumplen con los criterios de duplicidad"
-            },
-            "missing": {
-                "success": "Las muestras estan en el archivo preliminar y EDD",
-                "skipped": "Las muestras estan en el archivo preliminar y EDD",
-                "edd": {
-                    "error": "Las siguientes combinaciones de muestra y sustancia del EDD no estan en el preliminar"
-                },
-                "preliminar": {
-                    "error": "Las siguientes combinaciones de muestra y sustancia del preliminar no estan en el EDD"
-                }
-            }
-        }
-    },
-    "reports": {
-        "title": "Reportes",
-        "new": "Nuevo reporte",
-        "tabs": {
-            "individual": "Reporte Individual",
-            "preset": "Preset"
-        },
-        "individual": {
-            "title": "Generar reporte individual"
-        },
-        "preset": {
-            "title": "Generar por preset",
-            "helper": "El endpoint de presets está mockeado temporalmente hasta que backend quede disponible."
-        },
-        "fields": {
-            "reportType": "Tipo de reporte",
-            "reportTypeSearch": "Buscar tipo de reporte...",
-            "preset": "Preset",
-            "presetSearch": "Buscar preset...",
-            "dateRange": "Rango de fechas",
-            "dateRangePlaceholder": "Selecciona un rango de fechas",
-            "from": "Fecha desde",
-            "to": "Fecha hasta",
-            "wells": "Pozos",
-            "wellsPlaceholder": "Selecciona pozos",
-            "wellsSearch": "Buscar pozo...",
-            "empty": "Sin resultados"
-        },
-        "types": {
-            "well_depth": "Profundidad al agua",
-            "well_depth_cig": "Profundidad al agua para CIG",
-            "sampling_params": "Parámetros de muestreo",
-            "sampling_params_cig": "Parámetros de muestreo para CIG",
-            "injection_params_cig": "Parámetros de inyección para CIG",
-            "volatile_concentrations_cig": "Concentraciones volátiles para CIG",
-            "inorganic_concentrations_cig": "Concentraciones inorgánicas para CIG",
-            "concentrations": "Concentraciones",
-            "analysis_performed": "Avance Tareas de Remediación"
-        },
-        "presetConfig": {
-            "title": "Configuración por reporte",
-            "reportsIncluded": "{count} reportes incluidos",
-            "include": "Incluir"
-        },
-        "export": {
-            "downloadIndividual": "Descargar reporte",
-            "downloadPreset": "Descargar preset",
-            "downloading": "Descargando...",
-            "success": "Reporte generado correctamente",
-            "successPreset": "Preset generado correctamente",
-            "download": "Descargar reporte",
-            "error": "No se pudo generar el reporte",
-            "missingDates": "Debes seleccionar fecha desde y fecha hasta",
-            "missingSelection": "Debes seleccionar al menos un reporte"
-        },
-        "recent": {
-            "title": "Reportes generados recientemente",
-            "columns": {
-                "name": "Nombre",
-                "generatedAt": "Generado",
-                "range": "Rango",
-                "user": "Usuario",
-                "action": "Acción"
-            },
-            "aiPdf": {
-                "buttonLabel": "Generar PDF ejecutivo",
-                "progressStart": "Iniciando generación de PDF ejecutivo...",
-                "progressRunning": "Procesando archivos y generando resumen ejecutivo...",
-                "progressOpening": "PDF ejecutivo listo, abriendo archivo...",
-                "success": "PDF ejecutivo generado correctamente",
-                "successReused": "Se reutilizó un PDF ejecutivo ya generado",
-                "error": "No se pudo generar el PDF ejecutivo"
-            }
-        },
-        "generator": {
-            "title": "Generador de Reportes",
-            "globalFilters": "Filtros Globales",
-            "globalFiltersDesc": "Define el rango de fechas para todos los reportes generados.",
-            "addReport": "Agregar reporte",
-            "reportTitlePlaceholder": "Nombre del reporte",
-            "reportTypeLabel": "Tipo de Reporte",
-            "reportTypeHint": "Selecciona la categoría principal para cargar filtros.",
-            "specificFiltersLabel": "Filtros Específicos",
-            "selectTypeFirst": "Selecciona un tipo de reporte para ver los filtros disponibles.",
-            "noSpecificFilters": "Este tipo de reporte no tiene filtros específicos.",
-            "addMoreTitle": "¿Necesitas otro reporte?",
-            "addMoreDesc": "Haz clic aquí o usa el botón superior para agregar una nueva salida de datos.",
-            "summary": "Resumen",
-            "filesReady": "{count, plural, =0 {Sin archivos} one {# archivo} other {# archivos}}",
-            "cancel": "Cancelar",
-            "zipPlaceholder": "Ej: Reportes_Mensuales_Octubre",
-            "generateAll": "Generar Todo"
-        }
+      "title": "Análisis General"
     },
     "substance": {
-        "title": "Análisis de Sustancias",
-        "filters": "Filtros",
-        "clearFilters": "Limpiar filtros",
-        "dateRange": "Rango de fechas",
-        "dateFrom": "Fecha desde",
-        "dateTo": "Fecha hasta",
-        "substance": "Sustancia",
-        "searchSubstance": "Buscar sustancia...",
-        "noSubstanceFound": "No se encontró la sustancia",
-        "wellType": "Tipo de Pozo",
-        "searchWellType": "Buscar tipo de pozo...",
-        "noWellTypeFound": "No se encontró el tipo de pozo",
-        "area": "Área",
-        "searchArea": "Buscar área...",
-        "noAreaFound": "No se encontró el área",
-        "well": "Pozo",
-        "wells": "Pozos",
-        "searchWell": "Buscar pozo...",
-        "sampleType": "Tipo de Muestra",
-        "searchSampleType": "Buscar tipo de muestra...",
-        "noSampleTypeFound": "No se encontró el tipo de muestra",
-        "search": "Buscar",
-        "fqParameter": "Parámetro Físico-Químico",
-        "searchFqParameter": "Buscar parámetro...",
-        "noFqParameterFound": "No se encontró el parámetro"
+      "title": "Análisis de Concentraciones"
     },
-    "auth": {
-        "termsAndPrivacy": "Al hacer clic en continuar, aceptas nuestros <terms>Términos de Servicio</terms> y <privacy>Política de Privacidad</privacy>.",
-        "tenant": {
-            "selectProject": "Seleccionar Proyecto",
-            "selectProjectDescription": "Selecciona el proyecto para continuar.",
-            "country": "País",
-            "selectCountry": "Seleccionar país",
-            "selectCountryFirst": "Seleccionar país primero",
-            "site": "Sitio",
-            "selectSite": "Seleccionar sitio",
-            "selectSiteFirst": "Seleccionar sitio primero",
-            "project": "Proyecto",
-            "loading": "Cargando...",
-            "continue": "Continuar",
-            "noProjectAccess": "No tienes acceso a ningún proyecto.",
-            "noProjectAccessError": "Error al seleccionar el proyecto. Por favor, intenta nuevamente."
-        }
+    "physicoChemical": {
+      "title": "Análisis de Parámetros y Sustancias",
+      "fqParameter": "Parámetro Físico-Químico",
+      "substanceCompound": "Sustancia",
+      "combinedEvolution": "Evolución Temporal Combinada",
+      "emptyState": "Seleccioná un compuesto y parámetro en los filtros para ver el análisis."
+    },
+    "noData": {
+      "title": "No hay datos disponibles",
+      "description": "No hay datos que coincidan con los filtros seleccionados. Intente ajustar el rango de fechas o los filtros para ver resultados.",
+      "kpisDescription": "No hay métricas para mostrar con los filtros actuales. Intente ajustar el rango de fechas o los filtros.",
+      "mapDescription": "No hay datos espaciales para mostrar con los filtros actuales. Intente ajustar los filtros para ver resultados en el mapa."
+    },
+    "filter": {
+      "dateRange": "Rango de Fechas",
+      "substance": "Sustancia",
+      "wellType": "Tipo de Pozo",
+      "area": "Área",
+      "well": "Pozo",
+      "sampleType": "Tipo de Muestra"
+    },
+    "lineplot": {
+      "concentration": "Concentración",
+      "guidelineLevel": "Nivel Guía",
+      "average": "Promedio",
+      "title": "{0} promedio por período",
+      "defaultTitle": "Concentración promedio por período"
+    },
+    "boxplot": {
+      "interquartileRange": "Rango intercuartil",
+      "outlierRange": "Rango sin valores atípicos",
+      "average": "Promedio",
+      "median": "Mediana",
+      "guidelineLevel": "Nivel Guía",
+      "defaultTitle": "Distribución de concentraciones por año",
+      "defaultTooltip": "Este gráfico muestra cómo se comportan las concentraciones en cada año, permitiendo ver si los valores tienden a ser más dispersos o más cercanos entre sí con el paso del tiempo.",
+      "moreDetails": "Para más detalles, consulta la",
+      "documentation": "documentación"
+    },
+    "map": {
+      "title": "Mapa de distribución",
+      "viewInMap": "Ver en mapa",
+      "spatialDistribution": "Distribución espacial",
+      "light": "Claro",
+      "dark": "Oscuro",
+      "satellite": "Satélite",
+      "default": "Defecto",
+      "concentrations": "Concentraciones",
+      "markers": "Marcadores",
+      "areas": {
+        "Area C": "Área C",
+        "Area A y B": "Área A y B",
+        "Sitio Berazategui": "Sitio Berazategui"
+      },
+      "locationTooltip": {
+        "period": "Período",
+        "sampleCount": "Muestras",
+        "average": "Promedio",
+        "median": "Mediana",
+        "minimum": "Mínimo",
+        "maximum": "Máximo",
+        "standardDeviation": "Desvío"
+      }
+    },
+    "kpi": {
+      "sampleCount": "Muestras",
+      "lastValue": "Último valor",
+      "guidelineLevel": "Nivel Guía",
+      "average": "Promedio",
+      "minimum": "Mínimo",
+      "maximum": "Máximo",
+      "median": "Mediana",
+      "standardDeviation": "Desvío",
+      "well": "Pozo",
+      "firstSample": "Primer muestra",
+      "lastSample": "Última muestra",
+      "lastSampleConcentration": "Concentracion últ. muestra",
+      "percentageToGuideline": "% vs Guía",
+      "percentageToMaximum": "% vs Máx",
+      "percentageToGuidelineTooltip": "Variación porcentual del último valor medio respecto al nivel guía. Un valor negativo indica que está por debajo del nivel guía.",
+      "percentageToMaximumTooltip": "Variación porcentual del último valor medio respecto al máximo histórico. Un valor negativo indica que está por debajo del máximo histórico."
+    },
+    "correlations": {
+      "title": "Correlaciones ZVI",
+      "description": "Análisis de correlaciones Spearman entre concentraciones y parámetros fisicoquímicos",
+      "correlationsWith": "Correlaciones con {substance}",
+      "matrixTitle": "Matriz Spearman · Todos los parámetros",
+      "loeTitle": "Análisis de Hipótesis ZVI",
+      "loeSubtitle": "Lines of Evidence — estado del sistema",
+      "loe1Title": "Condiciones reductoras",
+      "loe2Title": "Correlaciones con mecanismo ZVI",
+      "loe3Title": "Degradación vs dilución",
+      "loe4Title": "Cumplimiento Decreto 831/93",
+      "statusCumplido": "CUMPLIDO",
+      "statusParcial": "PARCIAL",
+      "statusNoCumplido": "NO CUMPLIDO",
+      "statusNoEval": "NO EVAL.",
+      "statusCumple": "CUMPLE",
+      "statusExcede": "EXCEDE",
+      "noData": "Sin datos para los filtros seleccionados.",
+      "emptySubstance": "Seleccioná una sustancia en los filtros para ver las correlaciones.",
+      "filters": "Filtros",
+      "filterDateRange": "Rango de fechas",
+      "filterDateFrom": "Fecha desde",
+      "filterDateTo": "Fecha hasta",
+      "filterSubstance": "Sustancia",
+      "filterArea": "Área",
+      "filterAreaPlaceholder": "Todas las áreas",
+      "filterWells": "Pozos",
+      "filterWellsPlaceholder": "Todos los pozos",
+      "filterSubstancePlaceholder": "Seleccionar sustancia",
+      "search": "Buscar",
+      "clearFilters": "Limpiar filtros",
+      "sig": "sig.",
+      "ns": "n.s.",
+      "noDataLabel": "Sin datos",
+      "rhoStrongNeg": "Fuerte neg.",
+      "rhoModNeg": "Moderada neg.",
+      "rhoWeakNeg": "Débil neg.",
+      "rhoWeakPos": "Débil pos.",
+      "rhoModPos": "Moderada pos.",
+      "rhoStrongPos": "Fuerte pos.",
+      "rhoNa": "n/a"
     }
+  },
+  "substances": {
+    "carbonTetrachloride": "Tetracloruro de Carbono",
+    "chloroform": "Cloroformo"
+  },
+  "general": {
+    "title": "Dashboard General",
+    "chloroform": "Cloroformo",
+    "carbonTetrachloride": "Tetracloruro de Carbono",
+    "chloroformConcentration": "Cloroformo - Concentración promedio",
+    "carbonTetrachlorideConcentration": "Tetracloruro de Carbono - Concentración promedio"
+  },
+  "errors": {
+    "somethingWentWrong": "Algo salió mal",
+    "substanceDashboardError": "Error al cargar el tablero de sustancias.",
+    "physicoChemicalDashboardError": "Error al cargar el tablero de análisis combinado.",
+    "tryAgain": "Intentar de nuevo",
+    "retry": "Reintentar",
+    "kpisError": "Error al cargar los KPIs. Intente nuevamente.",
+    "lineChartError": "Error al cargar el gráfico. Intente nuevamente.",
+    "boxplotError": "Error al cargar el gráfico. Intente nuevamente.",
+    "mapError": "Error al cargar el mapa. Intente nuevamente.",
+    "generalDashboard": {
+      "title": "Error al cargar el dashboard",
+      "message": "No se pudieron cargar los datos. Por favor, intenta de nuevo."
+    },
+    "generalKpis": {
+      "title": "Error al cargar KPIs",
+      "tetracloruroMessage": "No se pudieron cargar los indicadores de tetracloruro.",
+      "cloroformoMessage": "No se pudieron cargar los indicadores de cloroformo."
+    },
+    "generalChart": {
+      "title": "Error al cargar gráfico",
+      "tetracloruroMessage": "No se pudo cargar el gráfico de tetracloruro.",
+      "cloroformoMessage": "No se pudo cargar el gráfico de cloroformo."
+    },
+    "loadingData": {
+      "title": "Error al cargar datos",
+      "message": "Algo salió mal al cargar esta sección."
+    }
+  },
+  "components": {
+    "infoSidebar": {
+      "learnMore": "Aprender más",
+      "noContentAvailable": "No hay contenido disponible"
+    },
+    "breadcrumbs": {
+      "dashboard": "Inicio",
+      "dashboard-general": "Análisis General",
+      "dashboard-substance": "Análisis de Concentraciones",
+      "dashboard-physico-chemical": "Análisis Combinado",
+      "dashboard-correlations": "Análisis de Correlaciones",
+      "dashboard-quarterly": "Análisis Trimestrales",
+      "search": "Buscador",
+      "explorer": "Explorador",
+      "validate": "Validación",
+      "reports": "Reportes",
+      "new": "Nuevo reporte",
+      "upload": "Cargar Documentos",
+      "results": "Resultados",
+      "profile": "Perfil"
+    },
+    "alertModal": {
+      "areYouSure": "¿Estás seguro?",
+      "thisActionCannotBeUndone": "Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "continue": "Continuar"
+    },
+    "combobox": {
+      "placeholder": "Seleccionar...",
+      "searchPlaceholder": "Buscar",
+      "emptyMessage": "No se encontraron resultados"
+    },
+    "dateRangePicker": {
+      "year": "Año",
+      "month": "Mes",
+      "from": "Desde",
+      "to": "Hasta",
+      "clearSelection": "Limpiar selección"
+    },
+    "table": {
+      "total": "{count, plural, =0 {Sin registros} =1 {1 registro en total} other {# registros en total}}.",
+      "selected": "{selected, plural, =0 {Sin registros seleccionados} =1 {1 registro seleccionado} other {# registros seleccionados}} de {total}.",
+      "rowsPerPage": "Registros por página",
+      "pageInfo": "Página {page} de {total}",
+      "noResults": "No hay resultados"
+    },
+    "multiSelect": {
+      "loading": "Cargando...",
+      "multiple": "Varios ({count})",
+      "emptyMessage": "No se encontraron resultados",
+      "placeholder": "Seleccione opciones..."
+    },
+    "fileUploader": {
+      "dropFilesHere": "Suelta los archivos aquí",
+      "dragAndDrop": "Arrastra y suelta archivos aquí, o haz clic para seleccionar archivos",
+      "youCanUpload": "Puedes subir",
+      "multipleFiles": "múltiples",
+      "filesUpTo": "archivos (hasta {size} cada uno)",
+      "multipleWithTotalLimit": "Puedes subir hasta {count} archivos ({total} en total como máximo; cada archivo hasta {each})",
+      "totalSizeExceeded": "Superaste el tamaño total máximo ({max}). Quita archivos o elige otros más pequeños.",
+      "fileWith": "un archivo de {size}",
+      "cannotUploadMoreThanOne": "No se pueden subir más de 1 archivo a la vez",
+      "cannotUploadMoreThan": "No se pueden subir más de {count} archivos",
+      "fileRejected": "El archivo {name} fue rechazado",
+      "uploading": "Subiendo {target}...",
+      "uploaded": "{target} subido",
+      "failedToUpload": "Error al subir {target}",
+      "removeFile": "Eliminar archivo",
+      "atLeastOneFile": "Debes seleccionar al menos un archivo"
+    }
+  },
+  "wellTypes": {
+    "all": "Todos",
+    "well": "Monitoreo",
+    "pump": "Bomba"
+  },
+  "sampleTypes": {
+    "water": "Agua",
+    "soil": "Suelo"
+  },
+  "areas": {
+    "": "Todos",
+    "Area C": "Área C",
+    "Area A y B": "Área A y B",
+    "Resto": "Resto"
+  },
+  "fqParameters": {
+    "pH": "pH",
+    "ORP": "ORP",
+    "OD": "Oxígeno Disuelto",
+    "Temp": "Temperatura",
+    "CE": "Conductividad Eléctrica",
+    "STD": "Sólidos Totales Disueltos",
+    "Profundidad al agua": "Profundidad al agua"
+  },
+  "search": {
+    "title": "Buscador de documentos",
+    "description": "Busca y gestiona documentos",
+    "fileTypes": {
+      "excels": "Excels",
+      "documents": "Documentos",
+      "others": "Otros"
+    },
+    "fileType": "Tipo de archivo",
+    "years": "Año",
+    "classifications": "Clasificación",
+    "subClassifications": "Subclasificación",
+    "resetFilters": "Eliminar filtros",
+    "table": {
+      "title": "Título",
+      "pageNumber": "Página",
+      "relevance": "Relevancia",
+      "download": "Descargar",
+      "useful": "Useful",
+      "unuseful": "Useless",
+      "moveUp": "Move up",
+      "moveDown": "Move down"
+    },
+    "search": "Buscar",
+    "searching": "Buscando...",
+    "noResults": "No se encontraron resultados",
+    "selected": "seleccionados"
+  },
+  "validation": {
+    "title": "Validación de documentos",
+    "description": "Valida los documentos de muestras realizadas por el laboratorio.",
+    "reset": "Nueva validación",
+    "documentTypes": {
+      "preliminar": "Preliminar Muestras",
+      "edd": "EDD Muestras",
+      "matrixSpike": "Matrix Spike",
+      "parametros": "Parámetros FQ"
+    },
+    "upload": {
+      "error": "Por favor sube los tres archivos requeridos",
+      "success": "Validación completada",
+      "fileTooLarge": "El tamaño máximo permitido es 10MB",
+      "fileInvalidType": "Solo se permiten archivos Excel (.xlsx o .xls)",
+      "preliminar": "Preliminar Muestras",
+      "edd": "EDD Muestras",
+      "parametrosFQ": "EDD Parametros Fisico-Quimicos",
+      "changeFile": "Haz clic para cambiar el archivo",
+      "dragAndDrop": "Arrastra y suelta tu archivo Excel aquí",
+      "orClickToSelect": "o haz clic para seleccionar",
+      "processing": "Procesando...",
+      "validateFiles": "Validar Archivos",
+      "matrixSpike": "Muestras de Matrix Spike"
+    },
+    "results": {
+      "title": "Resultados de la validación",
+      "noResults": "No hay validaciones con estado {status} para mostrar.",
+      "success": "Éxito",
+      "warning": "Advertencia",
+      "error": "Error",
+      "skipped": "Omitido"
+    },
+    "exportToPdf": {
+      "title": "Resultados de la validación",
+      "filesAnalyzed": "Archivos analizados:",
+      "exportToPdf": "Exportar a PDF",
+      "documentName": "resultados-validacion",
+      "date": "Fecha",
+      "dateLanguage": "es-ES"
+    },
+    "rules": {
+      "existingWells": {
+        "success": "Todos los pozos existen en la base de datos",
+        "error": "Los siguientes pozos no existen en la base de datos",
+        "skipped": "Todos los pozos existen en la base de datos"
+      },
+      "sampleId": {
+        "success": "El nombre de las muestras cumplen el estandar",
+        "error": "El nombre de las muestras no cumplen el estandar",
+        "skipped": "El nombre de las muestras no cumplen el estandar"
+      },
+      "requiredColumns": {
+        "success": "El documento tiene las columnas requeridas",
+        "error": "Las columnas {columns} no fueron encontradas en el documento"
+      },
+      "rangeValues": {
+        "success": "La columna {column} tiene valores dentro del rango permitido [{min_value}, {max_value}]",
+        "warning": "La columna {column} tiene valores fuera del rango permitido [{min_value}, {max_value}]",
+        "skipped": "El documento tiene valores dentro del rango permitido"
+      },
+      "holdingTime": {
+        "success": "El holding time es correcto para todos los parámetros",
+        "error": "El holding time es incorrecto para algunos parámetros",
+        "skipped": "El holding time es correcto para todos los parámetros"
+      },
+      "guidelineLevel": {
+        "success": "Las concentraciones de los parámetros no superan los niveles guía",
+        "warning": "Las concentraciones de los parámetros superan los niveles guía",
+        "skipped": "Las concentraciones de los parámetros no superan los niveles guía"
+      },
+      "equality": {
+        "success": "Los archivos preliminar y EDD del laboratorio son iguales",
+        "error": "Los archivos preliminar y EDD del laboratorio no son iguales",
+        "skipped": "Los archivos preliminar y EDD del laboratorio son iguales"
+      },
+      "duplicidadPreliminar": {
+        "success": "Las muestras duplicadas cumplen con los criterios de duplicidad",
+        "warning": "Las muestras duplicadas {original} y {duplicado} no cumplen con los criterios de duplicidad",
+        "skipped": "Las muestras duplicadas cumplen con los criterios de duplicidad"
+      },
+      "duplicidadPreliminarNoRPD": {
+        "warning": "Las mediciones de {original} y {duplicado} no superan los umbrales de RL2 o RL5. Requiere del criterio del analista."
+      },
+      "matrixSpike": {
+        "success": "Los porcentajes de recuperación de las muestras de matrix spike están dentro de los límites permitidos",
+        "warning": "Los porcentajes de recuperación de las muestras de matrix spike no están dentro de los límites permitidos",
+        "skipped": "Los porcentajes de recuperación de las muestras de matrix spike están dentro de los límites permitidos"
+      },
+      "matrixSpikeDuplicates": {
+        "success": "Las muestras de matrix spike duplicadas cumplen con los criterios de duplicidad",
+        "warning": "Las muestras de matrix spike duplicadas no cumplen con los criterios de duplicidad",
+        "skipped": "Las muestras de matrix spike duplicadas cumplen con los criterios de duplicidad"
+      },
+      "missing": {
+        "success": "Las muestras estan en el archivo preliminar y EDD",
+        "skipped": "Las muestras estan en el archivo preliminar y EDD",
+        "edd": {
+          "error": "Las siguientes combinaciones de muestra y sustancia del EDD no estan en el preliminar"
+        },
+        "preliminar": {
+          "error": "Las siguientes combinaciones de muestra y sustancia del preliminar no estan en el EDD"
+        }
+      }
+    }
+  },
+  "reports": {
+    "title": "Reportes",
+    "new": "Nuevo reporte",
+    "tabs": {
+      "individual": "Reporte Individual",
+      "preset": "Preset"
+    },
+    "individual": {
+      "title": "Generar reporte individual"
+    },
+    "preset": {
+      "title": "Generar por preset",
+      "helper": "El endpoint de presets está mockeado temporalmente hasta que backend quede disponible."
+    },
+    "fields": {
+      "reportType": "Tipo de reporte",
+      "reportTypeSearch": "Buscar tipo de reporte...",
+      "preset": "Preset",
+      "presetSearch": "Buscar preset...",
+      "dateRange": "Rango de fechas",
+      "dateRangePlaceholder": "Selecciona un rango de fechas",
+      "from": "Fecha desde",
+      "to": "Fecha hasta",
+      "wells": "Pozos",
+      "wellsPlaceholder": "Selecciona pozos",
+      "wellsSearch": "Buscar pozo...",
+      "empty": "Sin resultados"
+    },
+    "types": {
+      "well_depth": "Profundidad al agua",
+      "well_depth_cig": "Profundidad al agua para CIG",
+      "sampling_params": "Parámetros de muestreo",
+      "sampling_params_cig": "Parámetros de muestreo para CIG",
+      "injection_params_cig": "Parámetros de inyección para CIG",
+      "volatile_concentrations_cig": "Concentraciones volátiles para CIG",
+      "inorganic_concentrations_cig": "Concentraciones inorgánicas para CIG",
+      "concentrations": "Concentraciones",
+      "analysis_performed": "Avance Tareas de Remediación"
+    },
+    "presetConfig": {
+      "title": "Configuración por reporte",
+      "reportsIncluded": "{count} reportes incluidos",
+      "include": "Incluir"
+    },
+    "export": {
+      "downloadIndividual": "Descargar reporte",
+      "downloadPreset": "Descargar preset",
+      "downloading": "Descargando...",
+      "success": "Reporte generado correctamente",
+      "successPreset": "Preset generado correctamente",
+      "download": "Descargar reporte",
+      "error": "No se pudo generar el reporte",
+      "missingDates": "Debes seleccionar fecha desde y fecha hasta",
+      "missingSelection": "Debes seleccionar al menos un reporte"
+    },
+    "recent": {
+      "title": "Reportes generados recientemente",
+      "columns": {
+        "name": "Nombre",
+        "generatedAt": "Generado",
+        "range": "Rango",
+        "user": "Usuario",
+        "action": "Acción"
+      },
+      "aiPdf": {
+        "buttonLabel": "Generar PDF ejecutivo",
+        "progressStart": "Iniciando generación de PDF ejecutivo...",
+        "progressRunning": "Procesando archivos y generando resumen ejecutivo...",
+        "progressOpening": "PDF ejecutivo listo, abriendo archivo...",
+        "success": "PDF ejecutivo generado correctamente",
+        "successReused": "Se reutilizó un PDF ejecutivo ya generado",
+        "error": "No se pudo generar el PDF ejecutivo"
+      }
+    },
+    "generator": {
+      "title": "Generador de Reportes",
+      "globalFilters": "Filtros Globales",
+      "globalFiltersDesc": "Define el rango de fechas para todos los reportes generados.",
+      "addReport": "Agregar reporte",
+      "reportTitlePlaceholder": "Nombre del reporte",
+      "reportTypeLabel": "Tipo de Reporte",
+      "reportTypeHint": "Selecciona la categoría principal para cargar filtros.",
+      "specificFiltersLabel": "Filtros Específicos",
+      "selectTypeFirst": "Selecciona un tipo de reporte para ver los filtros disponibles.",
+      "noSpecificFilters": "Este tipo de reporte no tiene filtros específicos.",
+      "addMoreTitle": "¿Necesitas otro reporte?",
+      "addMoreDesc": "Haz clic aquí o usa el botón superior para agregar una nueva salida de datos.",
+      "summary": "Resumen",
+      "filesReady": "{count, plural, =0 {Sin archivos} one {# archivo} other {# archivos}}",
+      "cancel": "Cancelar",
+      "zipPlaceholder": "Ej: Reportes_Mensuales_Octubre",
+      "generateAll": "Generar Todo"
+    }
+  },
+  "substance": {
+    "title": "Análisis de Sustancias",
+    "filters": "Filtros",
+    "clearFilters": "Limpiar filtros",
+    "dateRange": "Rango de fechas",
+    "dateFrom": "Fecha desde",
+    "dateTo": "Fecha hasta",
+    "substance": "Sustancia",
+    "searchSubstance": "Buscar sustancia...",
+    "noSubstanceFound": "No se encontró la sustancia",
+    "wellType": "Tipo de Pozo",
+    "searchWellType": "Buscar tipo de pozo...",
+    "noWellTypeFound": "No se encontró el tipo de pozo",
+    "area": "Área",
+    "searchArea": "Buscar área...",
+    "noAreaFound": "No se encontró el área",
+    "well": "Pozo",
+    "wells": "Pozos",
+    "searchWell": "Buscar pozo...",
+    "sampleType": "Tipo de Muestra",
+    "searchSampleType": "Buscar tipo de muestra...",
+    "noSampleTypeFound": "No se encontró el tipo de muestra",
+    "search": "Buscar",
+    "fqParameter": "Parámetro Físico-Químico",
+    "searchFqParameter": "Buscar parámetro...",
+    "noFqParameterFound": "No se encontró el parámetro"
+  },
+  "auth": {
+    "termsAndPrivacy": "Al hacer clic en continuar, aceptas nuestros <terms>Términos de Servicio</terms> y <privacy>Política de Privacidad</privacy>.",
+    "tenant": {
+      "selectProject": "Seleccionar Proyecto",
+      "selectProjectDescription": "Selecciona el proyecto para continuar.",
+      "country": "País",
+      "selectCountry": "Seleccionar país",
+      "selectCountryFirst": "Seleccionar país primero",
+      "site": "Sitio",
+      "selectSite": "Seleccionar sitio",
+      "selectSiteFirst": "Seleccionar sitio primero",
+      "project": "Proyecto",
+      "loading": "Cargando...",
+      "continue": "Continuar",
+      "noProjectAccess": "No tienes acceso a ningún proyecto.",
+      "noProjectAccessError": "Error al seleccionar el proyecto. Por favor, intenta nuevamente."
+    },
+    "signIn": {
+      "title": "Iniciar sesión"
+    },
+    "signUp": {
+      "title": "Crear cuenta"
+    }
+  }
 }

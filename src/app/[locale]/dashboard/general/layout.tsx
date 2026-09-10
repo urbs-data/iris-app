@@ -9,6 +9,8 @@ import {
   generalInfoContentEn
 } from '@/config/infoconfig';
 
+import { titleMetadata } from '@/lib/page-metadata';
+export const generateMetadata = titleMetadata('dashboard.general.title');
 interface GeneralLayoutProps {
   tetracloruro_line: React.ReactNode;
   tetracloruro_kpis: React.ReactNode;
