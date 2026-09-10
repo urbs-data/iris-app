@@ -22,7 +22,8 @@ import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { InfoButton } from '@/components/ui/info-button';
 import { InfobarContent } from '../ui/infobar';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { formatLogTick, resolveLogAxis, type YScale } from './log-scale';
 
 interface BoxplotDataPoint {
   period: string;
@@ -49,6 +50,7 @@ interface BoxplotChartProps {
   referenceLines?: ReferenceLineConfig[];
   className?: string;
   yAxisLabel?: string;
+  yScale?: YScale;
 }
 
 // Componente para renderizar las líneas verticales de los whiskers
@@ -92,10 +94,12 @@ const HorizontalLine = (props: RectangleProps) => {
 };
 
 type TransformedBoxplotData = BoxplotDataPoint & {
+  base: number;
   bottomWhisker: number;
   bottomBox: number;
   topBox: number;
   topWhisker: number;
+  meanPlot?: number;
 };
 
 const chartConfig: ChartConfig = {
@@ -119,10 +123,35 @@ export function BoxplotChart({
   data,
   referenceLines = [],
   className,
-  yAxisLabel
+  yAxisLabel,
+  yScale = 'auto'
 }: BoxplotChartProps) {
   const t = useTranslations('dashboard.boxplot');
   const tKpi = useTranslations('dashboard.kpi');
+  const locale = useLocale();
+
+  const logAxis = React.useMemo(
+    () =>
+      resolveLogAxis({
+        values: data.flatMap((d) => [
+          d.min,
+          d.q1,
+          d.median,
+          d.q3,
+          d.max,
+          ...(d.mean != null ? [d.mean] : [])
+        ]),
+        refValues: referenceLines.map((r) => r.value),
+        yScale
+      }),
+    [data, referenceLines, yScale]
+  );
+
+  const toPlot = React.useMemo(() => {
+    if (!logAxis) return (value: number) => value;
+    const floor = Math.log10(logAxis.domain[0]);
+    return (value: number) => Math.log10(value) - floor;
+  }, [logAxis]);
 
   // Transform data for the boxplot visualization with proper stacking
   const transformedData: TransformedBoxplotData[] = React.useMemo(
@@ -132,28 +161,31 @@ export function BoxplotChart({
         const lowerLimit = item.q1 - 1.5 * iqr;
         const upperLimit = item.q3 + 1.5 * iqr;
 
-        // Ajustar min y max según los límites del IQR
-        const minValue = Math.max(Math.min(item.min, lowerLimit), 0);
+        const minValue = Math.max(item.min, lowerLimit, 0);
         const maxValue = Math.min(item.max, upperLimit);
 
         return {
           ...item,
-          bottomWhisker: item.q1 - minValue,
-          bottomBox: item.median - item.q1,
-          topBox: item.q3 - item.median,
-          topWhisker: maxValue - item.q3
+          base: toPlot(minValue),
+          bottomWhisker: toPlot(item.q1) - toPlot(minValue),
+          bottomBox: toPlot(item.median) - toPlot(item.q1),
+          topBox: toPlot(item.q3) - toPlot(item.median),
+          topWhisker: toPlot(maxValue) - toPlot(item.q3),
+          meanPlot: item.mean != null ? toPlot(item.mean) : undefined
         };
       }),
-    [data]
+    [data, toPlot]
   );
 
   // Recharts calcula el dominio automático sumando los stacks de las barras, y
   // ahí ifOverflow='extendDomain' de las ReferenceLine no lo altera. Calculamos
   // el dominio a mano para que el nivel guía siempre entre en la escala.
   const yDomain = React.useMemo<[number, number]>(() => {
+    if (logAxis) return [0, toPlot(logAxis.domain[1])];
+
     // El tope visible de cada caja es la suma del stack, no item.max.
     const stackTops = transformedData.map(
-      (d) => d.min + d.bottomWhisker + d.bottomBox + d.topBox + d.topWhisker
+      (d) => d.base + d.bottomWhisker + d.bottomBox + d.topBox + d.topWhisker
     );
     const means = transformedData
       .map((d) => d.mean)
@@ -168,7 +200,9 @@ export function BoxplotChart({
     const padding = (upper - lower) * 0.05 || 1;
 
     return [lower, upper + padding];
-  }, [transformedData, referenceLines]);
+  }, [transformedData, referenceLines, logAxis, toPlot]);
+
+  const yAxisTitle = yAxisLabel && logAxis ? `${yAxisLabel} (log)` : yAxisLabel;
 
   return (
     <Card className={cn('flex h-full min-h-0 flex-col', className)}>
@@ -226,14 +260,21 @@ export function BoxplotChart({
               />
               <YAxis
                 domain={yDomain}
+                ticks={logAxis ? logAxis.ticks.map(toPlot) : undefined}
+                tickFormatter={
+                  logAxis
+                    ? (value) =>
+                        formatLogTick(logAxis.domain[0] * 10 ** value, locale)
+                    : undefined
+                }
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
                 tick={{ fontSize: 10 }}
                 label={
-                  yAxisLabel
+                  yAxisTitle
                     ? {
-                        value: yAxisLabel,
+                        value: yAxisTitle,
                         angle: -90,
                         position: 'insideLeft',
                         style: { fontSize: 10 }
@@ -282,7 +323,7 @@ export function BoxplotChart({
               {referenceLines.map((ref, index) => (
                 <ReferenceLine
                   key={index}
-                  y={ref.value}
+                  y={toPlot(ref.value)}
                   ifOverflow='extendDomain'
                   stroke={ref.color || 'var(--destructive)'}
                   strokeDasharray={ref.strokeDasharray || '10 10'}
@@ -291,7 +332,7 @@ export function BoxplotChart({
               ))}
               {/* Stack de barras para crear el boxplot */}
               {/* Barra invisible para el offset desde 0 hasta min */}
-              <Bar stackId='a' dataKey='min' fill='none' />
+              <Bar stackId='a' dataKey='base' fill='none' />
               {/* Cap inferior del whisker */}
               <Bar stackId='a' dataKey='bar' shape={<HorizontalLine />} />
               {/* Línea del whisker inferior */}
@@ -313,7 +354,7 @@ export function BoxplotChart({
               {/* Puntos del promedio */}
               {data.some((d) => d.mean != null) && (
                 <Scatter
-                  dataKey='mean'
+                  dataKey='meanPlot'
                   fill='var(--foreground)'
                   shape={(props: any) => {
                     const { cx, cy } = props;

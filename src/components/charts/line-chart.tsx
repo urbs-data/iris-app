@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/chart';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
+import { formatLogTick, resolveLogAxis, type YScale } from './log-scale';
 
 export interface SeriesConfig {
   dataKey: string;
@@ -50,6 +51,7 @@ interface LineChartProps {
   locale?: string;
   series?: SeriesConfig[];
   timeMode?: TimeMode;
+  yScale?: YScale;
 }
 
 export function LineChart({
@@ -63,7 +65,8 @@ export function LineChart({
   tooltipUnit = '',
   locale = 'es-AR',
   series,
-  timeMode = 'monthly'
+  timeMode = 'monthly',
+  yScale = 'auto'
 }: LineChartProps) {
   const isMultiSeries = !!series && series.length > 0;
 
@@ -117,6 +120,23 @@ export function LineChart({
 
   const leftAxisColor = leftSeries?.color ?? 'currentColor';
   const rightAxisColor = rightSeries?.color ?? 'currentColor';
+
+  const logAxis = React.useMemo(() => {
+    const leftKeys = isMultiSeries
+      ? series!.filter((s) => s.yAxisId !== 'right').map((s) => s.dataKey)
+      : [dataKey];
+
+    return resolveLogAxis({
+      values: normalizedData.flatMap((point) =>
+        leftKeys.map((key) => Number(point[key]))
+      ),
+      refValues: referenceLines.map((ref) => Number(ref.value)),
+      yScale
+    });
+  }, [yScale, isMultiSeries, series, dataKey, normalizedData, referenceLines]);
+
+  const leftAxisTitle =
+    leftAxisLabel && logAxis ? `${leftAxisLabel} (log)` : leftAxisLabel;
 
   const formatTick = (rawValue: number | string) => {
     const value = typeof rawValue === 'string' ? Number(rawValue) : rawValue;
@@ -224,18 +244,24 @@ export function LineChart({
             <YAxis
               yAxisId='left'
               orientation='left'
+              scale={logAxis ? 'log' : 'auto'}
+              domain={logAxis ? logAxis.domain : undefined}
+              ticks={logAxis ? logAxis.ticks : undefined}
+              tickFormatter={
+                logAxis ? (value) => formatLogTick(value, locale) : undefined
+              }
               tickLine={false}
               axisLine={false}
               tickMargin={4}
-              width={leftAxisLabel ? 65 : 50}
+              width={leftAxisTitle ? 65 : 50}
               tick={{
                 fontSize: 10,
                 fill: isMultiSeries ? leftAxisColor : 'currentColor'
               }}
               label={
-                leftAxisLabel
+                leftAxisTitle
                   ? {
-                      value: leftAxisLabel,
+                      value: leftAxisTitle,
                       angle: -90,
                       position: 'insideLeft',
                       offset: 10,

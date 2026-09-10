@@ -1,7 +1,10 @@
 'use server';
 
+import { after } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { authOrganizationActionClient } from '@/lib/actions/safe-action';
-import { getBlobContainer, getQueueClient } from '@/lib/azure-blob';
+import { getBlobContainer } from '@/lib/azure-blob';
+import { indexDocument } from '../lib/indexing/index-document';
 import { uploadDocumentsSchema } from './upload-documents-schema';
 import { resolveETLProcessor } from '../lib/etl/registry';
 import type { FileMetadata } from '../lib/types';
@@ -159,15 +162,26 @@ export const uploadDocuments = authOrganizationActionClient
         }
       );
 
-      const queueClient = getQueueClient('uploaded-documents-local');
-      const messageBody = {
-        metadata,
-        file_path: blobPath,
-        organization_id: ctx.organization.id
-      };
-      await queueClient.sendMessage(
-        Buffer.from(JSON.stringify(messageBody)).toString('base64')
-      );
+      // Indexar después de responder: el parseo con Document Intelligence puede
+      // tardar minutos y el usuario no tiene por qué esperarlo.
+      after(async () => {
+        try {
+          const indexed = await indexDocument({
+            buffer,
+            fileName,
+            blobPath,
+            organizationId: ctx.organization.id,
+            metadata
+          });
+          logger('Indexed ->', { fileName, chunks: indexed });
+        } catch (error) {
+          Sentry.captureException(error, {
+            tags: { action: 'indexDocument' },
+            extra: { fileName, blobPath, organizationId: ctx.organization.id }
+          });
+          logger('Index error ->', { fileName, error });
+        }
+      });
 
       const currentResult = results.find((r) => r.fileName === fileName);
       if (currentResult) {

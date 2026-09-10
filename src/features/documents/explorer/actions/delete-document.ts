@@ -87,7 +87,10 @@ export const deleteDocument = authOrganizationActionClient
     // 5. Eliminar del índice de Elasticsearch
     let deletedFromIndex = 0;
     try {
-      deletedFromIndex = await deleteFromElasticsearch(fileName);
+      deletedFromIndex = await deleteFromElasticsearch(
+        fileName,
+        ctx.organization.id
+      );
     } catch (error) {
       // Log el error pero no fallar la eliminación completa
       console.error('Error eliminando del índice de Elasticsearch:', error);

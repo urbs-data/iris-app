@@ -231,7 +231,8 @@ export async function searchElasticsearch(
 }
 
 export async function deleteFromElasticsearch(
-  filename: string
+  filename: string,
+  organizationId: string
 ): Promise<number> {
   const esUrl = getEnvVar('ELASTICSEARCH_URL');
   const esApiKey = getEnvVar('ELASTICSEARCH_API_KEY');
@@ -239,8 +240,11 @@ export async function deleteFromElasticsearch(
 
   const query = {
     query: {
-      term: {
-        'sourcefile.keyword': filename
+      bool: {
+        filter: [
+          { term: { 'sourcefile.keyword': filename } },
+          { term: { 'organization_id.keyword': organizationId } }
+        ]
       }
     }
   };
@@ -271,4 +275,107 @@ export async function deleteFromElasticsearch(
       error instanceof Error ? error.message : 'Unknown error';
     throw new Error(`Error eliminando documentos del índice: ${errorMessage}`);
   }
+}
+
+export interface IndexableChunk {
+  content: string;
+  sourcepage: number;
+}
+
+export interface IndexDocumentFields {
+  filename: string;
+  organizationId: string;
+  storageUrl: string;
+  area: string | null;
+  year: string | null;
+  classification: string | null;
+  subClassification: string | null;
+  extension: string | null;
+  date: string | null;
+}
+
+const BULK_BATCH_SIZE = 1000;
+
+/**
+ * Id determinístico por chunk, para que volver a subir el mismo archivo
+ * sobrescriba en vez de duplicar. El formato lo hereda el índice existente,
+ * así que no se puede cambiar sin reindexar todo.
+ */
+function chunkId(filename: string, chunkNumber: number): string {
+  const ascii = filename.replace(/[^0-9a-zA-Z_-]/g, '_');
+  const hash = Buffer.from(filename, 'utf8').toString('hex').toUpperCase();
+  return `file-${ascii}-${hash}-page-${chunkNumber}`;
+}
+
+export async function bulkIndexDocuments(
+  chunks: IndexableChunk[],
+  fields: IndexDocumentFields
+): Promise<number> {
+  if (chunks.length === 0) {
+    return 0;
+  }
+
+  const esUrl = getEnvVar('ELASTICSEARCH_URL');
+  const esApiKey = getEnvVar('ELASTICSEARCH_API_KEY');
+  const esIndex = getEnvVar('ELASTICSEARCH_INDEX');
+
+  for (let start = 0; start < chunks.length; start += BULK_BATCH_SIZE) {
+    const batch = chunks.slice(start, start + BULK_BATCH_SIZE);
+
+    const operations = batch.flatMap((chunk, offset) => [
+      {
+        index: {
+          _index: esIndex,
+          _id: chunkId(fields.filename, start + offset + 1)
+        }
+      },
+      {
+        content: chunk.content,
+        sourcepage: chunk.sourcepage,
+        sourcefile: fields.filename,
+        area: fields.area,
+        year: fields.year === 'Otros' ? null : fields.year,
+        classification: fields.classification,
+        sub_classification: fields.subClassification,
+        extension: fields.extension,
+        date: fields.date,
+        storage_url: fields.storageUrl,
+        storage_url_organization: fields.storageUrl,
+        organization_id: fields.organizationId
+      }
+    ]);
+
+    const ndjson =
+      operations.map((operation) => JSON.stringify(operation)).join('\n') +
+      '\n';
+
+    const response = await fetch(`${esUrl}/_bulk`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-ndjson',
+        Authorization: `ApiKey ${esApiKey}`
+      },
+      body: ndjson
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Elasticsearch bulk error: ${response.status} - ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+
+    if (result.errors) {
+      const failed = (result.items ?? [])
+        .filter((item: { index?: { error?: unknown } }) => item.index?.error)
+        .slice(0, 5);
+      throw new Error(
+        `Errores indexando en Elasticsearch: ${JSON.stringify(failed)}`
+      );
+    }
+  }
+
+  return chunks.length;
 }

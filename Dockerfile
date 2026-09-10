@@ -1,4 +1,4 @@
-FROM oven/bun:latest AS base
+FROM oven/bun:1.4.2 AS base
 
 ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 ARG NEXT_PUBLIC_CLERK_SIGN_IN_URL
@@ -13,9 +13,8 @@ ARG CLERK_SECRET_KEY
 
 WORKDIR /app
 
-# Install dependencies with bun
 FROM base AS deps
-COPY package.json bun.lock* ./
+COPY package.json bun.lock ./
 RUN bun install --no-save --frozen-lockfile
 
 # Rebuild the source code only when needed
