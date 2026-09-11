@@ -6,6 +6,7 @@ import { createFileListColumns } from './file-list-columns';
 import { SimpleDataTable } from '@/components/ui/table/simple-data-table';
 import { useTranslations } from 'next-intl';
 import { BulkDeleteButton } from './bulk-delete-button';
+import { BulkReindexButton } from './bulk-reindex-button';
 
 interface FileListProps {
   files: FileItem[];
@@ -70,10 +71,13 @@ export function FileList({ files, currentPath }: FileListProps) {
           <span className='text-muted-foreground text-sm'>
             {selectedIds.size} archivo(s) seleccionado(s)
           </span>
-          <BulkDeleteButton
-            blobPaths={Array.from(selectedIds)}
-            onComplete={() => setSelectedIds(new Set())}
-          />
+          <div className='flex gap-2'>
+            <BulkReindexButton blobPaths={Array.from(selectedIds)} />
+            <BulkDeleteButton
+              blobPaths={Array.from(selectedIds)}
+              onComplete={() => setSelectedIds(new Set())}
+            />
+          </div>
         </div>
       )}
       <SimpleDataTable

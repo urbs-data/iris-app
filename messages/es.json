@@ -109,7 +109,15 @@
     "deletingFiles": "Eliminando archivos",
     "bulkDeleteSuccess": "{0} archivos eliminados correctamente",
     "bulkDeleteError": "Error al eliminar {0} de {1} archivos",
-    "emptyFolder": "No hay archivos en esta carpeta"
+    "emptyFolder": "No hay archivos en esta carpeta",
+    "reindex": "Reindexar",
+    "reindexing": "Reindexando documento...",
+    "reindexSuccess": "Documento reindexado ({chunks} fragmentos)",
+    "reindexError": "Error al reindexar el documento",
+    "bulkReindexProgress": "Reindexando {done} de {total}...",
+    "bulkReindexSuccess": "{count} archivo(s) reindexados correctamente",
+    "bulkReindexError": "Error al reindexar {count} archivo(s)",
+    "bulkReindexPartial": "Reindexados {succeeded} de {total} ({failed} fallaron)"
   },
   "uploadDocument": {
     "title": "Cargar Documentos",

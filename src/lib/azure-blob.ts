@@ -3,6 +3,7 @@ import {
   ContainerClient,
   StorageSharedKeyCredential
 } from '@azure/storage-blob';
+import { ForbiddenError } from '@/lib/errors';
 
 let blobServiceClient: BlobServiceClient | null = null;
 let storageCredential: StorageSharedKeyCredential | null = null;
@@ -48,4 +49,13 @@ export function getBlobContainer(containerName?: string): ContainerClient {
   }
 
   return getBlobServiceClient().getContainerClient(container);
+}
+
+export function assertOrgBlobPath(
+  blobPath: string,
+  organizationId: string
+): void {
+  if (!blobPath.startsWith(`${organizationId}/`)) {
+    throw new ForbiddenError('El archivo no pertenece a la organización');
+  }
 }

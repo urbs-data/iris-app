@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { authOrganizationActionClient } from '@/lib/actions/safe-action';
-import { getBlobContainer } from '@/lib/azure-blob';
+import { assertOrgBlobPath, getBlobContainer } from '@/lib/azure-blob';
 import { deleteDocumentSchema } from './delete-document-schema';
 import { SubClassification } from '../constants/classifications';
 import { deleteDocumentData } from '../data/delete-document-data';
@@ -57,6 +57,9 @@ export const deleteDocument = authOrganizationActionClient
   .inputSchema(deleteDocumentSchema)
   .action(async ({ parsedInput, ctx }) => {
     const { blobPath } = parsedInput;
+
+    assertOrgBlobPath(blobPath, ctx.organization.id);
+
     const container = getBlobContainer();
 
     // 1. Obtener metadata del archivo para determinar si necesita limpieza de BD

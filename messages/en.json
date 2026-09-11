@@ -107,7 +107,15 @@
     "deletingFiles": "Deleting files",
     "bulkDeleteSuccess": "{0} files deleted successfully",
     "bulkDeleteError": "Error deleting {0} of {1} files",
-    "emptyFolder": "No files in this folder"
+    "emptyFolder": "No files in this folder",
+    "reindex": "Reindex",
+    "reindexing": "Reindexing document...",
+    "reindexSuccess": "Document reindexed ({chunks} chunks)",
+    "reindexError": "Error reindexing the document",
+    "bulkReindexProgress": "Reindexing {done} of {total}...",
+    "bulkReindexSuccess": "{count} file(s) reindexed successfully",
+    "bulkReindexError": "Error reindexing {count} file(s)",
+    "bulkReindexPartial": "Reindexed {succeeded} of {total} ({failed} failed)"
   },
   "uploadDocument": {
     "title": "Upload Documents",
