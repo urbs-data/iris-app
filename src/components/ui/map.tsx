@@ -3,6 +3,12 @@
 import * as MapLibreGL from 'maplibre-gl';
 import type { PopupOptions, MarkerOptions } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+
+// maplibre-gl 6 loads its worker from a separate file next to its own bundle,
+// which Next doesn't emit; pointing at it here makes the bundler ship it.
+MapLibreGL.setWorkerUrl(
+  new URL('maplibre-gl/dist/maplibre-gl-worker.mjs', import.meta.url).href
+);
 import { useTheme } from 'next-themes';
 import {
   createContext,
