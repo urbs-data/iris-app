@@ -13,7 +13,6 @@ import {
 } from '@/db/schema';
 import { sql } from 'drizzle-orm';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type DbClient = NodePgDatabase<any>;
 
 /**

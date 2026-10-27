@@ -8,7 +8,6 @@ import {
   estudiosTable
 } from '@/db/schema';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type DbClient = NodePgDatabase<any>;
 
 /**

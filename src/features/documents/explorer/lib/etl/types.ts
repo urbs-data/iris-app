@@ -1,6 +1,5 @@
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type DbClient = NodePgDatabase<any>;
 
 export interface ETLResult {

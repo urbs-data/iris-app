@@ -19,7 +19,7 @@ function buildContentDisposition(filename: string): string {
   // an RFC 5987 Content-Disposition: an ASCII-safe `filename` fallback plus a
   // `filename*` with percent-encoded UTF-8 that browsers use for the real name.
   const asciiFilename = filename
-    // eslint-disable-next-line no-control-regex
+
     .replace(/[^\x20-\x7E]/g, '_')
     .replace(/["\\]/g, '_');
   const encodedFilename = encodeURIComponent(filename);

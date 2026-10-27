@@ -46,3 +46,9 @@ node_modules
 build
 dist
 ico
+
+# generado por drizzle-kit
+/drizzle
+
+# skills vendorizadas (hashes en skills-lock.json)
+/.agents
